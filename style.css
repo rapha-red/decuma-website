@@ -62,3 +62,5 @@ dt{color:var(--ink-2);font-size:var(--fs-sm);font-weight:var(--fw-semibold);marg
 dd{margin:0}
 @media (max-width:34rem){.two{grid-template-columns:1fr}h1{font-size:var(--fs-title)}.wrap{padding:0 var(--s4)}}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+
+.mark img { vertical-align: -3px; margin-right: 8px; }
