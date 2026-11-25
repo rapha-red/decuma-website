@@ -64,3 +64,11 @@ dd{margin:0}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
 
 .mark img { vertical-align: -3px; margin-right: 8px; }
+
+/* header links: GitHub mark with label (star count once the repository is public) and sign-in */
+header{display:flex;align-items:center;justify-content:space-between;gap:var(--s4)}
+.top{display:flex;align-items:center;gap:var(--s4);font-size:var(--fs-sm,14px)}
+.top a{color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.top a:hover{text-decoration:underline}
+.top .gh{color:var(--muted,var(--ink))}
+.top .sep{width:1px;height:20px;background:var(--line,currentColor);opacity:.6}
