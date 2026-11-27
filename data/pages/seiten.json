@@ -186,8 +186,8 @@
   },
   "schritte": [
    [
-    "Beleg rein: Foto, PDF, E-Mail an deine Belegadresse oder per API.",
-    "Beleg in: photo, PDF, e-mail to your Beleg address or via API."
+    "Beleg rein: Foto, PDF, Weiterleitung an dein Belegpostfach oder per API.",
+    "Beleg in: photo, PDF, forwarding to your Beleg inbox or via API."
    ],
    {
     "t": [
@@ -226,8 +226,8 @@
         "Scan with your phone; several pages become one Beleg."
        ],
        [
-        "Eigene Mail-Adresse für Belege: Rechnungen einfach weiterleiten.",
-        "Your own e-mail address for Belege: just forward invoices."
+        "Dein Belegpostfach mit eigener Adresse, in jedem Tarif: Rechnungen einfach weiterleiten.",
+        "Your Beleg inbox with its own address, in every plan: just forward invoices."
        ],
        [
         "Doppelte Belege erkennt Decuma, auch wenn die Datei eine andere ist.",
@@ -341,6 +341,22 @@
     ]
    },
    {
+    "id": "steuern",
+    "h": [
+     "Steuern im Blick",
+     "Taxes in view"
+    ],
+    "konto": "Rücklage",
+    "bloecke": [
+     {
+      "p": [
+       "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
+       "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+      ]
+     }
+    ]
+   },
+   {
     "id": "kasse",
     "h": [
      "Kassenbuch",
@@ -400,6 +416,16 @@
    "Belege, bank import, journal, reports and cash book are included in Kostenlos. Rules, automatic matching and more than {belege} Belege a month come with Pro."
   ],
   "faq": [
+   {
+    "q": [
+     "Kann ich ein früheres Jahr nachholen?",
+     "Can I catch up on an earlier year?"
+    ],
+    "a": [
+     "Ja, auf zwei Wegen. Selbst: Mit Pro oder Max bei jährlicher Abrechnung ziehst du deine Daten kostenlos um, buchst das Jahr aus deinen Belegen nach und machst EÜR oder Jahresabschluss und die Erklärungen in Decuma, ohne Aufpreis. Oder mit Done-for-you: Unser Team bucht die Geschäftsvorfälle des Jahres aus deinen Belegen. EÜR, Jahresabschluss und Erklärungen machst du dann mit Decuma oder mit deinem Steuerberater.",
+     "Yes, in two ways. Yourself: with Pro or Max on yearly billing you move your data free of charge, book the year from your Belege and do the EÜR or annual accounts and the returns in Decuma, at no extra cost. Or with Done-for-you: our team books the year’s transactions from your Belege. The EÜR, annual accounts and returns you then do with Decuma or with your tax adviser."
+    ]
+   },
    {
     "q": [
      "Kann ich von DATEV, lexoffice oder sevdesk wechseln?",
@@ -486,10 +512,243 @@
    "Try it with your own business."
   ]
  },
+ "ki-buchhaltung": {
+  "flag": "model_steps",
+  "titel": [
+   "KI-Buchhaltung: sag, was zu tun ist | Decuma",
+   "AI bookkeeping: say what needs doing | Decuma"
+  ],
+  "h1": [
+   "Sag es in deinen Worten. Decuma bucht und zeigt, warum.",
+   "Say it in your own words. Decuma books and shows why."
+  ],
+  "sub": [
+   "Belege, Korrekturen, die Voranmeldung: Du schreibst, was zu tun ist, Decuma erledigt es Schritt für Schritt, mit dem Grund und der Regel dahinter. Was ans Finanzamt geht, wartet auf dich.",
+   "Belege, corrections, the VAT return: you write what needs doing, Decuma does it step by step, with the reason and the rule behind it. Anything for the tax office waits for you."
+  ],
+  "cta1": {
+   "t": [
+    "Kostenlos starten",
+    "Start for free"
+   ],
+   "href": "#/registrieren"
+  },
+  "visual": "kichat",
+  "schritte": [
+   [
+    "Sagen: Beleg reinziehen oder in deinen Worten schreiben, was zu tun ist.",
+    "Say it: drop in a Beleg or write in your own words what needs doing."
+   ],
+   [
+    "Nachvollziehen: Jeder Schritt zeigt, was Decuma tut, warum, und nach welcher Regel.",
+    "Follow along: every step shows what Decuma does, why, and by which rule."
+   ],
+   [
+    "Korrigieren: Liegt Decuma daneben, sagst du es; auf Wunsch wird daraus eine Regel.",
+    "Correct: if Decuma is off, you say so; if you like, that becomes a rule."
+   ],
+   [
+    "Freigeben: Was Geld bewegt oder ans Finanzamt geht, gibst du selbst frei.",
+    "Release: anything that moves money or goes to the tax office you release yourself."
+   ]
+  ],
+  "abschnitte": [
+   {
+    "h": [
+     "Jede Buchung mit Begründung",
+     "Every booking with its reason"
+    ],
+    "konto": "§ 15 UStG",
+    "bloecke": [
+     {
+      "zeilen": [
+       {
+        "h": [
+         "Der Grund steht dabei",
+         "The reason is right there"
+        ],
+        "t": [
+         "Decuma sagt nicht nur, was es gebucht hat, sondern warum: Vorsteuer abziehbar, weil alle Angaben da sind; Anlage statt Aufwand, weil der Betrag über der Grenze liegt.",
+         "Decuma says not just what it booked but why: input VAT deductible because every detail is there; an asset instead of an expense because the amount is above the threshold."
+        ]
+       },
+       {
+        "h": [
+         "Die Regel auch",
+         "So is the rule"
+        ],
+        "t": [
+         "Hinter jedem Schritt steht die Norm, aus der er folgt. Die Regeln und ihre Quellen liest du in der Knowledge Base nach. Du musst Decuma nicht glauben.",
+         "Behind every step is the norm it follows from. You can read up on the rules and their sources in the Knowledge Base. You don't have to take Decuma's word for it."
+        ],
+        "href": "#/kb",
+        "mehr": [
+         "Zur Knowledge Base",
+         "To the Knowledge Base"
+        ]
+       },
+       {
+        "h": [
+         "Alles einen Klick entfernt",
+         "Everything one click away"
+        ],
+        "t": [
+         "Aus dem Chat öffnest du den Beleg, die Buchung und die Quelle. Nichts verschwindet in einer Blackbox.",
+         "From the chat you open the Beleg, the booking and the source. Nothing disappears into a black box."
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Du korrigierst einmal. Decuma merkt es sich.",
+     "You correct it once. Decuma remembers."
+    ],
+    "konto": "6805 Telefon",
+    "visual": "verlauf",
+    "bloecke": [
+     {
+      "p": [
+       "Liegt Decuma daneben, schreibst du es einfach. Die falsche Buchung wird storniert und richtig neu gebucht, beide bleiben sichtbar. Dann fragt Decuma, ob es künftig immer so buchen soll, und legt auf dein Ja eine Regel an.",
+       "If Decuma is off, you just say so. The wrong booking is reversed and booked again correctly, and both stay visible. Then Decuma asks whether to book it this way from now on and, if you say yes, creates a rule."
+      ]
+     },
+     {
+      "p": [
+       "Deine Regeln siehst und änderst du jederzeit. Was eine Regel sicher erkennt, bucht Decuma ohne Rückfrage; wo etwas unklar ist, fragt es kurz nach.",
+       "You can see and change your rules at any time. What a rule recognises for certain, Decuma books without asking; where something is unclear, it asks briefly."
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Was zählt, gibst du frei",
+     "What matters, you release"
+    ],
+    "konto": "Freigabe",
+    "visual": "freigabe",
+    "bloecke": [
+     {
+      "p": [
+       "Belege buchen und Zahlungen zuordnen darf Decuma nach deinen Regeln. Was Geld bewegt oder ans Finanzamt geht, legt es dir vor: mit den Zahlen, den Buchungen dahinter und der Frist. Erst deine Freigabe schickt es los.",
+       "Decuma may book Belege and match payments by your rules. Anything that moves money or goes to the tax office it puts to you: with the figures, the bookings behind them and the deadline. Only your release sends it off."
+      ]
+     },
+     {
+      "kontrast": [
+       "Freigeben kann nur jemand aus deinem Unternehmen. Nie die KI.",
+       "Only someone from your business can release. Never the AI."
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Auch in ChatGPT und Claude",
+     "In ChatGPT and Claude too"
+    ],
+    "konto": "MCP",
+    "bloecke": [
+     {
+      "zeilen": [
+       {
+        "h": [
+         "Einmal verbinden, überall arbeiten",
+         "Connect once, work anywhere"
+        ],
+        "t": [
+         "Decuma unterstützt MCP. Verbinde dein Decuma einmal mit ChatGPT, Claude oder einem anderen KI-Assistenten und gib ihm dieselben Aufgaben wie im Chat von Decuma. Es gelten dieselben Regeln und dieselben Freigaben.",
+         "Decuma supports MCP. Connect your Decuma once to ChatGPT, Claude or another AI assistant and give it the same tasks as in Decuma's chat. The same rules and the same releases apply."
+        ],
+        "href": "#/web/entwickler",
+        "mehr": [
+         "Zu API und MCP",
+         "To API and MCP"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "stufe": [
+   "Die Decuma-KI ist in jedem Tarif dabei: in Kostenlos inklusive, in Pro mit mehr Power, in Max mit voller Power, mit Agent und Decuma Bots.",
+   "Decuma AI comes with every plan: included in Kostenlos, with more power in Pro, with full power in Max, with the agent and Decuma Bots."
+  ],
+  "faq": [
+   {
+    "q": [
+     "Bucht die KI ohne mich?",
+     "Does the AI book without me?"
+    ],
+    "a": [
+     "Nur, was deine Regeln sicher abdecken, und jede Buchung steht mit Grund im Verlauf. Wo etwas unklar ist, fragt Decuma kurz nach. Was Geld bewegt oder ans Finanzamt geht, passiert nie ohne deine Freigabe.",
+     "Only what your rules cover for certain, and every booking is in the history with its reason. Where something is unclear, Decuma asks briefly. Nothing that moves money or goes to the tax office happens without your release."
+    ]
+   },
+   {
+    "q": [
+     "Woher weiß Decuma, wie gebucht wird?",
+     "How does Decuma know how to book?"
+    ],
+    "a": [
+     "Aus festen Regeln mit Quelle: Jede Kennzahl, jeder Steuersatz und jede Frist kommt aus dem Gesetz oder einer Anweisung der Finanzverwaltung und steht in der Knowledge Base, mit Abrufdatum. Dazu kommen deine eigenen Regeln. Die KI liest Belege und versteht deine Sätze; gebucht wird nach den Regeln.",
+     "From fixed rules with sources: every Kennzahl, tax rate and deadline comes from the law or a tax authority instruction and is in the Knowledge Base, with its retrieval date. Your own rules come on top. The AI reads Belege and understands your sentences; the booking follows the rules."
+    ]
+   },
+   {
+    "q": [
+     "Was ist, wenn Decuma falsch liegt?",
+     "What if Decuma gets it wrong?"
+    ],
+    "a": [
+     "Du sagst es im Chat. Die Buchung wird storniert und richtig neu gebucht, beide bleiben sichtbar, und auf Wunsch wird aus deiner Korrektur eine Regel.",
+     "You say so in the chat. The booking is reversed and booked again correctly, both stay visible, and if you like your correction becomes a rule."
+    ]
+   },
+   {
+    "q": [
+     "Was passiert mit meinen Daten?",
+     "What happens to my data?"
+    ],
+    "a": [
+     "Deine Daten liegen auf Servern in Deutschland und gehören dir; du kannst sie jederzeit vollständig exportieren. Mit deinen Daten wird kein Modell trainiert. Wer in unserem Auftrag Daten verarbeitet, sagen wir dir auf Anfrage.",
+     "Your data are on servers in Germany and belong to you; you can export all of them at any time. No model is trained on your data. Who processes data on our behalf, we tell you on request."
+    ]
+   },
+   {
+    "q": [
+     "Kann ich Decuma in ChatGPT oder Claude nutzen?",
+     "Can I use Decuma in ChatGPT or Claude?"
+    ],
+    "a": [
+     "Ja. Decuma unterstützt MCP, den offenen Standard, über den KI-Assistenten mit anderen Programmen arbeiten. Du verbindest dein Decuma einmal; danach gelten dort dieselben Regeln und Freigaben wie in der App.",
+     "Yes. Decuma supports MCP, the open standard through which AI assistants work with other software. You connect your Decuma once; after that the same rules and releases apply there as in the app."
+    ]
+   },
+   {
+    "q": [
+     "Muss ich Buchhaltung können?",
+     "Do I need to know bookkeeping?"
+    ],
+    "a": [
+     "Nein. Du schreibst, was passiert ist, Decuma übersetzt es in Buchungen und erklärt jeden Schritt in klaren Sätzen. Kontonummern siehst du nur, wenn du willst.",
+     "No. You write what happened, Decuma turns it into bookings and explains every step in plain sentences. You see account numbers only if you want to."
+    ]
+   }
+  ],
+  "band": [
+   "Probier es mit deinem Unternehmen aus.",
+   "Try it with your own business."
+  ]
+ },
  "rechnungen": {
   "titel": [
-   "Rechnungen und E-Rechnung schreiben | Decuma",
-   "Invoices and e-invoicing | Decuma"
+   "Rechnungen und E-Rechnungen schreiben | Decuma",
+   "Write invoices and e-invoices | Decuma"
   ],
   "h1": [
    "Rechnungen und E-Rechnungen in einer Minute.",
@@ -1299,7 +1558,7 @@
  "jahresabschluss": {
   "titel": [
    "Jahresabschluss, E-Bilanz, KSt und GewSt | Decuma",
-   "Annual accounts, E-Bilanz, corporate and trade tax | Decuma"
+   "Annual accounts, E-Bilanz, KSt and GewSt | Decuma"
   ],
   "h1": [
    "Das Jahr ist gebucht. Der Abschluss ist nur noch ein Schritt.",
@@ -1658,8 +1917,8 @@
  },
  "privat": {
   "titel": [
-   "Einkommensteuererklärung für {privat} | Decuma",
-   "Income tax return for {privat} | Decuma"
+   "Einkommensteuererklärung ohne Abo | Decuma",
+   "Income tax return, no subscription | Decuma"
   ],
   "h1": [
    "Deine Steuererklärung. Ohne Abo, ohne Formulardeutsch.",
@@ -2562,12 +2821,12 @@
           "Cost"
          ],
          [
-          "0 €, dein Server",
-          "€0, your server"
+          "{null}, dein Server",
+          "{null}, your server"
          ],
          [
-          "ab 0 €, siehe Preise",
-          "from €0, see pricing"
+          "ab {null}, siehe Preise",
+          "from {null}, see pricing"
          ]
         ],
         [
@@ -2708,5 +2967,2688 @@
    "Self-host or let us run it. You decide."
   ],
   "bandCall": true
+ },
+ "fuer-gmbh": {
+  "titel": [
+   "Buchhaltung und Steuern für deine GmbH | Decuma",
+   "Bookkeeping and taxes for your GmbH | Decuma"
+  ],
+  "h1": [
+   "Deine GmbH, ohne Zettelwirtschaft.",
+   "Your GmbH, without the paper chase."
+  ],
+  "sub": [
+   "Buchhaltung, Voranmeldung, Jahresabschluss und Steuererklärungen deiner GmbH an einem Ort. Decuma bereitet vor, du gibst frei.",
+   "Your GmbH's bookkeeping, VAT returns, annual accounts and tax returns in one place. Decuma prepares, you release."
+  ],
+  "cta1": {
+   "t": [
+    "Kostenlos starten",
+    "Start for free"
+   ],
+   "href": "#/registrieren"
+  },
+  "ablauf": {
+   "titel": [
+    "Gewinnausschüttung 2026",
+    "Profit distribution 2026"
+   ],
+   "zustand": [
+    [
+     "In Arbeit",
+     "In progress"
+    ],
+    [
+     "Bereit zur Freigabe",
+     "Ready for release"
+    ]
+   ],
+   "blatt": {
+    "kopf": [
+     "Beschluss",
+     "Resolution"
+    ],
+    "unter": [
+     "Studio Halbton GmbH · 14.06.2027",
+     "Studio Halbton GmbH · 14 Jun 2027"
+    ],
+    "zeilen": [
+     [
+      [
+       "Ausschüttung",
+       "Distribution"
+      ],
+      "40.000"
+     ],
+     [
+      [
+       "Zahltag",
+       "Pay day"
+      ],
+      "30.06."
+     ]
+    ],
+    "fuss": [
+     "an Jana Petersen, aus dem Gewinn 2026",
+     "to Jana Petersen, from the 2026 profit"
+    ]
+   },
+   "schritte": [
+    [
+     [
+      "Beschluss wird gelesen",
+      "Reading the resolution"
+     ],
+     [
+      "Beschluss: 40.000,00 € an Jana Petersen",
+      "Resolution: €40,000.00 to Jana Petersen"
+     ]
+    ],
+    [
+     [
+      "Abzug wird gerechnet",
+      "Working out the withholding"
+     ],
+     [
+      "Kapitalertragsteuer 25 % und Solidaritätszuschlag",
+      "Kapitalertragsteuer 25% and solidarity surcharge"
+     ]
+    ],
+    [
+     [
+      "Anmeldung wird vorbereitet",
+      "Preparing the return"
+     ],
+     [
+      "Kapitalertragsteuer-Anmeldung zum Tag der Auszahlung",
+      "Kapitalertragsteuer return for the day of payment"
+     ]
+    ],
+    [
+     [
+      "Buchungen werden vorbereitet",
+      "Preparing the bookings"
+     ],
+     [
+      "Beschluss, Einbehalt, Auszahlung und Steuerbescheinigung",
+      "Resolution, withholding, payment and tax certificate"
+     ]
+    ]
+   ],
+   "felder": [
+    [
+     [
+      "Ausschüttung",
+      "Distribution"
+     ],
+     [
+      "40.000,00 €",
+      "€40,000.00"
+     ],
+     1
+    ],
+    [
+     [
+      "Kapitalertragsteuer",
+      "Kapitalertragsteuer"
+     ],
+     [
+      "10.000,00 €",
+      "€10,000.00"
+     ],
+     2
+    ],
+    [
+     [
+      "Solidaritätszuschlag",
+      "Solidarity surcharge"
+     ],
+     [
+      "550,00 €",
+      "€550.00"
+     ],
+     2
+    ],
+    [
+     [
+      "Auszahlung an Jana",
+      "Paid to Jana"
+     ],
+     [
+      "29.450,00 €",
+      "€29,450.00"
+     ],
+     2
+    ],
+    [
+     [
+      "Steuerbescheinigung",
+      "Tax certificate"
+     ],
+     [
+      "Muster II, fertig",
+      "Muster II, ready"
+     ],
+     4
+    ]
+   ],
+   "ende": [
+    "Bereit. Anmeldung und Auszahlung gibst du frei.",
+    "Ready. You release the return and the payment."
+   ]
+  },
+  "schritte": [
+   [
+    "Verbinden: Bankkonto importieren, Belege per Foto, PDF oder Mail.",
+    "Connect: import your bank account, Belege by photo, PDF or e-mail."
+   ],
+   [
+    "Laufend buchen: doppelte Buchführung, ohne dass du Kontonummern lernst.",
+    "Book as you go: double-entry bookkeeping without learning account numbers."
+   ],
+   [
+    "Melden: Voranmeldung und Zusammenfassende Meldung aus deinen Buchungen.",
+    "File: VAT return and EC Sales List from your bookings."
+   ],
+   [
+    "Abschließen: Jahresabschluss, Körperschaft- und Gewerbesteuer aus denselben Zahlen.",
+    "Close: annual accounts, corporate and trade tax from the same numbers."
+   ]
+  ],
+  "abschnitte": [
+   {
+    "h": [
+     "Was Decuma für deine GmbH erledigt",
+     "What Decuma does for your GmbH"
+    ],
+    "bloecke": [
+     {
+      "zeilen": [
+       {
+        "h": [
+         "Buchhaltung",
+         "Bookkeeping"
+        ],
+        "t": [
+         "Eine GmbH bucht doppelt. Decuma liest Belege, ordnet Zahlungen zu und bucht nach SKR04 oder SKR03, mit Journal, BWA und offenen Posten.",
+         "A GmbH books double-entry. Decuma reads Belege, matches payments and books on SKR04 or SKR03, with journal, BWA and open items."
+        ],
+        "href": "#/web/buchhaltung",
+        "mehr": [
+         "Zur Buchhaltung",
+         "To bookkeeping"
+        ]
+       },
+       {
+        "h": [
+         "Rechnungen",
+         "Invoices"
+        ],
+        "t": [
+         "Rechnungen und E-Rechnungen schreiben, Zahlungseingänge im Blick, Mahnungen, wenn es sein muss.",
+         "Write invoices and e-invoices, keep an eye on incoming payments, send reminders when needed."
+        ],
+        "href": "#/web/rechnungen",
+        "mehr": [
+         "Zu den Rechnungen",
+         "To invoices"
+        ]
+       },
+       {
+        "h": [
+         "Umsatzsteuer",
+         "VAT"
+        ],
+        "t": [
+         "Voranmeldung und Zusammenfassende Meldung aus deinen Buchungen, jede Kennzahl mit den Buchungen dahinter.",
+         "VAT return and EC Sales List from your bookings, every Kennzahl with the bookings behind it."
+        ],
+        "href": "#/web/umsatzsteuer",
+        "mehr": [
+         "Zur Umsatzsteuer",
+         "To VAT"
+        ]
+       },
+       {
+        "h": [
+         "Jahresabschluss und Steuern",
+         "Year-end and taxes"
+        ],
+        "t": [
+         "Bilanz und GuV nach HGB, E-Bilanz, Körperschaft- und Gewerbesteuererklärung, Datei für die Offenlegung.",
+         "Bilanz and GuV under HGB, E-Bilanz, corporate and trade tax returns, file for publication."
+        ],
+        "href": "#/web/jahresabschluss",
+        "mehr": [
+         "Zum Jahresabschluss",
+         "To the year-end"
+        ]
+       },
+       {
+        "h": [
+         "Gründung",
+         "Founding"
+        ],
+        "t": [
+         "Neue GmbH? Decuma füllt den Fragebogen zur steuerlichen Erfassung vor und stellt die Eröffnungsbilanz auf.",
+         "New GmbH? Decuma prefills the tax registration questionnaire and draws up the opening balance sheet."
+        ],
+        "href": "#/web/gruendung",
+        "mehr": [
+         "Zur Gründung",
+         "To founding"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Dein Gehalt als Geschäftsführer",
+     "Your salary as managing director"
+    ],
+    "konto": "6020 Gehälter",
+    "flag": "lohn",
+    "bloecke": [
+     {
+      "p": [
+       "Decuma rechnet dein Gehalt ab, mit Lohnsteuer, Sozialversicherung, Lohnsteuer-Anmeldung und den Meldungen. Die Buchungen landen direkt im Journal.",
+       "Decuma runs your payroll, with wage tax, social security, the Lohnsteuer-Anmeldung and the reports. The bookings go straight into the journal."
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fristen",
+    "h": [
+     "Pflichten und Fristen",
+     "Duties and deadlines"
+    ],
+    "konto": "§ 264 HGB",
+    "bloecke": [
+     {
+      "fristen": [
+       [
+        [
+         "Umsatzsteuer-Voranmeldung",
+         "VAT return"
+        ],
+        [
+         "am 10. Tag nach Ende des Monats oder Quartals; mit Dauerfristverlängerung einen Monat später",
+         "on the 10th day after the end of the month or quarter; one month later with a permanent extension"
+        ]
+       ],
+       [
+        [
+         "Jahresabschluss aufstellen",
+         "Draw up the annual accounts"
+        ],
+        [
+         "in den ersten drei Monaten des neuen Jahres; eine kleine GmbH darf sich bis zu sechs Monate Zeit lassen, wenn das einem ordnungsgemäßen Geschäftsgang entspricht",
+         "within the first three months of the new year; a small GmbH may take up to six months if that is in line with orderly business"
+        ]
+       ],
+       [
+        [
+         "Jahresabschluss feststellen",
+         "Adopt the annual accounts"
+        ],
+        [
+         "durch die Gesellschafter, bei einer kleinen GmbH innerhalb von elf Monaten",
+         "by the shareholders, within eleven months for a small GmbH"
+        ]
+       ],
+       [
+        [
+         "Offenlegen",
+         "Publish"
+        ],
+        [
+         "beim Unternehmensregister spätestens ein Jahr nach dem Stichtag; eine Kleinst-GmbH darf ihre Bilanz hinterlegen",
+         "with the company register at the latest one year after the balance sheet date; a micro GmbH may deposit its Bilanz"
+        ]
+       ],
+       [
+        [
+         "Körperschaft-, Gewerbe- und Umsatzsteuererklärung 2026",
+         "Corporate, trade and annual VAT returns 2026"
+        ],
+        [
+         "bis 2. August 2027; mit Steuerberater bis 29. Februar 2028",
+         "by 2 August 2027; with a tax adviser by 29 February 2028"
+        ]
+       ],
+       [
+        [
+         "Kapitalertragsteuer bei einer Ausschüttung",
+         "Kapitalertragsteuer on a distribution"
+        ],
+        [
+         "anmelden und abführen am Tag der Auszahlung",
+         "file and pay on the day of payment"
+        ]
+       ]
+      ]
+     },
+     {
+      "p": [
+       "Decuma trägt jede dieser Fristen für dein Unternehmen ein, erinnert dich rechtzeitig und zeigt, was bis dahin noch fehlt.",
+       "Decuma enters each of these deadlines for your business, reminds you in time and shows what is still missing."
+      ]
+     }
+    ]
+   }
+  ],
+  "tarife": {
+   "h": [
+    "Welcher Tarif passt",
+    "Which plan fits"
+   ],
+   "lead": [
+    "Für den laufenden Betrieb deiner GmbH reicht Kostenlos: Buchhaltung, Rechnungen und Voranmeldung. Für Jahresabschluss und Steuererklärungen nimmst du Pro mit jährlicher Abrechnung. Max, wenn der Agent die Kleinarbeit übernehmen soll.",
+    "For the day-to-day of your GmbH, Kostenlos is enough: bookkeeping, invoices and the VAT return. For the annual accounts and tax returns you take Pro on yearly billing. Max if the agent should take over the small stuff."
+   ]
+  },
+  "dfy": true,
+  "faq": [
+   {
+    "q": [
+     "Brauche ich für meine GmbH einen Steuerberater?",
+     "Do I need a tax adviser for my GmbH?"
+    ],
+    "a": [
+     "Nein, eine Pflicht gibt es nicht. Deine GmbH darf ihre Bücher, ihren Jahresabschluss und ihre Steuererklärungen selbst machen. Fragen, die von deinem Fall abhängen, markiert Decuma für dich. Und wenn du magst, lädst du deinen Berater ein.",
+     "No, there is no obligation. Your GmbH may do its books, its annual accounts and its tax returns itself. Questions that depend on your case are flagged for you. And if you like, you invite your adviser."
+    ]
+   },
+   {
+    "q": [
+     "Muss meine GmbH doppelt buchen?",
+     "Does my GmbH have to use double-entry bookkeeping?"
+    ],
+    "a": [
+     "Ja. Eine GmbH ist Kaufmann kraft Gesetzes und muss Bücher führen und bilanzieren; eine Einnahmenüberschussrechnung reicht nicht. Decuma bucht doppelt, du musst dafür keine Kontonummern kennen.",
+     "Yes. A GmbH is a merchant by law and must keep books and draw up a balance sheet; a cash-basis statement is not enough. Decuma books double-entry, and you need no account numbers for it."
+    ]
+   },
+   {
+    "q": [
+     "Was gehört zum Jahresabschluss meiner GmbH?",
+     "What makes up my GmbH's annual accounts?"
+    ],
+    "a": [
+     "Bilanz und Gewinn- und Verlustrechnung, bei einer kleinen GmbH auch ein Anhang. Eine Kleinst-GmbH braucht keinen Anhang, wenn wenige Angaben unter der Bilanz stehen. Decuma bestimmt deine Größenklasse und stellt alles auf.",
+     "Bilanz and GuV, and for a small GmbH a note as well. A micro GmbH needs no note if a few disclosures sit under the Bilanz. Decuma works out your size class and draws it all up."
+    ]
+   },
+   {
+    "q": [
+     "Wie zahle ich mir Gewinn aus?",
+     "How do I pay myself a profit?"
+    ],
+    "a": [
+     "Mit einem Gesellschafterbeschluss. Am Tag der Auszahlung behält die GmbH 25 % Kapitalertragsteuer und den Solidaritätszuschlag darauf ein und meldet beides an. Decuma rechnet den Abzug, bucht alles und erstellt die Steuerbescheinigung. Ob und wie viel du ausschüttest, entscheidest du.",
+     "With a shareholders' resolution. On the day of payment the GmbH withholds 25% Kapitalertragsteuer and the solidarity surcharge on it and files both. Decuma works out the withholding, books everything and creates the tax certificate. Whether and how much you distribute is your decision."
+    ]
+   },
+   {
+    "q": [
+     "Kann ich mitten im Jahr wechseln?",
+     "Can I switch in the middle of the year?"
+    ],
+    "a": [
+     "Ja. Du ziehst deine Bücher aus DATEV, lexoffice, sevdesk oder Tabellen um, in jedem Tarif und ohne Aufpreis. Decuma übernimmt Salden und Buchungen und macht dort weiter.",
+     "Yes. You move your books from DATEV, lexoffice, sevdesk or spreadsheets, in every plan and at no extra cost. Decuma takes over balances and bookings and carries on from there."
+    ]
+   },
+   {
+    "q": [
+     "Was kostet Decuma für eine GmbH?",
+     "What does Decuma cost for a GmbH?"
+    ],
+    "a": [
+     "Buchhaltung, Rechnungen und Voranmeldung sind kostenlos. Jahresabschluss und Steuererklärungen gibt es in Pro mit jährlicher Abrechnung, für {projahr} im Jahr. Ein Preis je Unternehmen, gleich für jede Rechtsform.",
+     "Bookkeeping, invoices and the VAT return are free. Annual accounts and tax returns come with Pro on yearly billing, for {projahr} a year. One price per business, the same for every legal form."
+    ]
+   }
+  ],
+  "band": [
+   "Probier es mit deinem Unternehmen aus.",
+   "Try it with your own business."
+  ]
+ },
+ "fuer-ug": {
+  "titel": [
+   "Buchhaltung und Steuern für deine UG | Decuma",
+   "Bookkeeping and taxes for your UG | Decuma"
+  ],
+  "h1": [
+   "Deine UG, von der ersten Buchung bis zur Rücklage.",
+   "Your UG, from the first booking to the reserve."
+  ],
+  "sub": [
+   "Decuma bucht für deine UG wie für eine große GmbH, stellt den Jahresabschluss auf und bildet die gesetzliche Rücklage, ohne dass du nachrechnen musst.",
+   "Decuma books for your UG like for a big GmbH, draws up the annual accounts and forms the statutory reserve without you doing the maths."
+  ],
+  "cta1": {
+   "t": [
+    "Kostenlos starten",
+    "Start for free"
+   ],
+   "href": "#/registrieren"
+  },
+  "ablauf": {
+   "titel": [
+    "Jahresabschluss 2026",
+    "Year-end 2026"
+   ],
+   "zustand": [
+    [
+     "Offen",
+     "Open"
+    ],
+    [
+     "Aufgestellt",
+     "Drawn up"
+    ]
+   ],
+   "blatt": {
+    "kopf": [
+     "Lumen Werkstatt UG",
+     "Lumen Werkstatt UG"
+    ],
+    "unter": [
+     "haftungsbeschränkt · 31.12.2026",
+     "haftungsbeschränkt · 31 Dec 2026"
+    ],
+    "zeilen": [
+     [
+      [
+       "Überschuss",
+       "Net income"
+      ],
+      "18.400"
+     ],
+     [
+      [
+       "Verlustvortrag",
+       "Loss b/f"
+      ],
+      "−2.600"
+     ]
+    ],
+    "summe": [
+     [
+      "Basis",
+      "Basis"
+     ],
+     "15.800"
+    ],
+    "fuss": [
+     "nach Steuerrückstellungen",
+     "after tax provisions"
+    ]
+   },
+   "schritte": [
+    [
+     [
+      "Jahresüberschuss wird übernommen",
+      "Taking over the net income"
+     ],
+     [
+      "Jahresüberschuss nach Steuerrückstellungen",
+      "Net income after tax provisions"
+     ]
+    ],
+    [
+     [
+      "Verlustvortrag wird abgezogen",
+      "Deducting the loss carried forward"
+     ],
+     [
+      "Verlustvortrag aus 2025 abgezogen",
+      "Loss carried forward from 2025 deducted"
+     ]
+    ],
+    [
+     [
+      "Rücklage wird gerechnet",
+      "Working out the reserve"
+     ],
+     [
+      "Ein Viertel in die gesetzliche Rücklage",
+      "A quarter into the statutory reserve"
+     ]
+    ],
+    [
+     [
+      "Buchung wird vorbereitet",
+      "Preparing the booking"
+     ],
+     [
+      "Gebucht: 7765 an 2930 Gesetzliche Rücklage",
+      "Booked: 7765 to 2930 statutory reserve"
+     ]
+    ]
+   ],
+   "felder": [
+    [
+     [
+      "Jahresüberschuss",
+      "Net income"
+     ],
+     [
+      "18.400,00 €",
+      "€18,400.00"
+     ],
+     1
+    ],
+    [
+     [
+      "Verlustvortrag",
+      "Loss carried forward"
+     ],
+     [
+      "2.600,00 €",
+      "€2,600.00"
+     ],
+     2
+    ],
+    [
+     [
+      "In die Rücklage",
+      "Into the reserve"
+     ],
+     [
+      "3.950,00 €",
+      "€3,950.00"
+     ],
+     3
+    ],
+    [
+     [
+      "Bilanzgewinn",
+      "Balance sheet profit"
+     ],
+     [
+      "11.850,00 €",
+      "€11,850.00"
+     ],
+     4
+    ]
+   ],
+   "ende": [
+    "Rücklage gebildet. Die Bilanz ist aufgestellt.",
+    "Reserve formed. The Bilanz is drawn up."
+   ]
+  },
+  "schritte": [
+   [
+    "Verbinden: Bankkonto importieren, Belege per Foto, PDF oder Mail.",
+    "Connect: import your bank account, Belege by photo, PDF or e-mail."
+   ],
+   [
+    "Laufend buchen: doppelt, nach SKR04 oder SKR03, mit allen Belegen.",
+    "Book as you go: double-entry, on SKR04 or SKR03, with every Beleg."
+   ],
+   [
+    "Melden: Voranmeldung und Zusammenfassende Meldung aus deinen Buchungen.",
+    "File: VAT return and EC Sales List from your bookings."
+   ],
+   [
+    "Abschließen: Jahresabschluss mit Rücklage, Körperschaft- und Gewerbesteuer.",
+    "Close: annual accounts with the reserve, corporate and trade tax."
+   ]
+  ],
+  "abschnitte": [
+   {
+    "id": "ruecklage",
+    "h": [
+     "Die Rücklage, richtig gerechnet",
+     "The reserve, worked out correctly"
+    ],
+    "konto": "2930 Gesetzliche Rücklage",
+    "visual": "bilanz",
+    "bloecke": [
+     {
+      "p": [
+       "Eine UG muss jedes Jahr ein Viertel ihres Jahresüberschusses in die gesetzliche Rücklage stellen, gemindert um einen Verlustvortrag aus dem Vorjahr. Das ist keine Wahl, und es passiert schon beim Aufstellen der Bilanz.",
+       "Every year a UG must put a quarter of its net income into the statutory reserve, less a loss carried forward from the prior year. That is not a choice, and it happens when the Bilanz is drawn up."
+      ]
+     },
+     {
+      "liste": [
+       [
+        "Decuma rechnet die Rücklage aus dem endgültigen Jahresüberschuss, nach den Steuerrückstellungen.",
+        "Decuma works out the reserve from the final net income, after the tax provisions."
+       ],
+       [
+        "Ein Verlustvortrag aus dem Vorjahr mindert sie, ein Gewinnvortrag erhöht sie nicht. In einem Verlustjahr wird nichts eingestellt.",
+        "A loss carried forward from the prior year reduces it; a profit carried forward does not increase it. In a loss year nothing goes in."
+       ],
+       [
+        "Die Bilanz zeigt danach den Bilanzgewinn, aus dem ihr ausschütten könnt.",
+        "The Bilanz then shows the balance sheet profit you can distribute from."
+       ],
+       [
+        "Ist im Jahr etwas anderes über den Verlustvortrag gelaufen, fragt Decuma nach, statt zu raten.",
+        "If anything else moved the loss carried forward during the year, Decuma asks instead of guessing."
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Was Decuma für deine UG erledigt",
+     "What Decuma does for your UG"
+    ],
+    "bloecke": [
+     {
+      "zeilen": [
+       {
+        "h": [
+         "Buchhaltung",
+         "Bookkeeping"
+        ],
+        "t": [
+         "Doppelte Buchführung, wie sie das Gesetz von der UG verlangt, ohne Kontonummern lernen zu müssen.",
+         "Double-entry bookkeeping as the law requires of a UG, without learning account numbers."
+        ],
+        "href": "#/web/buchhaltung",
+        "mehr": [
+         "Zur Buchhaltung",
+         "To bookkeeping"
+        ]
+       },
+       {
+        "h": [
+         "Umsatzsteuer",
+         "VAT"
+        ],
+        "t": [
+         "Voranmeldung und Zusammenfassende Meldung, jede Kennzahl mit den Buchungen dahinter.",
+         "VAT return and EC Sales List, every Kennzahl with the bookings behind it."
+        ],
+        "href": "#/web/umsatzsteuer",
+        "mehr": [
+         "Zur Umsatzsteuer",
+         "To VAT"
+        ]
+       },
+       {
+        "h": [
+         "Jahresabschluss und Steuern",
+         "Year-end and taxes"
+        ],
+        "t": [
+         "Bilanz und GuV mit Rücklage, E-Bilanz, Körperschaft- und Gewerbesteuererklärung, Datei für die Offenlegung.",
+         "Bilanz and GuV with the reserve, E-Bilanz, corporate and trade tax returns, file for publication."
+        ],
+        "href": "#/web/jahresabschluss",
+        "mehr": [
+         "Zum Jahresabschluss",
+         "To the year-end"
+        ]
+       },
+       {
+        "h": [
+         "Gründung",
+         "Founding"
+        ],
+        "t": [
+         "Fragebogen zur steuerlichen Erfassung und Eröffnungsbilanz für deine neue UG.",
+         "Tax registration questionnaire and opening balance sheet for your new UG."
+        ],
+        "href": "#/web/gruendung",
+        "mehr": [
+         "Zur Gründung",
+         "To founding"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fristen",
+    "h": [
+     "Pflichten und Fristen",
+     "Duties and deadlines"
+    ],
+    "konto": "§ 5a GmbHG",
+    "bloecke": [
+     {
+      "fristen": [
+       [
+        [
+         "Umsatzsteuer-Voranmeldung",
+         "VAT return"
+        ],
+        [
+         "am 10. Tag nach Ende des Monats oder Quartals; mit Dauerfristverlängerung einen Monat später",
+         "on the 10th day after the end of the month or quarter; one month later with a permanent extension"
+        ]
+       ],
+       [
+        [
+         "Jahresabschluss aufstellen, mit Rücklage",
+         "Draw up the annual accounts, with the reserve"
+        ],
+        [
+         "in den ersten drei Monaten des neuen Jahres, als kleine UG bis zu sechs Monate",
+         "within the first three months of the new year, up to six months as a small UG"
+        ]
+       ],
+       [
+        [
+         "Jahresabschluss feststellen",
+         "Adopt the annual accounts"
+        ],
+        [
+         "durch die Gesellschafter, bei einer kleinen UG innerhalb von elf Monaten",
+         "by the shareholders, within eleven months for a small UG"
+        ]
+       ],
+       [
+        [
+         "Offenlegen",
+         "Publish"
+        ],
+        [
+         "beim Unternehmensregister spätestens ein Jahr nach dem Stichtag; als Kleinstgesellschaft darfst du die Bilanz hinterlegen",
+         "with the company register at the latest one year after the balance sheet date; as a micro company you may deposit the Bilanz"
+        ]
+       ],
+       [
+        [
+         "Körperschaft-, Gewerbe- und Umsatzsteuererklärung 2026",
+         "Corporate, trade and annual VAT returns 2026"
+        ],
+        [
+         "bis 2. August 2027; mit Steuerberater bis 29. Februar 2028",
+         "by 2 August 2027; with a tax adviser by 29 February 2028"
+        ]
+       ]
+      ]
+     },
+     {
+      "p": [
+       "Decuma trägt jede dieser Fristen für dein Unternehmen ein, erinnert dich rechtzeitig und zeigt, was bis dahin noch fehlt.",
+       "Decuma enters each of these deadlines for your business, reminds you in time and shows what is still missing."
+      ]
+     }
+    ]
+   }
+  ],
+  "tarife": {
+   "h": [
+    "Welcher Tarif passt",
+    "Which plan fits"
+   ],
+   "lead": [
+    "Die meisten UGs starten mit Kostenlos: Buchhaltung, Rechnungen und Voranmeldung. Für den Jahresabschluss mit Rücklage und die Steuererklärungen nimmst du Pro mit jährlicher Abrechnung.",
+    "Most UGs start with Kostenlos: bookkeeping, invoices and the VAT return. For the annual accounts with the reserve and the tax returns you take Pro on yearly billing."
+   ]
+  },
+  "dfy": true,
+  "faq": [
+   {
+    "q": [
+     "Muss meine UG eine Rücklage bilden?",
+     "Does my UG have to form a reserve?"
+    ],
+    "a": [
+     "Ja. Ein Viertel des Jahresüberschusses, gemindert um einen Verlustvortrag aus dem Vorjahr, geht in die gesetzliche Rücklage. Decuma rechnet und bucht das beim Jahresabschluss.",
+     "Yes. A quarter of the net income, less a loss carried forward from the prior year, goes into the statutory reserve. Decuma works it out and books it at year end."
+    ]
+   },
+   {
+    "q": [
+     "Was passiert in einem Jahr mit Verlust?",
+     "What happens in a year with a loss?"
+    ],
+    "a": [
+     "Dann wird nichts in die Rücklage eingestellt. Der Verlust wird vorgetragen und mindert im nächsten Gewinnjahr den Betrag, aus dem die Rücklage gerechnet wird.",
+     "Then nothing goes into the reserve. The loss is carried forward and in the next profitable year reduces the amount the reserve is worked out from."
+    ]
+   },
+   {
+    "q": [
+     "Gilt für meine UG dasselbe wie für eine GmbH?",
+     "Does the same apply to my UG as to a GmbH?"
+    ],
+    "a": [
+     "Fast alles. Die UG ist eine GmbH mit kleinerem Stammkapital: Sie bucht doppelt, stellt einen Jahresabschluss auf, legt ihn offen und gibt dieselben Steuererklärungen ab. Dazu kommt die Rücklage.",
+     "Almost everything. A UG is a GmbH with a smaller share capital: it books double-entry, draws up annual accounts, publishes them and files the same tax returns. The reserve comes on top."
+    ]
+   },
+   {
+    "q": [
+     "Muss ich meinen Abschluss veröffentlichen?",
+     "Do I have to publish my accounts?"
+    ],
+    "a": [
+     "Ja, beim Unternehmensregister, spätestens ein Jahr nach dem Stichtag. Als Kleinstgesellschaft darfst du die Bilanz hinterlegen statt offenlegen. Wer die Frist versäumt, riskiert ein Ordnungsgeld. Decuma erstellt die Datei dafür.",
+     "Yes, with the company register, at the latest one year after the balance sheet date. As a micro company you may deposit the Bilanz instead of publishing it. Missing the deadline risks a fine. Decuma creates the file for it."
+    ]
+   },
+   {
+    "q": [
+     "Was kostet Decuma für eine UG?",
+     "What does Decuma cost for a UG?"
+    ],
+    "a": [
+     "Dasselbe wie für jede Rechtsform. Buchhaltung, Rechnungen und Voranmeldung sind kostenlos; Jahresabschluss und Steuererklärungen gibt es in Pro mit jährlicher Abrechnung, für {projahr} im Jahr.",
+     "The same as for every legal form. Bookkeeping, invoices and the VAT return are free; annual accounts and tax returns come with Pro on yearly billing, for {projahr} a year."
+    ]
+   }
+  ],
+  "band": [
+   "Probier es mit deinem Unternehmen aus.",
+   "Try it with your own business."
+  ]
+ },
+ "fuer-holding": {
+  "titel": [
+   "Abschluss und Steuern für deine Holding | Decuma",
+   "Accounts and taxes for your holding | Decuma"
+  ],
+  "h1": [
+   "Deine Holding: wenig Buchungen, alles richtig.",
+   "Your holding: few bookings, all of them right."
+  ],
+  "sub": [
+   "Dividenden deiner Töchter, der Jahresabschluss und die Steuererklärungen einer Gesellschaft ohne eigenes Geschäft. Decuma rechnet die Steuerfreiheit mit und legt dir alles zur Freigabe vor.",
+   "Your subsidiaries' dividends, the annual accounts and the tax returns of a company without operations of its own. Decuma works out the tax exemption and puts everything to you for release."
+  ],
+  "cta1": {
+   "t": [
+    "Kostenlos starten",
+    "Start for free"
+   ],
+   "href": "#/registrieren"
+  },
+  "ablauf": {
+   "titel": [
+    "Brenner Beteiligungs GmbH",
+    "Brenner Beteiligungs GmbH"
+   ],
+   "zustand": [
+    [
+     "In Arbeit",
+     "In progress"
+    ],
+    [
+     "Bereit für 2026",
+     "Ready for 2026"
+    ]
+   ],
+   "blatt": {
+    "kopf": [
+     "Steuerbescheinigung",
+     "Tax certificate"
+    ],
+    "unter": [
+     "Werkhaus Brenner GmbH · Muster II",
+     "Werkhaus Brenner GmbH · Muster II"
+    ],
+    "zeilen": [
+     [
+      [
+       "Kapitalerträge",
+       "Dividend"
+      ],
+      "40.000"
+     ],
+     [
+      [
+       "KapESt",
+       "KapESt"
+      ],
+      "10.000"
+     ],
+     [
+      [
+       "Soli",
+       "Soli"
+      ],
+      "550"
+     ]
+    ],
+    "fuss": [
+     "Zahltag 30.06.2027",
+     "paid 30 Jun 2027"
+    ]
+   },
+   "schritte": [
+    [
+     [
+      "Zahlung wird zugeordnet",
+      "Matching the payment"
+     ],
+     [
+      "Eingang 29.450,00 € zur Bescheinigung der Tochter",
+      "Receipt of €29,450.00 matched to the certificate"
+     ]
+    ],
+    [
+     [
+      "Dividende wird gebucht",
+      "Booking the dividend"
+     ],
+     [
+      "40.000,00 € auf 7000 Erträge aus Beteiligungen",
+      "€40,000.00 to 7000 income from investments"
+     ]
+    ],
+    [
+     [
+      "Steuerfreiheit wird gerechnet",
+      "Working out the exemption"
+     ],
+     [
+      "§ 8b KStG: 95 % bleiben außer Ansatz",
+      "§ 8b KStG: 95% stays out of the income"
+     ]
+    ],
+    [
+     [
+      "Gewerbesteuer wird geprüft",
+      "Checking trade tax"
+     ],
+     [
+      "Beteiligung ab 15 %: keine Hinzurechnung",
+      "Holding of 15% or more: no add-back"
+     ]
+    ],
+    [
+     [
+      "Abschluss wird aufgestellt",
+      "Drawing up the accounts"
+     ],
+     [
+      "Bilanz und GuV 2026, 14 Buchungen im Jahr",
+      "Bilanz and GuV 2026, 14 bookings in the year"
+     ]
+    ]
+   ],
+   "felder": [
+    [
+     [
+      "Beteiligungsertrag",
+      "Investment income"
+     ],
+     [
+      "40.000,00 €",
+      "€40,000.00"
+     ],
+     2
+    ],
+    [
+     [
+      "Anrechenbare Steuer",
+      "Creditable tax"
+     ],
+     [
+      "10.550,00 €",
+      "€10,550.00"
+     ],
+     2
+    ],
+    [
+     [
+      "Steuerfrei",
+      "Tax-exempt"
+     ],
+     [
+      "38.000,00 €",
+      "€38,000.00"
+     ],
+     3
+    ],
+    [
+     [
+      "Steuerpflichtig",
+      "Taxable"
+     ],
+     [
+      "2.000,00 €",
+      "€2,000.00"
+     ],
+     3
+    ],
+    [
+     [
+      "Jahresabschluss",
+      "Annual accounts"
+     ],
+     [
+      "aufgestellt",
+      "drawn up"
+     ],
+     5
+    ]
+   ],
+   "ende": [
+    "Fertig für die Erklärungen. Die einbehaltene Steuer wird angerechnet.",
+    "Ready for the returns. The withheld tax is credited."
+   ]
+  },
+  "schritte": [
+   [
+    "Verbinden: Bankkonto importieren, Beteiligungen mit Quote und Datum anlegen.",
+    "Connect: import your bank account, enter your holdings with share and date."
+   ],
+   [
+    "Zuordnen: Dividenden, Steuerbescheinigungen, Beschlüsse und Rechnungen an ihre Buchung.",
+    "Match: dividends, tax certificates, resolutions and invoices to their booking."
+   ],
+   [
+    "Abschließen: Bilanz und GuV, mit Beteiligungen und Beteiligungserträgen.",
+    "Close: Bilanz and GuV, with holdings and investment income."
+   ],
+   [
+    "Erklären: Körperschaft- und Gewerbesteuer mit § 8b KStG, E-Bilanz, Offenlegung.",
+    "File: corporate and trade tax with § 8b KStG, E-Bilanz, publication."
+   ]
+  ],
+  "abschnitte": [
+   {
+    "id": "dividenden",
+    "h": [
+     "Dividenden, richtig versteuert",
+     "Dividends, taxed correctly"
+    ],
+    "konto": "§ 8b KStG",
+    "bloecke": [
+     {
+      "p": [
+       "Hält deine Holding mindestens 10 % an einer Tochter, bleiben deren Dividenden bei der Körperschaftsteuer zu 95 % außer Ansatz. Bei der Gewerbesteuer zählt eine andere Grenze: 15 % zu Beginn des Jahres. Decuma kennt deine Quoten und rechnet beides.",
+       "If your holding owns at least 10% of a subsidiary, 95% of its dividends stay out of corporate tax. For trade tax a different threshold applies: 15% at the start of the year. Decuma knows your shares and works out both."
+      ]
+     },
+     {
+      "liste": [
+       [
+        "Die Kapitalertragsteuer, die die Tochter einbehalten hat, wird mit der Steuerbescheinigung auf deine Körperschaftsteuer angerechnet.",
+        "The Kapitalertragsteuer the subsidiary withheld is credited against your corporate tax with the tax certificate."
+       ],
+       [
+        "Gewinne aus dem Verkauf von Anteilen bleiben ebenfalls zu 95 % steuerfrei; Verluste daraus sind nicht abziehbar.",
+        "Gains from selling shares are also 95% tax-free; losses from it are not deductible."
+       ],
+       [
+        "Unter 10 % ist die Dividende voll steuerpflichtig. Decuma zeigt dir, welche Grenze für welche Beteiligung gilt.",
+        "Below 10% the dividend is fully taxable. Decuma shows you which threshold applies to which holding."
+       ]
+      ]
+     },
+     {
+      "kontrast": [
+       "Sonderfälle wie den Erwerb im laufenden Jahr oder Darlehen an die Tochter markiert Decuma für dich. Entscheiden tut es sie nicht.",
+       "Special cases such as an acquisition during the year or loans to the subsidiary are flagged for you. Decuma does not decide them."
+      ]
+     }
+    ]
+   },
+   {
+    "id": "umsatzsteuer",
+    "h": [
+     "Umsatzsteuer: Holding ist nicht gleich Holding",
+     "VAT: not every holding is the same"
+    ],
+    "konto": "§ 2 UStG",
+    "bloecke": [
+     {
+      "p": [
+       "Eine Gesellschaft, die nur Beteiligungen hält, ist keine Unternehmerin im Sinne der Umsatzsteuer: keine Voranmeldung, aber auch kein Vorsteuerabzug. Erbringt deine Holding Leistungen gegen Entgelt, etwa die Geschäftsführung für ihre Tochter, sieht das anders aus.",
+       "A company that only holds shares is not a business for VAT: no VAT return, but no input VAT deduction either. If your holding supplies services for a fee, such as managing its subsidiary, that changes."
+      ]
+     },
+     {
+      "p": [
+       "Decuma fragt ab, was deine Holding tut, und richtet Voranmeldung und Vorsteuer danach ein. Ob sie unternehmerisch tätig ist, markiert Decuma als Frage für dich oder deinen Berater.",
+       "Decuma asks what your holding does and sets up the VAT return and input VAT accordingly. Whether it acts as a business is flagged as a question for you or your adviser."
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Was Decuma für deine Holding erledigt",
+     "What Decuma does for your holding"
+    ],
+    "bloecke": [
+     {
+      "zeilen": [
+       {
+        "h": [
+         "Buchhaltung",
+         "Bookkeeping"
+        ],
+        "t": [
+         "Bank, Beteiligungen, Darlehen und Zinsen, die wenigen Rechnungen: doppelt gebucht, mit allen Belegen.",
+         "Bank, holdings, loans and interest, the few invoices: booked double-entry, with every Beleg."
+        ],
+        "href": "#/web/buchhaltung",
+        "mehr": [
+         "Zur Buchhaltung",
+         "To bookkeeping"
+        ]
+       },
+       {
+        "h": [
+         "Jahresabschluss und Steuern",
+         "Year-end and taxes"
+        ],
+        "t": [
+         "Bilanz und GuV, E-Bilanz, Körperschaft- und Gewerbesteuererklärung mit den Beteiligungserträgen, Datei für die Offenlegung.",
+         "Bilanz and GuV, E-Bilanz, corporate and trade tax returns with the investment income, file for publication."
+        ],
+        "href": "#/web/jahresabschluss",
+        "mehr": [
+         "Zum Jahresabschluss",
+         "To the year-end"
+        ]
+       },
+       {
+        "h": [
+         "Gründung",
+         "Founding"
+        ],
+        "t": [
+         "Neue Holding? Fragebogen zur steuerlichen Erfassung und Eröffnungsbilanz.",
+         "New holding? Tax registration questionnaire and opening balance sheet."
+        ],
+        "href": "#/web/gruendung",
+        "mehr": [
+         "Zur Gründung",
+         "To founding"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fristen",
+    "h": [
+     "Pflichten und Fristen",
+     "Duties and deadlines"
+    ],
+    "konto": "§ 325 HGB",
+    "bloecke": [
+     {
+      "fristen": [
+       [
+        [
+         "Jahresabschluss aufstellen",
+         "Draw up the annual accounts"
+        ],
+        [
+         "in den ersten drei Monaten, als kleine Gesellschaft bis zu sechs Monate",
+         "within the first three months, up to six months as a small company"
+        ]
+       ],
+       [
+        [
+         "Jahresabschluss feststellen",
+         "Adopt the annual accounts"
+        ],
+        [
+         "durch die Gesellschafter, als kleine Gesellschaft innerhalb von elf Monaten",
+         "by the shareholders, within eleven months as a small company"
+        ]
+       ],
+       [
+        [
+         "Offenlegen",
+         "Publish"
+        ],
+        [
+         "beim Unternehmensregister spätestens ein Jahr nach dem Stichtag; ob deine Holding als Kleinstgesellschaft nur hinterlegen darf, ist eine Frage für deinen Fall, Decuma markiert sie",
+         "with the company register at the latest one year after the balance sheet date; whether your holding may deposit only, as a micro company, depends on your case, and Decuma flags it"
+        ]
+       ],
+       [
+        [
+         "Körperschaft- und Gewerbesteuererklärung 2026",
+         "Corporate and trade tax returns 2026"
+        ],
+        [
+         "bis 2. August 2027; mit Steuerberater bis 29. Februar 2028",
+         "by 2 August 2027; with a tax adviser by 29 February 2028"
+        ]
+       ],
+       [
+        [
+         "Umsatzsteuer-Voranmeldung",
+         "VAT return"
+        ],
+        [
+         "nur, wenn deine Holding Unternehmerin ist",
+         "only if your holding is a business"
+        ]
+       ]
+      ]
+     },
+     {
+      "p": [
+       "Decuma trägt jede dieser Fristen für dein Unternehmen ein, erinnert dich rechtzeitig und zeigt, was bis dahin noch fehlt.",
+       "Decuma enters each of these deadlines for your business, reminds you in time and shows what is still missing."
+      ]
+     }
+    ]
+   }
+  ],
+  "tarife": {
+   "h": [
+    "Welcher Tarif passt",
+    "Which plan fits"
+   ],
+   "lead": [
+    "Für die Holding nimmst du Pro mit jährlicher Abrechnung: Jahresabschluss und Steuererklärungen sind darin enthalten. Jedes Unternehmen hat seinen eigenen Tarif; eines davon kann auf Kostenlos laufen, etwa deine Tochter, wenn sie den Abschluss anderswo macht.",
+    "For the holding you take Pro on yearly billing: annual accounts and tax returns are included. Each business has its own plan; one of them can run on Kostenlos, your subsidiary for instance, if it does its year-end elsewhere."
+   ]
+  },
+  "faq": [
+   {
+    "q": [
+     "Wie werden Dividenden in meiner Holding versteuert?",
+     "How are dividends taxed in my holding?"
+    ],
+    "a": [
+     "Ab 10 % Beteiligung zu Beginn des Jahres bleiben 95 % der Dividende bei der Körperschaftsteuer außer Ansatz; 5 % gelten als nicht abziehbare Ausgaben. Bei der Gewerbesteuer gilt das erst ab 15 %. Darunter ist die Dividende voll steuerpflichtig.",
+     "From a 10% holding at the start of the year, 95% of the dividend stays out of corporate tax; 5% count as non-deductible expenses. For trade tax this applies only from 15%. Below that the dividend is fully taxable."
+    ]
+   },
+   {
+    "q": [
+     "Was passiert mit der Kapitalertragsteuer, die die Tochter einbehält?",
+     "What happens to the Kapitalertragsteuer the subsidiary withholds?"
+    ],
+    "a": [
+     "Sie wird auf die Körperschaftsteuer und den Solidaritätszuschlag deiner Holding angerechnet, auch für den steuerfreien Teil. Dafür brauchst du die Steuerbescheinigung der Tochter; Decuma hängt sie an die Buchung.",
+     "It is credited against your holding's corporate tax and solidarity surcharge, also for the tax-exempt part. For that you need the subsidiary's tax certificate; Decuma attaches it to the booking."
+    ]
+   },
+   {
+    "q": [
+     "Ist der Verkauf von Anteilen steuerfrei?",
+     "Is selling shares tax-free?"
+    ],
+    "a": [
+     "Zu 95 %: Der Gewinn bleibt außer Ansatz, 5 % gelten als nicht abziehbar. Ein Verlust aus dem Verkauf ist dafür nicht abziehbar.",
+     "At 95%: the gain stays out of the income, 5% count as non-deductible. A loss from the sale, in turn, is not deductible."
+    ]
+   },
+   {
+    "q": [
+     "Welche Erklärungen gibt meine Holding ab?",
+     "Which returns does my holding file?"
+    ],
+    "a": [
+     "Körperschaft- und Gewerbesteuererklärung jedes Jahr, dazu die E-Bilanz. Eine Umsatzsteuererklärung nur, wenn deine Holding Unternehmerin ist. Für 2026 ist die Frist der 2. August 2027.",
+     "Corporate and trade tax returns every year, plus the E-Bilanz. An annual VAT return only if your holding is a business. For 2026 the deadline is 2 August 2027."
+    ]
+   },
+   {
+    "q": [
+     "Muss meine Holding ihren Abschluss veröffentlichen?",
+     "Does my holding have to publish its accounts?"
+    ],
+    "a": [
+     "Ja, beim Unternehmensregister. Ob sie dabei die Erleichterungen einer Kleinstgesellschaft nutzen darf, hängt bei einer Holding von ihrem Fall ab; Decuma markiert die Frage, statt sie zu entscheiden.",
+     "Yes, with the company register. Whether it may use the relief for micro companies depends, for a holding, on its case; Decuma flags the question instead of deciding it."
+    ]
+   },
+   {
+    "q": [
+     "Kann ich Holding und Tochter in einem Konto führen?",
+     "Can I run the holding and the subsidiary in one account?"
+    ],
+    "a": [
+     "Ja. Du wechselst zwischen deinen Unternehmen mit einem Klick; jedes hat seine eigenen Bücher und seinen eigenen Tarif.",
+     "Yes. You switch between your businesses with one click; each has its own books and its own plan."
+    ]
+   }
+  ],
+  "band": [
+   "Probier es mit deiner Holding aus.",
+   "Try it with your holding."
+  ]
+ },
+ "fuer-freiberufler": {
+  "titel": [
+   "Buchhaltung, EÜR und Steuern für Freiberufler | Decuma",
+   "Bookkeeping, EÜR and taxes for freelancers | Decuma"
+  ],
+  "h1": [
+   "Du arbeitest frei. Decuma rechnet mit.",
+   "You work freelance. Decuma does the maths."
+  ],
+  "sub": [
+   "Rechnungen, Belege, Voranmeldung, Einnahmenüberschussrechnung und deine Einkommensteuer an einem Ort. Und du weißt jederzeit, wie viel Steuer auf dich zukommt.",
+   "Invoices, Belege, VAT return, the cash-basis profit statement and your income tax in one place. And you know at any time how much tax is coming your way."
+  ],
+  "cta1": {
+   "t": [
+    "Kostenlos starten",
+    "Start for free"
+   ],
+   "href": "#/registrieren"
+  },
+  "ablauf": {
+   "titel": [
+    "Einkommensteuer 2026, Lea Hartwig",
+    "Income tax 2026, Lea Hartwig"
+   ],
+   "zustand": [
+    [
+     "Wird gerechnet",
+     "Calculating"
+    ],
+    [
+     "Fertig",
+     "Done"
+    ]
+   ],
+   "blatt": {
+    "kopf": [
+     "EÜR 2026",
+     "EÜR 2026"
+    ],
+    "unter": [
+     "Übersetzungen Hartwig",
+     "Übersetzungen Hartwig"
+    ],
+    "zeilen": [
+     [
+      [
+       "Einnahmen",
+       "Income"
+      ],
+      "78.400"
+     ],
+     [
+      [
+       "Ausgaben",
+       "Expenses"
+      ],
+      "−21.300"
+     ]
+    ],
+    "summe": [
+     [
+      "Gewinn",
+      "Profit"
+     ],
+     "57.100"
+    ],
+    "fuss": [
+     "aus deinen Buchungen",
+     "from your bookings"
+    ]
+   },
+   "schritte": [
+    [
+     [
+      "EÜR wird erstellt",
+      "Drawing up the EÜR"
+     ],
+     [
+      "EÜR 2026 aus deinen Buchungen",
+      "EÜR 2026 from your bookings"
+     ]
+    ],
+    [
+     [
+      "Anlage S wird gefüllt",
+      "Filling in Anlage S"
+     ],
+     [
+      "Gewinn als Einkünfte aus selbständiger Arbeit",
+      "Profit as income from self-employment"
+     ]
+    ],
+    [
+     [
+      "Abzüge werden übernommen",
+      "Taking over deductions"
+     ],
+     [
+      "Vorsorge und Sonderausgaben aus deinen Antworten",
+      "Provision and special expenses from your answers"
+     ]
+    ],
+    [
+     [
+      "Steuer wird gerechnet",
+      "Calculating the tax"
+     ],
+     [
+      "Einkommensteuer nach dem Tarif 2026",
+      "Income tax on the 2026 tariff"
+     ]
+    ],
+    [
+     [
+      "Vorauszahlungen werden abgezogen",
+      "Deducting prepayments"
+     ],
+     [
+      "Vier Vorauszahlungen à 2.400,00 € abgezogen",
+      "Four prepayments of €2,400.00 deducted"
+     ]
+    ]
+   ],
+   "felder": [
+    [
+     [
+      "Gewinn",
+      "Profit"
+     ],
+     [
+      "57.100,00 €",
+      "€57,100.00"
+     ],
+     1
+    ],
+    [
+     [
+      "Zu versteuern",
+      "Taxable income"
+     ],
+     [
+      "50.000,00 €",
+      "€50,000.00"
+     ],
+     3
+    ],
+    [
+     [
+      "Einkommensteuer",
+      "Income tax"
+     ],
+     [
+      "10.548,00 €",
+      "€10,548.00"
+     ],
+     4
+    ],
+    [
+     [
+      "Schon bezahlt",
+      "Already paid"
+     ],
+     [
+      "9.600,00 €",
+      "€9,600.00"
+     ],
+     5
+    ],
+    [
+     [
+      "Nachzahlung",
+      "Still to pay"
+     ],
+     [
+      "948,00 €",
+      "€948.00"
+     ],
+     5
+    ]
+   ],
+   "ende": [
+    "Erklärung mit EÜR und Anlage S fertig. Abgabe bis 2. August 2027.",
+    "Return with EÜR and Anlage S ready. Due by 2 August 2027."
+   ]
+  },
+  "schritte": [
+   [
+    "Rechnungen schreiben: mit E-Rechnung, Zahlungseingang im Blick.",
+    "Write invoices: with e-invoicing, incoming payments in view."
+   ],
+   [
+    "Belege erfassen: Foto, PDF oder Mail, Decuma ordnet sie zu.",
+    "Capture Belege: photo, PDF or e-mail, Decuma matches them."
+   ],
+   [
+    "Voranmeldung: aus deinen Buchungen, du gibst frei.",
+    "VAT return: from your bookings, you release it."
+   ],
+   [
+    "Jahresende: EÜR, Anlage S und Einkommensteuererklärung aus denselben Zahlen.",
+    "Year end: EÜR, Anlage S and income tax return from the same numbers."
+   ]
+  ],
+  "abschnitte": [
+   {
+    "id": "schaetzung",
+    "h": [
+     "Du weißt immer, was an Steuer kommt",
+     "You always know what tax is coming"
+    ],
+    "konto": "Rücklage",
+    "bloecke": [
+     {
+      "p": [
+       "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
+       "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+      ]
+     },
+     {
+      "liste": [
+       [
+        "Die Schätzung rechnet mit deinem Gewinn bis heute und deinen Vorauszahlungen.",
+        "The estimate uses your profit to date and your prepayments."
+       ],
+       [
+        "Ändert sich dein Gewinn deutlich, sagt Decuma dir, ob du die Vorauszahlungen anpassen lassen kannst.",
+        "If your profit changes a lot, Decuma tells you whether you can have your prepayments adjusted."
+       ],
+       [
+        "Am Jahresende wird aus der Schätzung deine Erklärung, mit denselben Zahlen.",
+        "At year end the estimate becomes your return, with the same numbers."
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Was Decuma für dich erledigt",
+     "What Decuma does for you"
+    ],
+    "bloecke": [
+     {
+      "zeilen": [
+       {
+        "h": [
+         "Rechnungen",
+         "Invoices"
+        ],
+        "t": [
+         "Honorarrechnungen mit allen Pflichtangaben, als PDF oder E-Rechnung, auch an Kunden im Ausland mit dem richtigen Hinweis.",
+         "Fee invoices with every required detail, as PDF or e-invoice, also to clients abroad with the right note."
+        ],
+        "href": "#/web/rechnungen",
+        "mehr": [
+         "Zu den Rechnungen",
+         "To invoices"
+        ]
+       },
+       {
+        "h": [
+         "Buchhaltung",
+         "Bookkeeping"
+        ],
+        "t": [
+         "Belege lesen, Zahlungen zuordnen, nach Zufluss und Abfluss buchen, wie es die Einnahmenüberschussrechnung will.",
+         "Read Belege, match payments, book by receipt and payment as the cash-basis statement wants."
+        ],
+        "href": "#/web/buchhaltung",
+        "mehr": [
+         "Zur Buchhaltung",
+         "To bookkeeping"
+        ]
+       },
+       {
+        "h": [
+         "Umsatzsteuer",
+         "VAT"
+        ],
+        "t": [
+         "Voranmeldung aus deinen Buchungen, oder gar keine, wenn du Kleinunternehmer bist.",
+         "VAT return from your bookings, or none at all if you are a small business."
+        ],
+        "href": "#/web/umsatzsteuer",
+        "mehr": [
+         "Zur Umsatzsteuer",
+         "To VAT"
+        ]
+       },
+       {
+        "h": [
+         "Einkommensteuer",
+         "Income tax"
+        ],
+        "t": [
+         "EÜR, Anlage S und deine ganze Erklärung, auch mit Einkünften außerhalb deines Berufs.",
+         "EÜR, Anlage S and your whole return, also with income outside your profession."
+        ],
+        "href": "#/web/privat",
+        "mehr": [
+         "Zur Einkommensteuer",
+         "To income tax"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fristen",
+    "h": [
+     "Pflichten und Fristen",
+     "Duties and deadlines"
+    ],
+    "konto": "§ 18 EStG",
+    "bloecke": [
+     {
+      "fristen": [
+       [
+        [
+         "Beginn melden",
+         "Report your start"
+        ],
+        [
+         "dem Finanzamt mit dem Fragebogen zur steuerlichen Erfassung, innerhalb eines Monats; eine Gewerbeanmeldung brauchst du nicht",
+         "to the tax office with the registration questionnaire, within one month; you need no trade registration"
+        ]
+       ],
+       [
+        [
+         "Umsatzsteuer-Voranmeldung",
+         "VAT return"
+        ],
+        [
+         "am 10. Tag nach Ende des Monats oder Quartals; als Kleinunternehmer keine (Vorjahr bis 25.000 €, laufendes Jahr bis 100.000 €)",
+         "on the 10th day after the end of the month or quarter; none as a small business (prior year up to €25,000, current year up to €100,000)"
+        ]
+       ],
+       [
+        [
+         "Einkommensteuer-Vorauszahlungen",
+         "Income tax prepayments"
+        ],
+        [
+         "10. März, 10. Juni, 10. September, 10. Dezember",
+         "10 March, 10 June, 10 September, 10 December"
+        ]
+       ],
+       [
+        [
+         "Einkommensteuererklärung 2026 mit EÜR",
+         "Income tax return 2026 with EÜR"
+        ],
+        [
+         "elektronisch bis 2. August 2027; mit Steuerberater bis 29. Februar 2028",
+         "electronically by 2 August 2027; with a tax adviser by 29 February 2028"
+        ]
+       ],
+       [
+        [
+         "Gewerbesteuer",
+         "Trade tax"
+        ],
+        [
+         "fällt für einen freien Beruf nicht an",
+         "does not apply to a liberal profession"
+        ]
+       ]
+      ]
+     },
+     {
+      "p": [
+       "Decuma trägt jede dieser Fristen für dein Unternehmen ein, erinnert dich rechtzeitig und zeigt, was bis dahin noch fehlt.",
+       "Decuma enters each of these deadlines for your business, reminds you in time and shows what is still missing."
+      ]
+     }
+    ]
+   }
+  ],
+  "tarife": {
+   "h": [
+    "Welcher Tarif passt",
+    "Which plan fits"
+   ],
+   "lead": [
+    "Rechnungen, Buchhaltung und Voranmeldung sind kostenlos. Mit Pro bei jährlicher Abrechnung ist deine Einkommensteuererklärung mit EÜR enthalten.",
+    "Invoices, bookkeeping and the VAT return are free. With Pro on yearly billing your income tax return with EÜR is included."
+   ]
+  },
+  "dfy": true,
+  "faq": [
+   {
+    "q": [
+     "Bin ich Freiberufler oder Gewerbetreibender?",
+     "Am I a freelancer or a trader?"
+    ],
+    "a": [
+     "Das hängt von deiner Tätigkeit ab: Katalogberufe wie Ärzte, Architekten oder Übersetzer sind frei, ebenso wissenschaftliche, künstlerische, schriftstellerische und unterrichtende Arbeit. Alles andere ist im Zweifel Gewerbe. Decuma fragt dich, zeigt die Folgen und die Fundstellen und rechnet mit deiner Antwort.",
+     "It depends on your work: listed professions such as doctors, architects or translators are liberal, as is scientific, artistic, writing and teaching work. Anything else is a trade when in doubt. Decuma asks you, shows the consequences and the references, and works with your answer."
+    ]
+   },
+   {
+    "q": [
+     "Reicht mir eine Einnahmenüberschussrechnung?",
+     "Is a cash-basis statement enough for me?"
+    ],
+    "a": [
+     "Ja. Als Freiberufler musst du keine Bilanz aufstellen, egal wie groß dein Umsatz ist. Decuma erstellt die EÜR mit der Anlage EÜR aus deinen Buchungen.",
+     "Yes. As a freelancer you need no balance sheet, however large your turnover. Decuma creates the EÜR with the Anlage EÜR from your bookings."
+    ]
+   },
+   {
+    "q": [
+     "Kann Decuma meine Einkommensteuererklärung machen?",
+     "Can Decuma do my income tax return?"
+    ],
+    "a": [
+     "Ja. Decuma bereitet sie mit EÜR und Anlage S vor, fragt nach dem, was nicht in deinen Büchern steht, und zeigt dir vorher, was herauskommt. Abgegeben wird sie nach deiner Freigabe.",
+     "Yes. Decuma prepares it with the EÜR and Anlage S, asks for what isn't in your books and shows you the result beforehand. It is filed after your release."
+    ]
+   },
+   {
+    "q": [
+     "Woher weiß ich, wie viel ich zurücklegen muss?",
+     "How do I know how much to set aside?"
+    ],
+    "a": [
+     "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
+     "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+    ]
+   },
+   {
+    "q": [
+     "Muss ich Umsatzsteuer berechnen?",
+     "Do I have to charge VAT?"
+    ],
+    "a": [
+     "Nicht, wenn du Kleinunternehmer bist: Umsatz im Vorjahr bis 25.000 € und im laufenden Jahr bis 100.000 €. Dann schreibst du Rechnungen ohne Umsatzsteuer mit dem Hinweis auf die Steuerbefreiung, und eine Voranmeldung entfällt. Decuma behält die Grenzen im Blick.",
+     "Not if you are a small business: turnover up to €25,000 in the prior year and up to €100,000 in the current year. Then you write invoices without VAT with the note on the exemption, and there is no VAT return. Decuma keeps an eye on the thresholds."
+    ]
+   },
+   {
+    "q": [
+     "Wir arbeiten zu zweit als GbR. Geht das auch?",
+     "We work as a partnership of two (GbR). Does that work?"
+    ],
+    "a": [
+     "Ja. Decuma führt die Bücher eurer GbR, macht die Voranmeldung und bereitet die Feststellungserklärung vor, die den Gewinn auf euch beide verteilt. Eure eigenen Einkommensteuererklärungen übernehmen den Anteil daraus.",
+     "Yes. Decuma keeps your GbR's books, does the VAT return and prepares the Feststellungserklärung that splits the profit between you. Your own income tax returns take over your share."
+    ]
+   }
+  ],
+  "band": [
+   "Probier es mit deinem nächsten Auftrag aus.",
+   "Try it with your next job."
+  ]
+ },
+ "fuer-selbststaendige": {
+  "titel": [
+   "Buchhaltung und Steuern für Selbstständige | Decuma",
+   "Bookkeeping and taxes for the self-employed | Decuma"
+  ],
+  "h1": [
+   "Dein Gewerbe läuft. Deine Steuern auch.",
+   "Your business is running. So are your taxes."
+  ],
+  "sub": [
+   "Decuma bucht, macht die Voranmeldung und rechnet laufend mit, wie viel Einkommen- und Gewerbesteuer auf dich zukommt. Du legst zurück, was Decuma vorschlägt, und bist vorbereitet.",
+   "Decuma books, does the VAT return and keeps working out how much income and trade tax is coming your way. You set aside what Decuma suggests and you are prepared."
+  ],
+  "cta1": {
+   "t": [
+    "Kostenlos starten",
+    "Start for free"
+   ],
+   "href": "#/registrieren"
+  },
+  "ablauf": {
+   "titel": [
+    "Steuerschätzung 2026, Fahrradwerkstatt Kranich",
+    "Tax estimate 2026, Fahrradwerkstatt Kranich"
+   ],
+   "zustand": [
+    [
+     "Wird gerechnet",
+     "Calculating"
+    ],
+    [
+     "Aktuell",
+     "Up to date"
+    ]
+   ],
+   "schritte": [
+    [
+     [
+      "Gewinn wird gelesen",
+      "Reading the profit"
+     ],
+     [
+      "Gewinn 2026 aus deinen Buchungen",
+      "Profit 2026 from your bookings"
+     ]
+    ],
+    [
+     [
+      "Gewerbesteuer wird gerechnet",
+      "Calculating trade tax"
+     ],
+     [
+      "24.500 € Freibetrag, Hebesatz deiner Gemeinde 400 %",
+      "€24,500 allowance, your municipality’s rate 400%"
+     ]
+    ],
+    [
+     [
+      "Einkommensteuer wird gerechnet",
+      "Calculating income tax"
+     ],
+     [
+      "Einkommensteuer nach dem Tarif 2026",
+      "Income tax on the 2026 tariff"
+     ]
+    ],
+    [
+     [
+      "Gewerbesteuer wird angerechnet",
+      "Crediting trade tax"
+     ],
+     [
+      "§ 35 EStG: Gewerbesteuer mindert die Einkommensteuer",
+      "§ 35 EStG: trade tax reduces income tax"
+     ]
+    ],
+    [
+     [
+      "Vorauszahlungen werden abgezogen",
+      "Deducting prepayments"
+     ],
+     [
+      "Vorauszahlungen 2026 abgezogen",
+      "Prepayments 2026 deducted"
+     ]
+    ]
+   ],
+   "felder": [
+    [
+     [
+      "Gewinn",
+      "Profit"
+     ],
+     [
+      "60.000,00 €",
+      "€60,000.00"
+     ],
+     1
+    ],
+    [
+     [
+      "Gewerbesteuer",
+      "Trade tax"
+     ],
+     [
+      "4.968,00 €",
+      "€4,968.00"
+     ],
+     2
+    ],
+    [
+     [
+      "Einkommensteuer",
+      "Income tax"
+     ],
+     [
+      "5.580,00 €",
+      "€5,580.00"
+     ],
+     4
+    ],
+    [
+     [
+      "Schon bezahlt",
+      "Already paid"
+     ],
+     [
+      "9.000,00 €",
+      "€9,000.00"
+     ],
+     5
+    ],
+    [
+     [
+      "Zurücklegen",
+      "Set aside"
+     ],
+     [
+      "1.548,00 €",
+      "€1,548.00"
+     ],
+     5
+    ]
+   ],
+   "ende": [
+    "Leg 1.548,00 € zurück. Decuma rechnet mit jeder Buchung neu.",
+    "Set aside €1,548.00. Decuma recalculates with every booking."
+   ]
+  },
+  "schritte": [
+   [
+    "Verbinden: Bankkonto importieren, Belege per Foto, PDF oder Mail.",
+    "Connect: import your bank account, Belege by photo, PDF or e-mail."
+   ],
+   [
+    "Laufend buchen: Decuma liest, ordnet zu und bucht nach deinen Regeln.",
+    "Book as you go: Decuma reads, matches and books by your rules."
+   ],
+   [
+    "Melden: Voranmeldung aus deinen Buchungen, du gibst frei.",
+    "File: VAT return from your bookings, you release it."
+   ],
+   [
+    "Vorsorgen: Steuerschätzung und Rücklage, am Jahresende die Erklärungen.",
+    "Plan ahead: tax estimate and reserve, the returns at year end."
+   ]
+  ],
+  "abschnitte": [
+   {
+    "id": "schaetzung",
+    "h": [
+     "Kein Bescheid überrascht dich mehr",
+     "No assessment takes you by surprise"
+    ],
+    "konto": "Rücklage",
+    "bloecke": [
+     {
+      "p": [
+       "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
+       "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+      ]
+     },
+     {
+      "liste": [
+       [
+        "Einkommensteuer und Gewerbesteuer in einer Zahl, mit der Anrechnung der Gewerbesteuer auf die Einkommensteuer.",
+        "Income tax and trade tax in one figure, with the trade tax credited against income tax."
+       ],
+       [
+        "Was du schon vorausgezahlt hast, ist abgezogen. Übrig bleibt, was du zurücklegen solltest.",
+        "What you have already prepaid is deducted. What remains is what you should set aside."
+       ],
+       [
+        "Liegt dein Gewinn deutlich über oder unter dem Vorjahr, sagt dir Decuma, ob sich ein Antrag auf neue Vorauszahlungen lohnt.",
+        "If your profit is well above or below the prior year, Decuma tells you whether applying for new prepayments is worth it."
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "gewerbesteuer",
+    "h": [
+     "Gewerbesteuer, ohne Schreck",
+     "Trade tax, without the scare"
+    ],
+    "konto": "§ 35 EStG",
+    "bloecke": [
+     {
+      "p": [
+       "Als Gewerbetreibender hast du einen Freibetrag von 24.500 € auf deinen Gewerbeertrag. Liegst du darüber, zahlst du Gewerbesteuer an deine Gemeinde, bekommst aber das Vierfache des Messbetrags auf deine Einkommensteuer angerechnet.",
+       "As a trader you have an allowance of €24,500 on your trade income. Above it you pay trade tax to your municipality, but four times the base amount is credited against your income tax."
+      ]
+     },
+     {
+      "p": [
+       "Decuma rechnet beides zusammen, mit dem Hebesatz deiner Gemeinde, und trägt die Vorauszahlungstermine der Gewerbesteuer ein.",
+       "Decuma works out both together, with your municipality's rate, and enters the trade tax prepayment dates."
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Was Decuma für dich erledigt",
+     "What Decuma does for you"
+    ],
+    "bloecke": [
+     {
+      "zeilen": [
+       {
+        "h": [
+         "Buchhaltung",
+         "Bookkeeping"
+        ],
+        "t": [
+         "Belege, Bank und Kasse, gebucht nach deinen Regeln; als Einnahmenüberschussrechnung oder mit Bilanz.",
+         "Belege, bank and cash, booked by your rules; as a cash-basis statement or with a balance sheet."
+        ],
+        "href": "#/web/buchhaltung",
+        "mehr": [
+         "Zur Buchhaltung",
+         "To bookkeeping"
+        ]
+       },
+       {
+        "h": [
+         "Rechnungen",
+         "Invoices"
+        ],
+        "t": [
+         "Rechnungen und E-Rechnungen, Angebote, Mahnungen, Zahlungen im Blick.",
+         "Invoices and e-invoices, quotes, reminders, payments in view."
+        ],
+        "href": "#/web/rechnungen",
+        "mehr": [
+         "Zu den Rechnungen",
+         "To invoices"
+        ]
+       },
+       {
+        "h": [
+         "Umsatzsteuer",
+         "VAT"
+        ],
+        "t": [
+         "Voranmeldung aus deinen Buchungen; als Kleinunternehmer behältst du die Grenzen im Blick.",
+         "VAT return from your bookings; as a small business you keep an eye on the thresholds."
+        ],
+        "href": "#/web/umsatzsteuer",
+        "mehr": [
+         "Zur Umsatzsteuer",
+         "To VAT"
+        ]
+       },
+       {
+        "h": [
+         "Einkommensteuer",
+         "Income tax"
+        ],
+        "t": [
+         "EÜR, Anlage G und deine Erklärung, dazu die Gewerbesteuererklärung, wenn du sie brauchst.",
+         "EÜR, Anlage G and your return, plus the trade tax return when you need it."
+        ],
+        "href": "#/web/privat",
+        "mehr": [
+         "Zur Einkommensteuer",
+         "To income tax"
+        ]
+       },
+       {
+        "h": [
+         "Gründung",
+         "Founding"
+        ],
+        "t": [
+         "Fragebogen zur steuerlichen Erfassung für dein Einzelunternehmen, vorausgefüllt.",
+         "Tax registration questionnaire for your sole proprietorship, prefilled."
+        ],
+        "href": "#/web/gruendung",
+        "mehr": [
+         "Zur Gründung",
+         "To founding"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fristen",
+    "h": [
+     "Pflichten und Fristen",
+     "Duties and deadlines"
+    ],
+    "konto": "§ 14 GewO",
+    "bloecke": [
+     {
+      "fristen": [
+       [
+        [
+         "Gewerbe anmelden",
+         "Register the trade"
+        ],
+        [
+         "bei der Gemeinde, gleichzeitig mit dem Beginn; danach der Fragebogen zur steuerlichen Erfassung innerhalb eines Monats",
+         "with the municipality, at the same time as you start; then the registration questionnaire within one month"
+        ]
+       ],
+       [
+        [
+         "Umsatzsteuer-Voranmeldung",
+         "VAT return"
+        ],
+        [
+         "am 10. Tag nach Ende des Monats oder Quartals; mit Dauerfristverlängerung einen Monat später",
+         "on the 10th day after the end of the month or quarter; one month later with a permanent extension"
+        ]
+       ],
+       [
+        [
+         "Einkommensteuer-Vorauszahlungen",
+         "Income tax prepayments"
+        ],
+        [
+         "10. März, 10. Juni, 10. September, 10. Dezember",
+         "10 March, 10 June, 10 September, 10 December"
+        ]
+       ],
+       [
+        [
+         "Gewerbesteuer-Vorauszahlungen",
+         "Trade tax prepayments"
+        ],
+        [
+         "15. Februar, 15. Mai, 15. August, 15. November, an die Gemeinde",
+         "15 February, 15 May, 15 August, 15 November, to the municipality"
+        ]
+       ],
+       [
+        [
+         "Gewerbesteuererklärung",
+         "Trade tax return"
+        ],
+        [
+         "nur bei einem Gewerbeertrag über 24.500 €, einem festgestellten Verlust oder auf Aufforderung",
+         "only with trade income above €24,500, an assessed loss or on request"
+        ]
+       ],
+       [
+        [
+         "Einkommensteuererklärung 2026 mit EÜR und Anlage G",
+         "Income tax return 2026 with EÜR and Anlage G"
+        ],
+        [
+         "elektronisch bis 2. August 2027; mit Steuerberater bis 29. Februar 2028",
+         "electronically by 2 August 2027; with a tax adviser by 29 February 2028"
+        ]
+       ]
+      ]
+     },
+     {
+      "p": [
+       "Decuma trägt jede dieser Fristen für dein Unternehmen ein, erinnert dich rechtzeitig und zeigt, was bis dahin noch fehlt.",
+       "Decuma enters each of these deadlines for your business, reminds you in time and shows what is still missing."
+      ]
+     }
+    ]
+   }
+  ],
+  "tarife": {
+   "h": [
+    "Welcher Tarif passt",
+    "Which plan fits"
+   ],
+   "lead": [
+    "Buchhaltung, Rechnungen und Voranmeldung sind kostenlos. Mit Pro bei jährlicher Abrechnung sind deine Einkommensteuer- und Gewerbesteuererklärung enthalten.",
+    "Bookkeeping, invoices and the VAT return are free. With Pro on yearly billing your income and trade tax returns are included."
+   ]
+  },
+  "dfy": true,
+  "faq": [
+   {
+    "q": [
+     "Wie viel Steuer muss ich zurücklegen?",
+     "How much tax do I need to set aside?"
+    ],
+    "a": [
+     "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
+     "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+    ]
+   },
+   {
+    "q": [
+     "Muss ich Gewerbesteuer zahlen?",
+     "Do I have to pay trade tax?"
+    ],
+    "a": [
+     "Erst, wenn dein Gewerbeertrag über dem Freibetrag von 24.500 € liegt. Und dann wird das Vierfache des Messbetrags auf deine Einkommensteuer angerechnet; bis zu einem Hebesatz von 400 % gleicht das die Gewerbesteuer rechnerisch aus.",
+     "Only once your trade income exceeds the allowance of €24,500. And then four times the base amount is credited against your income tax; up to a rate of 400% that offsets the trade tax arithmetically."
+    ]
+   },
+   {
+    "q": [
+     "Reicht mir die Einnahmenüberschussrechnung?",
+     "Is the cash-basis statement enough for me?"
+    ],
+    "a": [
+     "Meistens ja. Erst wenn das Finanzamt bei mehr als 800.000 € Umsatz oder mehr als 80.000 € Gewinn feststellt, dass du Bücher führen musst, und es dir mitteilt, brauchst du ab dem folgenden Jahr eine Bilanz. Decuma warnt dich, wenn du eine Grenze überschreitest.",
+     "Mostly yes. Only when the tax office finds, at more than €800,000 turnover or more than €80,000 profit, that you must keep books, and tells you, do you need a balance sheet from the following year. Decuma warns you when you cross a threshold."
+    ]
+   },
+   {
+    "q": [
+     "Was muss ich beim Start erledigen?",
+     "What do I have to do when I start?"
+    ],
+    "a": [
+     "Dein Gewerbe bei der Gemeinde anmelden, gleichzeitig mit dem Beginn, und innerhalb eines Monats den Fragebogen zur steuerlichen Erfassung ans Finanzamt schicken. Decuma füllt den Fragebogen mit dir vor.",
+     "Register your trade with the municipality as you start, and within one month send the tax registration questionnaire to the tax office. Decuma prefills the questionnaire with you."
+    ]
+   },
+   {
+    "q": [
+     "Kann Decuma meine Einkommensteuererklärung machen?",
+     "Can Decuma do my income tax return?"
+    ],
+    "a": [
+     "Ja, mit EÜR, Anlage G und, wenn nötig, der Gewerbesteuererklärung, aus denselben Zahlen wie deine Buchhaltung. Abgegeben wird nach deiner Freigabe.",
+     "Yes, with the EÜR, Anlage G and, if needed, the trade tax return, from the same numbers as your bookkeeping. It is filed after your release."
+    ]
+   }
+  ],
+  "band": [
+   "Probier es mit deinem Unternehmen aus.",
+   "Try it with your own business."
+  ]
+ },
+ "fuer-entwickler": {
+  "titel": [
+   "Buchhaltung für Entwickler mit KI-Assistent | Decuma",
+   "Bookkeeping for developers with your AI assistant | Decuma"
+  ],
+  "h1": [
+   "Du baust Software. Dein Assistent macht die Buchhaltung mit.",
+   "You build software. Your assistant does the bookkeeping too."
+  ],
+  "sub": [
+   "Für Entwickler mit eigener Firma oder als Freelancer: Cloud-Rechnungen aus dem Ausland, Kunden in der EU, die Voranmeldung. Erledigt aus Claude, ChatGPT oder deinem eigenen Agenten, freigegeben von dir.",
+   "For developers with their own company or freelancing: cloud invoices from abroad, clients in the EU, the VAT return. Done from Claude, ChatGPT or your own agent, released by you."
+  ],
+  "cta1": {
+   "t": [
+    "Kostenlos starten",
+    "Start for free"
+   ],
+   "href": "#/registrieren"
+  },
+  "ablauf": {
+   "titel": [
+    "Dein KI-Assistent, mit Decuma verbunden",
+    "Your AI assistant, connected to Decuma"
+   ],
+   "zustand": [
+    [
+     "Arbeitet",
+     "Working"
+    ],
+    [
+     "Wartet auf dich",
+     "Waiting for you"
+    ]
+   ],
+   "frage": [
+    "Buch die neuen Rechnungen vom Januar und sag mir, was in die Voranmeldung geht.",
+    "Book the new January invoices and tell me what goes into the VAT return."
+   ],
+   "schritte": [
+    [
+     [
+      "Rechnung wird gelesen",
+      "Reading the invoice"
+     ],
+     [
+      "Corrib Cloud Ltd., Dublin: 240,00 €, ohne Umsatzsteuer",
+      "Corrib Cloud Ltd., Dublin: €240.00, no VAT"
+     ]
+    ],
+    [
+     [
+      "Steuer wird bestimmt",
+      "Working out the tax"
+     ],
+     [
+      "Leistung aus der EU: Steuer schuldest du (Reverse Charge)",
+      "Service from the EU: you owe the tax (reverse charge)"
+     ]
+    ],
+    [
+     [
+      "Vorsteuer wird gebucht",
+      "Booking input VAT"
+     ],
+     [
+      "Im selben Monat als Vorsteuer abgezogen, Saldo null",
+      "Deducted as input VAT in the same month, net zero"
+     ]
+    ],
+    [
+     [
+      "Ausgangsrechnung wird geprüft",
+      "Checking the sales invoice"
+     ],
+     [
+      "Alpenmark Software GmbH, Wien: USt-IdNr. bestätigt, Kz 21",
+      "Alpenmark Software GmbH, Vienna: VAT ID confirmed, Kz 21"
+     ]
+    ],
+    [
+     [
+      "Freigabe wird angefragt",
+      "Requesting the release"
+     ],
+     [
+      "Voranmeldung Januar aktualisiert, Freigabe angefragt",
+      "January VAT return updated, release requested"
+     ]
+    ]
+   ],
+   "felder": [
+    [
+     [
+      "Kz 46 Bemessungsgrundlage",
+      "Kz 46 tax base"
+     ],
+     [
+      "240,00 €",
+      "€240.00"
+     ],
+     2
+    ],
+    [
+     [
+      "Kz 47 Steuer",
+      "Kz 47 tax"
+     ],
+     [
+      "45,60 €",
+      "€45.60"
+     ],
+     2
+    ],
+    [
+     [
+      "Kz 67 Vorsteuer",
+      "Kz 67 input VAT"
+     ],
+     [
+      "45,60 €",
+      "€45.60"
+     ],
+     3
+    ],
+    [
+     [
+      "Kz 21 Leistung in der EU",
+      "Kz 21 supply in the EU"
+     ],
+     [
+      "4.800,00 €",
+      "€4,800.00"
+     ],
+     4
+    ],
+    [
+     [
+      "Zusammenfassende Meldung",
+      "EC Sales List"
+     ],
+     [
+      "1. Quartal 2027",
+      "Q1 2027"
+     ],
+     4
+    ]
+   ],
+   "ende": [
+    "Gebucht. Die Voranmeldung wartet auf deine Freigabe.",
+    "Booked. The VAT return is waiting for your release."
+   ]
+  },
+  "schritte": [
+   [
+    "Verbinden: Decuma in Claude, ChatGPT oder deinem Agenten hinzufügen.",
+    "Connect: add Decuma to Claude, ChatGPT or your agent."
+   ],
+   [
+    "Belege rein: Rechnungen weiterleiten, hochladen oder per API schicken.",
+    "Belege in: forward invoices, upload them or send them via API."
+   ],
+   [
+    "Buchen lassen: dein Assistent bucht, Decuma prüft jede Steuerregel.",
+    "Let it book: your assistant books, Decuma checks every tax rule."
+   ],
+   [
+    "Freigeben: Meldungen und Zahlungen gibst nur du frei.",
+    "Release: only you release filings and payments."
+   ]
+  ],
+  "abschnitte": [
+   {
+    "h": [
+     "Typisch für dein Business, von Decuma richtig gebucht",
+     "Typical for your business, booked correctly by Decuma"
+    ],
+    "konto": "Kz 46",
+    "bloecke": [
+     {
+      "zeilen": [
+       {
+        "h": [
+         "Cloud, Hosting und KI-Dienste aus dem Ausland",
+         "Cloud, hosting and AI services from abroad"
+        ],
+        "t": [
+         "Rechnungen ohne deutsche Umsatzsteuer aus der EU oder den USA: Decuma erkennt, dass du die Steuer schuldest, trägt sie in die richtige Kennzahl ein und zieht sie im selben Monat als Vorsteuer wieder ab.",
+         "Invoices without German VAT from the EU or the US: Decuma recognises that you owe the tax, enters it in the right Kennzahl and deducts it again as input VAT in the same month."
+        ],
+        "href": "#/web/umsatzsteuer",
+        "mehr": [
+         "Zur Umsatzsteuer",
+         "To VAT"
+        ]
+       },
+       {
+        "h": [
+         "Kunden in der EU und weltweit",
+         "Clients in the EU and worldwide"
+        ],
+        "t": [
+         "Für Firmenkunden in der EU ohne deutsche Umsatzsteuer, mit geprüfter USt-IdNr. und dem Hinweis auf der Rechnung; die Zusammenfassende Meldung macht Decuma gleich mit.",
+         "For business clients in the EU without German VAT, with a verified VAT ID and the note on the invoice; Decuma does the EC Sales List along the way."
+        ],
+        "href": "#/web/rechnungen",
+        "mehr": [
+         "Zu den Rechnungen",
+         "To invoices"
+        ]
+       },
+       {
+        "h": [
+         "SaaS und Zahlungsanbieter",
+         "SaaS and payment providers"
+        ],
+        "t": [
+         "Auszahlungen deines Zahlungsanbieters werden in Umsätze und Gebühren aufgeteilt; Bemessungsgrundlage ist, was dein Kunde gezahlt hat, nicht die Auszahlung. Verkaufst du an Privatkunden in der EU, behält Decuma die Schwelle von 10.000 € im Blick.",
+         "Your payment provider's payouts are split into sales and fees; the tax base is what your client paid, not the payout. If you sell to consumers in the EU, Decuma keeps an eye on the €10,000 threshold."
+        ],
+        "href": "#/web/buchhaltung",
+        "mehr": [
+         "Zur Buchhaltung",
+         "To bookkeeping"
+        ]
+       },
+       {
+        "h": [
+         "API, CLI und SDKs",
+         "API, CLI and SDKs"
+        ],
+        "t": [
+         "Für deine eigenen Abläufe: alles, was die App kann, als Command, mit Webhooks und Trockenlauf.",
+         "For your own workflows: everything the app can do, as a command, with webhooks and dry run."
+        ],
+        "href": "#/web/entwickler",
+        "mehr": [
+         "Zu API und MCP",
+         "To API and MCP"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "h": [
+     "Dein Agent arbeitet mit. Du behältst das letzte Wort.",
+     "Your agent works along. You keep the last word."
+    ],
+    "konto": "MCP",
+    "visual": "verlauf",
+    "bloecke": [
+     {
+      "liste": [
+       [
+        "Decuma unterstützt MCP: Claude, ChatGPT und jeder Agent, der MCP kann, arbeitet mit denselben Werkzeugen wie die App.",
+        "Decuma supports MCP: Claude, ChatGPT and any agent that supports MCP work with the same tools as the app."
+       ],
+       [
+        "Jeder Schritt hat einen Trockenlauf: dein Agent sieht vorher, ob er darf und was passieren würde.",
+        "Every step has a dry run: your agent sees beforehand whether it may and what would happen."
+       ],
+       [
+        "Was Geld bewegt oder ans Finanzamt geht, gibt jemand aus deinem Unternehmen frei. Was ein Schlüssel allein darf, legst du fest.",
+        "Anything that moves money or goes to the tax office is released by someone from your business. You decide what a key may do alone."
+       ],
+       [
+        "Jede Aktion steht mit ihrem Grund im Verlauf.",
+        "Every action is in the history with its reason."
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "einordnung",
+    "h": [
+     "Freiberufler, Gewerbe oder GmbH?",
+     "Freelancer, trade or GmbH?"
+    ],
+    "konto": "§ 18 EStG",
+    "bloecke": [
+     {
+      "p": [
+       "Ob Softwareentwicklung ein freier Beruf ist, hängt davon ab, was du entwickelst und wie: Systemsoftware gilt regelmäßig als ingenieurähnlich, Anwendersoftware nur bei ingenieurmäßigem Vorgehen und entsprechender Ausbildung. Decuma fragt dich, zeigt die Folgen für Gewerbesteuer und Erklärungen und rechnet mit deiner Antwort.",
+       "Whether software development is a liberal profession depends on what you build and how: system software is regularly treated as engineering-like, application software only with an engineering approach and matching training. Decuma asks you, shows the consequences for trade tax and returns, and works with your answer."
+      ]
+     },
+     {
+      "p": [
+       "Mit einer UG oder GmbH gelten die Pflichten einer Kapitalgesellschaft; Decuma führt dich durch beide.",
+       "With a UG or GmbH the duties of a corporation apply; Decuma guides you through either."
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fristen",
+    "h": [
+     "Pflichten und Fristen",
+     "Duties and deadlines"
+    ],
+    "konto": "§ 18a UStG",
+    "bloecke": [
+     {
+      "fristen": [
+       [
+        [
+         "Umsatzsteuer-Voranmeldung",
+         "VAT return"
+        ],
+        [
+         "am 10. Tag nach Ende des Monats oder Quartals; mit Dauerfristverlängerung einen Monat später",
+         "on the 10th day after the end of the month or quarter; one month later with a permanent extension"
+        ]
+       ],
+       [
+        [
+         "Zusammenfassende Meldung",
+         "EC Sales List"
+        ],
+        [
+         "für Leistungen an Firmenkunden in der EU am 25. Tag nach Ende des Quartals; die Dauerfristverlängerung gilt hier nicht",
+         "for services to business clients in the EU on the 25th day after the end of the quarter; the permanent extension does not apply"
+        ]
+       ],
+       [
+        [
+         "Jahreserklärungen 2026",
+         "Annual returns 2026"
+        ],
+        [
+         "bis 2. August 2027; mit Steuerberater bis 29. Februar 2028; welche, hängt von deiner Rechtsform ab",
+         "by 2 August 2027; with a tax adviser by 29 February 2028; which ones depends on your legal form"
+        ]
+       ]
+      ]
+     },
+     {
+      "p": [
+       "Decuma trägt jede dieser Fristen für dein Unternehmen ein, erinnert dich rechtzeitig und zeigt, was bis dahin noch fehlt.",
+       "Decuma enters each of these deadlines for your business, reminds you in time and shows what is still missing."
+      ]
+     }
+    ]
+   }
+  ],
+  "tarife": {
+   "h": [
+    "Welcher Tarif passt",
+    "Which plan fits"
+   ],
+   "lead": [
+    "API und MCP gibt es in jedem Tarif, auch in Kostenlos. Pro, wenn du das Jahr abschließt; Max, wenn Decumas eigener Agent die Kleinarbeit übernehmen soll.",
+    "API and MCP come with every plan, Kostenlos included. Pro when you close the year; Max if Decuma’s own agent should take over the small stuff."
+   ]
+  },
+  "faq": [
+   {
+    "q": [
+     "Kann ich meine Buchhaltung aus Claude oder ChatGPT erledigen?",
+     "Can I do my bookkeeping from Claude or ChatGPT?"
+    ],
+    "a": [
+     "Ja. Decuma unterstützt MCP. Du verbindest dein Decuma einmal und bittest deinen Assistenten dann, Belege zu buchen, Rechnungen vorzubereiten oder die Voranmeldung zu prüfen. Was ans Finanzamt geht oder Geld bewegt, gibst du selbst frei.",
+     "Yes. Decuma supports MCP. You connect your Decuma once and then ask your assistant to book Belege, prepare invoices or check the VAT return. Anything that goes to the tax office or moves money you release yourself."
+    ]
+   },
+   {
+    "q": [
+     "Was ist mit Rechnungen von Cloud- und KI-Anbietern aus dem Ausland?",
+     "What about invoices from cloud and AI providers abroad?"
+    ],
+    "a": [
+     "Kommen sie ohne deutsche Umsatzsteuer aus dem Ausland, schuldest du die Steuer selbst (Reverse Charge) und ziehst sie im selben Monat als Vorsteuer wieder ab. Unterm Strich zahlst du nichts, aber beides muss in die Voranmeldung. Decuma erledigt das.",
+     "If they come from abroad without German VAT, you owe the tax yourself (reverse charge) and deduct it again as input VAT in the same month. On balance you pay nothing, but both must go into the VAT return. Decuma handles it."
+    ]
+   },
+   {
+    "q": [
+     "Ich arbeite für Kunden im Ausland. Berechne ich Umsatzsteuer?",
+     "I work for clients abroad. Do I charge VAT?"
+    ],
+    "a": [
+     "Für Firmenkunden in der EU mit gültiger USt-IdNr. und für Firmenkunden außerhalb der EU in der Regel nicht; die Rechnung braucht dann den passenden Hinweis. Decuma prüft die USt-IdNr. und schreibt den Hinweis auf die Rechnung.",
+     "For business clients in the EU with a valid VAT ID and for business clients outside the EU, as a rule not; the invoice then needs the matching note. Decuma checks the VAT ID and puts the note on the invoice."
+    ]
+   },
+   {
+    "q": [
+     "Bin ich als Entwickler Freiberufler?",
+     "Am I a freelancer as a developer?"
+    ],
+    "a": [
+     "Das hängt von deiner Arbeit ab und ist eine Frage deines Einzelfalls. Decuma zeigt dir die Merkmale und die Folgen, du entscheidest, und Decuma rechnet mit deiner Antwort.",
+     "It depends on your work and is a question of your own case. Decuma shows you the criteria and the consequences, you decide, and Decuma works with your answer."
+    ]
+   },
+   {
+    "q": [
+     "Kann ich die API für eigene Tools nutzen?",
+     "Can I use the API for my own tools?"
+    ],
+    "a": [
+     "Ja. Alles, was die App kann, gibt es über die API, die CLI und die SDKs, in jedem Tarif ohne Aufpreis. Details auf der Seite Für Entwickler.",
+     "Yes. Everything the app can do is available through the API, the CLI and the SDKs, in every plan at no extra cost. Details on the developers page."
+    ]
+   }
+  ],
+  "band": [
+   "Probier es mit deinem Unternehmen aus.",
+   "Try it with your own business."
+  ]
  }
 }

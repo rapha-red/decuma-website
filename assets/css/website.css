@@ -1,4 +1,4 @@
-/* website.css of the design source at c34112bfaee6, synced by tools/sync.mjs; do not edit */
+/* website.css of the design source at fbb1bcf789b2, synced by tools/sync.mjs; do not edit */
 
 .web {
   --w-max: 1200px;
@@ -762,7 +762,7 @@
 }
 .web .w-foot-cols {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.2fr) repeat(5, minmax(0, 1fr));
   gap: var(--s6);
 }
 .web .w-foot h2 {
@@ -1549,6 +1549,116 @@
   border-radius: var(--r);
   font-size: var(--fs-sm);
 }
+.web .w-kichat .fenster {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 470px;
+  overflow: hidden;
+}
+.web .w-kichat .verlauf {
+  gap: var(--s3);
+}
+.web .w-kichat .anhang {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: var(--s2);
+  padding: 2px var(--s2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--bg);
+  font-size: var(--fs-xs);
+}
+.web .w-kichat .ki-schritt {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  gap: var(--s3);
+  align-items: start;
+  font-size: var(--fs-sm);
+  animation: w-ein 300ms var(--ease) both;
+}
+.web .w-kichat .ki-schritt > span {
+  margin-top: 6px;
+}
+.web .w-kichat .ki-schritt:not(.fertig) .was {
+  color: var(--ink-2);
+}
+.web .w-kichat .warum {
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+}
+.web .w-kichat .norm {
+  display: inline-block;
+  margin-left: var(--s2);
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  color: var(--accent);
+  font: 500 11px/1.6 var(--font-mono, ui-monospace, monospace);
+}
+.web .w-kichat .ki-frage {
+  justify-self: start;
+  padding: var(--s2) var(--s3);
+  border-left: 3px solid var(--accent);
+  font-size: var(--fs-sm);
+  animation: w-ein 300ms var(--ease) both;
+}
+.web .w-kichat .ki-karte {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  font-size: var(--fs-sm);
+  animation: w-ein 300ms var(--ease) both;
+}
+.web .w-kichat .ki-karte .titel {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-weight: var(--fw-semibold);
+}
+.web .w-kichat .ki-karte .titel svg {
+  color: var(--accent);
+}
+.web .w-kichat .ki-karte dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: 2px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.web .w-kichat .ki-karte dt {
+  color: var(--ink-2);
+}
+.web .w-kichat .ki-karte dd {
+  font-variant-numeric: tabular-nums;
+}
+.web .w-kichat .knoepfe {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s2);
+}
+.web .w-kichat .knoepfe span {
+  padding: var(--s1) var(--s3);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.web .w-kichat .knoepfe .freigeben {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: var(--fw-semibold);
+}
+.web .w-kichat .hinweis {
+  font-weight: var(--fw-semibold);
+}
+@media (max-width: 760px) {
+  .web .w-kichat .fenster {
+    height: 520px;
+  }
+}
 .web .chat-app .mail {
   display: grid;
   gap: 2px;
@@ -2269,6 +2379,26 @@
   margin-top: 5px;
   color: var(--accent);
 }
+.web .w-fristen {
+  display: grid;
+  border-top: 1px solid var(--ink);
+}
+.web .w-fristen > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--s4);
+  padding: var(--s3) 0;
+  border-bottom: 1px solid var(--line);
+}
+.web .w-fristen dt {
+  font-weight: var(--fw-semibold);
+}
+@media (max-width: 760px) {
+  .web .w-fristen > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s1);
+  }
+}
 .web .w-fakten {
   padding: var(--s4) var(--s5);
   border: 1px solid var(--line);
@@ -2642,4 +2772,189 @@ body:has(aside.proto) .web .w-cookies {
   .web .w-ablauf .ende {
     opacity: 1;
   }
+}
+.web .i-0 {
+  --i: 0;
+}
+.web .i-1 {
+  --i: 1;
+}
+.web .i-2 {
+  --i: 2;
+}
+.web .i-3 {
+  --i: 3;
+}
+.web .i-4 {
+  --i: 4;
+}
+.web .i-5 {
+  --i: 5;
+}
+.web .i-6 {
+  --i: 6;
+}
+.web .i-7 {
+  --i: 7;
+}
+.web .i-8 {
+  --i: 8;
+}
+.web .i-9 {
+  --i: 9;
+}
+.web .i-10 {
+  --i: 10;
+}
+.web .i-11 {
+  --i: 11;
+}
+.web .i-12 {
+  --i: 12;
+}
+.web .i-13 {
+  --i: 13;
+}
+.web .i-14 {
+  --i: 14;
+}
+.web .i-15 {
+  --i: 15;
+}
+.web .w-0 {
+  --w: 0;
+}
+.web .w-1 {
+  --w: 1;
+}
+.web .w-2 {
+  --w: 2;
+}
+.web .w-3 {
+  --w: 3;
+}
+.web .w-4 {
+  --w: 4;
+}
+.web .w-5 {
+  --w: 5;
+}
+.web .w-6 {
+  --w: 6;
+}
+.web .w-7 {
+  --w: 7;
+}
+.web .w-8 {
+  --w: 8;
+}
+.web .w-9 {
+  --w: 9;
+}
+.web .w-10 {
+  --w: 10;
+}
+.web .w-11 {
+  --w: 11;
+}
+.web .w-12 {
+  --w: 12;
+}
+.web .w-13 {
+  --w: 13;
+}
+.web .w-14 {
+  --w: 14;
+}
+.web .w-15 {
+  --w: 15;
+}
+.web .w-16 {
+  --w: 16;
+}
+.web .w-17 {
+  --w: 17;
+}
+.web .w-18 {
+  --w: 18;
+}
+.web .w-19 {
+  --w: 19;
+}
+.web .w-20 {
+  --w: 20;
+}
+.web .w-21 {
+  --w: 21;
+}
+.web .w-22 {
+  --w: 22;
+}
+.web .w-23 {
+  --w: 23;
+}
+.web .w-24 {
+  --w: 24;
+}
+.web .w-25 {
+  --w: 25;
+}
+.web .w-26 {
+  --w: 26;
+}
+.web .w-27 {
+  --w: 27;
+}
+.web .w-28 {
+  --w: 28;
+}
+.web .w-29 {
+  --w: 29;
+}
+.web .w-30 {
+  --w: 30;
+}
+.web .w-31 {
+  --w: 31;
+}
+.web .w-32 {
+  --w: 32;
+}
+.web .w-33 {
+  --w: 33;
+}
+.web .w-34 {
+  --w: 34;
+}
+.web .w-35 {
+  --w: 35;
+}
+.web .w-36 {
+  --w: 36;
+}
+.web .w-37 {
+  --w: 37;
+}
+.web .w-38 {
+  --w: 38;
+}
+.web .w-39 {
+  --w: 39;
+}
+.web .w-40 {
+  --w: 40;
+}
+.web .n-4 {
+  --n: 4;
+}
+.web .mt-5 {
+  margin-top: var(--s5);
+}
+.web .mit-linie {
+  margin-top: var(--s7);
+  border-top: 1px solid var(--line);
+}
+.web .block,
+.web .w-tier li.block {
+  display: block;
 }

@@ -1,1 +1,147 @@
-{{ define "main" }}{{ end }}
+{{/* The start page (the prototype's Start.svelte): hero over the Startseite (the chat with model_steps, else the static
+     visual), trust line, steps, what Decuma takes off your plate, the release, Decuma Bots (agent_tier), open source
+     (source_link), the plan cards, Done-for-you, questions, closing band. Visuals are captured (fragment.html). */}}
+{{ define "main" }}
+{{ $ms := partial "flag.html" "model_steps" }}
+{{ $src := partial "flag.html" "source_link" }}
+{{ $start := partial "link.html" "#/registrieren" }}
+<section class="w-hero">
+  <div class="w-wrap">
+    <div class="w-hero-text">
+      <h1 class="w-h1">{{ i18n "w.s.h1" }}</h1>
+      <p class="w-lead">{{ i18n "w.s.sub" }}</p>
+      <div class="w-ctas"><a class="btn primary large" href="{{ $start }}">{{ i18n "w.start" }}</a></div>
+    </div>
+    <div class="w-hero-visual">
+      {{ if $ms }}
+        {{ partial (print "fragments/" site.Language.Lang "/start-chat.html") . }}
+        {{ range seq 6 }}<template data-chat="{{ . }}">{{ partial (print "fragments/" site.Language.Lang "/start-chat-" . ".html") . }}</template>{{ end }}
+      {{ else }}{{ partial "fragment.html" "hero" }}{{ end }}
+    </div>
+  </div>
+</section>
+
+<div class="w-wrap">
+  <ul class="w-facts">
+    {{ range slice (slice "w.s.f1" "mail") (slice "w.s.f2" "shield") (slice "w.s.f3" "globe") (slice "w.s.f4" "eyeoff") }}<li>{{ partial "icon.html" (dict "name" (index . 1) "size" 16) }}{{ i18n (index . 0) }}</li>{{ end }}
+    {{ if $src }}<li>{{ partial "icon.html" (dict "name" "plug" "size" 16) }}{{ i18n "w.s.f5" }}</li>{{ end }}
+  </ul>
+</div>
+
+<section class="w-sec" aria-labelledby="s-so">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="s-so" class="w-h2">{{ i18n "w.s.so.h" }}</h2></div>
+    <ol class="w-steps n-4">
+      {{ range $i, $icon := slice "konto" "belege" "auswertungen" "check" }}<li><span class="kopf"><span class="w-glyphe" aria-hidden="true">{{ partial "icon.html" (dict "name" $icon "size" 22) }}</span><span class="nr">{{ add $i 1 }}</span></span><span>{{ i18n (print "w.s.so." (add $i 1)) }}</span></li>{{ end }}
+    </ol>
+  </div>
+</section>
+
+{{ $r4 := cond (partial "flag.html" "auftrag") "w.s.r4.t.auftrag" (cond (partial "flag.html" "eric") "w.s.r4.t.eric" "w.s.r4.t") }}
+{{ $rows := slice
+  (dict "konto" "1406 Vorsteuer" "h" (cond $ms "w.s.r1.h" "w.s.r1.h.fb") "t" (cond $ms "w.s.r1.t" "w.s.r1.t.fb"))
+  (dict "konto" "1800 Bank" "h" "w.s.r2.h" "t" "w.s.r2.t" "extra" (cond (partial "flag.html" "bank") "w.s.r2.bank" ""))
+  (dict "konto" "1200 Forderungen" "h" "w.s.r3.h" "t" "w.s.r3.t")
+  (dict "konto" "3806 Umsatzsteuer" "h" "w.s.r4.h" "t" $r4)
+  (dict "konto" "2900 Gezeichnetes Kapital" "h" "w.s.r5.h" "t" "w.s.r5.t" "link" (slice "#/web/jahresabschluss" "w.s.r5.link"))
+}}
+<section class="w-sec" aria-labelledby="s-take">
+  <div class="w-wrap">
+    <div class="w-sec-head">{{ partial "fragment.html" "z-take" }}<h2 id="s-take" class="w-h2">{{ i18n "w.s.take" }}</h2></div>
+    <div class="w-rows">
+      {{ range $i, $r := $rows }}
+        <div class="w-row">
+          <div class="text">
+            <span class="w-konto">{{ $r.konto }}</span>
+            <h3 class="w-h3">{{ i18n $r.h }}</h3>
+            <p>{{ i18n $r.t }}</p>
+            {{ with $r.extra }}<p>{{ i18n . }}</p>{{ end }}
+            {{ with $r.link }}{{ with partial "link.html" (index . 0) }}<a class="w-more" href="{{ . }}">{{ i18n (index $r.link 1) }} →</a>{{ end }}{{ end }}
+          </div>
+          <div>{{ partial "fragment.html" (print "row" (add $i 1)) }}</div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="w-sec" aria-labelledby="s-ok">
+  <div class="w-wrap">
+    <div class="w-sec-head">{{ partial "fragment.html" "z-ok" }}<h2 id="s-ok" class="w-h2">{{ i18n "w.s.ok.h" }}</h2></div>
+    <div class="w-row">
+      <div class="text"><p>{{ i18n "w.s.ok.t" }}</p><p>{{ i18n "w.s.ok.t2" }}</p></div>
+      <div>{{ partial "fragment.html" "verlauf" }}</div>
+    </div>
+  </div>
+</section>
+
+{{ if partial "flag.html" "agent_tier" }}
+<section class="w-sec" aria-labelledby="s-ag">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="s-ag" class="w-h2">{{ i18n "w.s.ag.h" }}</h2></div>
+    <div class="w-stapel">
+      <div class="text"><p>{{ i18n "w.s.ag.t" }}</p><p>{{ i18n "w.s.ag.t2" }}</p>{{ with partial "link.html" "#/web/bots" }}<a class="w-more" href="{{ . }}">{{ i18n "w.s.ag.cta" }} →</a>{{ end }}</div>
+      {{ partial "fragment.html" "bots" }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ if $src }}
+<section class="w-sec" aria-labelledby="s-os">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="s-os" class="w-h2">{{ i18n "w.s.os.h" }}</h2></div>
+    <div class="w-row">
+      <div class="text">
+        <p>{{ i18n "w.s.os.t" }}</p>
+        <div class="w-ctas"><a class="btn large" href="{{ site.Params.repo }}" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="16" height="16"><path d="{{ hugo.Data.icons.github }}"></path></svg>{{ i18n "w.s.os.gh" }}</a>{{ with partial "link.html" "#/web/open-source" }}<a class="w-more" href="{{ . }}">{{ i18n "w.s.os.cta" }} →</a>{{ end }}</div>
+      </div>
+      {{ partial "fragment.html" "eigen" }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+<section class="w-sec" aria-labelledby="s-pr">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="s-pr" class="w-h2">{{ i18n "w.s.pr.h" }}</h2><p class="w-lead">{{ i18n "w.p.sub" }}</p></div>
+    {{ partial "plan-cards.html" . }}
+    {{ with partial "link.html" "#/web/preise" }}<p class="w-mehr"><a class="w-more" href="{{ . }}">{{ i18n "w.s.pr.cta" }} →</a></p>{{ end }}
+  </div>
+</section>
+
+<section class="w-sec" aria-labelledby="s-dfy">
+  <div class="w-wrap">
+    <div class="w-dfy">
+      <div class="text">
+        <p class="w-eyebrow">Done-for-you</p>
+        <h2 id="s-dfy" class="w-h2">{{ i18n "w.s.dfy.h" }}</h2>
+        <p>{{ i18n "w.s.dfy.t" }}</p>
+        <ul class="w-punkte">{{ range seq 3 }}<li>{{ partial "icon.html" (dict "name" "check" "size" 16) }}<span>{{ i18n (print "w.s.dfy.l" . (cond (and (eq . 1) (partial "flag.html" "lohn")) ".lohn" "")) }}</span></li>{{ end }}</ul>
+        <p class="w-small">{{ i18n "w.s.dfy.preis" }}</p>
+        <div class="w-ctas">
+          <a class="btn primary large" href="{{ site.Params.booking }}" target="_blank" rel="noopener">{{ i18n "w.call" }} ↗</a>
+          {{ with partial "link.html" "#/web/preise/service" }}<a class="btn large" href="{{ . }}">{{ i18n "w.s.dfy.cta" }}</a>{{ end }}
+        </div>
+      </div>
+      {{ partial "fragment.html" "dfy" }}
+    </div>
+  </div>
+</section>
+
+{{ $auftrag := partial "flag.html" "auftrag" }}
+{{ $fragen := slice }}
+{{ range slice 1 9 10 2 3 4 5 6 7 8 }}
+  {{ if or (ne . 8) $src }}
+    {{ $fragen = $fragen | append (dict "q" (i18n (print "w.s.q" .)) "a" (i18n (cond (and (eq . 3) (not $auftrag)) "w.s.a3.fb" (print "w.s.a" .)))) }}
+  {{ end }}
+{{ end }}
+{{ partial "faq.html" (dict "id" "s-faq" "fragen" $fragen) }}
+
+<section class="w-band" aria-labelledby="s-end">
+  <div class="w-wrap">
+    <h2 id="s-end" class="w-h2">{{ i18n "w.s.end.h" }}</h2>
+    <div class="w-ctas"><a class="btn primary large" href="{{ $start }}">{{ i18n "w.start" }}</a></div>
+  </div>
+</section>
+{{ end }}

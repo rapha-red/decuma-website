@@ -1,3 +1,6 @@
 # Owner-approved differences between the prototype and the site. One per line, tab-separated:
-# case (or *)<TAB>CSS that hides the part on the prototype side<TAB>reason and approval
-produkt-1280	.w-menu-foot { display: none !important }	The "Für:" row is off at launch (switch menu_fuer in hugo.toml) until the "Lösungen für" pages exist; owner decision 2026-11-27
+# case (or *)<TAB>CSS that hides the part on the prototype side<TAB>flag state it applies to (offer, all; empty: both)<TAB>reason and approval
+produkt-1280	.w-menu-foot { display: none !important }		The "Für:" row is off at launch (switch menu_fuer in hugo.toml) until the "Lösungen für" pages exist; owner decision 2026-11-27
+*	nav[aria-labelledby=f-fuer] { display: none !important }		The footer column "Lösungen für" is off with the "Für:" row (menu_fuer) until the "Lösungen für" pages exist; owner decision 2026-11-27 (orchestrator, this train)
+start-1280	#agent { display: none !important }	all	data/offer.json has no Max plan and no Max column (the price list carries none yet), so the site cannot show the Max card with agent_tier on; open point for the price list (decuma #99), to be approved by the owner
+start-390	#agent { display: none !important }	all	the same at 390 px

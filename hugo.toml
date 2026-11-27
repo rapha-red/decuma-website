@@ -12,8 +12,10 @@ disableKinds = ["taxonomy", "term", "rss", "sitemap"]
 app = "https://app.decuma.de"
 booking = "https://cal.com/decuma-raphael/30min"
 repo = "https://github.com/rapha-red/open-decuma"
-# the "Für:" row of the Produkt menu; on once the "Lösungen für" pages exist
+# the "Für:" row of the Produkt menu and the footer column "Lösungen für"; on once the "Lösungen für" pages exist
 menu_fuer = false
+# the "Lösungen für" pages: address slug and label key (w.m.fuer.<key>), in the menu row and the footer column
+fuer = [["gmbh", "gmbh"], ["ug", "ug"], ["holding", "holding"], ["freiberufler", "frei"], ["selbststaendige", "selbst"], ["entwickler", "dev"]]
 
 [languages.de]
 weight = 1

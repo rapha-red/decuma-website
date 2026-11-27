@@ -141,3 +141,99 @@ test.describe('without JavaScript', () => {
     }
   })
 })
+
+// The start page built from a test copy of data/offer.json (Hugo into a temporary directory), served through a route
+// so that each case can change the offer without touching the tree under test.
+import { mkdtempSync, cpSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+const REPO = join(import.meta.dirname, '..')
+function buildWith(change: (o: any) => void) {
+  const dir = mkdtempSync(join(tmpdir(), 'offer-'))
+  for (const d of ['hugo.toml', 'content', 'layouts', 'i18n', 'data', 'assets', 'static']) cpSync(join(REPO, d), join(dir, d), { recursive: true })
+  const o = JSON.parse(readFileSync(join(dir, 'data/offer.json'), 'utf8'))
+  change(o)
+  writeFileSync(join(dir, 'data/offer.json'), JSON.stringify(o))
+  execFileSync(join(REPO, 'tools/bin/hugo'), ['--minify', '--logLevel', 'error', '-s', dir, '-d', join(dir, 'public')])
+  return join(dir, 'public')
+}
+const SITE = 'http://site.test'
+async function serve(page: Page, root: string) {
+  await page.route(SITE + '/**', (r) => {
+    const p = decodeURIComponent(new URL(r.request().url()).pathname)
+    const f = [p + '.html', join(p, 'index.html'), p].map((x) => join(root, x)).find((x) => existsSync(x) && statSync(x).isFile())
+    return f ? r.fulfill({ path: f }) : r.fulfill({ status: 404 })
+  })
+}
+const ALL_ON = (o: any) => Object.keys(o.flags).forEach((k) => (o.flags[k] = true))
+
+test.describe('start page', () => {
+  test.use({ viewport: { width: 1280, height: 900 } })
+
+  test('motion: the hero plays its six steps once and stops; each visual plays once in view; nothing loops', async ({ page }) => {
+    await serve(page, buildWith(ALL_ON))
+    // the page's own clock: when each step was reached, from the moment the chat started (hero.js marks data-an)
+    await page.addInitScript(() => {
+      const w = window as any
+      w.steps = {}
+      new MutationObserver((m) => m.forEach((x) => {
+        const e = x.target as Element
+        if (e.classList?.contains('chat-app')) w.steps[x.attributeName === 'data-an' ? 'start' : e.getAttribute('data-stufe')!] = performance.now()
+      })).observe(document, { subtree: true, attributes: true, attributeFilter: ['data-stufe', 'data-an'] })
+    })
+    await page.goto(SITE + '/')
+    await expect(page.locator('.chat-app[data-stufe="6"]')).toBeAttached({ timeout: 12000 })
+    const s = await page.evaluate(() => (window as any).steps)
+    const took = s['6'] - s.start
+    expect(took).toBeGreaterThan(7400) // 900 + 1500 + 1400 + 1300 + 1300 + 1100 ms
+    expect(took).toBeLessThan(8500)
+    const later = page.locator('.w-anim').last()
+    expect(await later.getAttribute('data-an')).toBeNull() // not in view yet
+    const changes = await page.evaluate(() => new Promise<number>((done) => {
+      let n = 0
+      new MutationObserver((m) => (n += m.length)).observe(document.querySelector('.chat-app')!, { subtree: true, childList: true, attributes: true })
+      setTimeout(() => done(n), 2000)
+    }))
+    expect(changes).toBe(0) // the hero has stopped
+    await later.scrollIntoViewIfNeeded()
+    await expect(later).toHaveAttribute('data-an', '1')
+    // every animation is finite: all of them finish (an infinite one would never resolve)
+    await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)))
+    const running = () => page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length)
+    expect(await running()).toBe(0)
+    expect(await page.evaluate(() => document.getAnimations().filter((a) => a.effect?.getTiming().iterations === Infinity).length)).toBe(0)
+    await page.mouse.wheel(0, -4000)
+    await later.scrollIntoViewIfNeeded()
+    await page.waitForTimeout(300)
+    expect(await running()).toBe(0) // seen again: it does not play again
+  })
+
+  test('reduced motion: every end state at load', async ({ browser }) => {
+    const ctx = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } })
+    const page = await ctx.newPage()
+    await serve(page, buildWith(ALL_ON))
+    await page.goto(SITE + '/')
+    await expect(page.locator('.chat-app')).toHaveAttribute('data-stufe', '6')
+    expect(await page.locator('.w-anim:not([data-an]), .w-z:not([data-an])').count()).toBe(0)
+    await ctx.close()
+  })
+
+  test('plan cards follow data/offer.json: amounts, the toggle, a column whose flag is off', async ({ page }) => {
+    await serve(page, buildWith((o) => {
+      Object.assign(o.plans.find((p: any) => p.plan === 'pro'), { monthly: '12.00', intro: '1.20', yearly_per_month: '9.00', yearly: '108.00' })
+      o.offer.columns.find((c: any) => c.key === 'free').flags = ['lohn']
+      o.flags.lohn = false
+    }))
+    await page.goto(SITE + '/')
+    const pro = page.locator('.w-tier:has(#k-pro)')
+    const text = async () => (await pro.locator('.preis:visible, .notiz:visible').allInnerTexts()).join(' | ').replace(/\s+/g, ' ')
+    expect(await text()).toBe('9 € statt 12 € | im Monat (zzgl. USt.), 108 € im Jahr, jährlich abgerechnet')
+    await page.locator('[data-billing="monthly"]').click()
+    expect(await text()).toBe('1,20 € statt 12 € | im Monat (zzgl. USt.) für die ersten 3 Monate, danach 12 €. Monatlich kündbar.')
+    await expect(page.locator('[data-billing="monthly"]')).toHaveAttribute('aria-pressed', 'true')
+    await page.locator('[data-billing="yearly"]').click()
+    expect(await text()).toContain('108 € im Jahr')
+    await expect(page.locator('#k-free')).toHaveCount(0)
+  })
+})

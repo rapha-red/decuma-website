@@ -7,8 +7,16 @@
     <div class="w-foot-cols">
       <div><a class="w-brand" href="{{ partial "link.html" "#/web" }}"><img src="/icon.svg" alt="" width="22" height="22">Decuma</a></div>
       <nav aria-labelledby="f-produkt"><h2 id="f-produkt">{{ i18n "w.f.produkt" }}</h2><ul>
-        {{ range slice (slice "w.f.buch" "#/web/buchhaltung") (slice "w.f.rech" "#/web/rechnungen") (slice "w.f.ust" "#/web/umsatzsteuer") (slice "w.f.abschluss" "#/web/jahresabschluss") (slice "w.f.gruendung" "#/web/gruendung") (slice "w.f.est" "#/web/privat") (slice "w.f.dev" "#/web/entwickler") }}{{ partial "inline/foot-link.html" (dict "k" (index . 0) "t" (index . 1)) }}{{ end }}
+        {{ if partial "flag.html" "model_steps" }}{{ partial "inline/foot-link.html" (dict "k" "w.f.ki" "t" "#/web/ki-buchhaltung") }}{{ end }}
+        {{ partial "inline/foot-link.html" (dict "k" "w.f.buch" "t" "#/web/buchhaltung") }}
+        {{ if partial "flag.html" "agent_tier" }}{{ partial "inline/foot-link.html" (dict "k" "w.m.bots" "t" "#/web/bots") }}{{ end }}
+        {{ range slice (slice "w.f.rech" "#/web/rechnungen") (slice "w.f.ust" "#/web/umsatzsteuer") (slice "w.f.abschluss" "#/web/jahresabschluss") (slice "w.f.gruendung" "#/web/gruendung") (slice "w.f.est" "#/web/privat") (slice "w.f.dev" "#/web/entwickler") }}{{ partial "inline/foot-link.html" (dict "k" (index . 0) "t" (index . 1)) }}{{ end }}
       </ul></nav>
+      {{ if site.Params.menu_fuer }}
+      <nav aria-labelledby="f-fuer"><h2 id="f-fuer">{{ i18n "w.f.fuer" }}</h2><ul>
+        {{ range $f := site.Params.fuer }}{{ partial "inline/foot-link.html" (dict "k" (print "w.m.fuer." (index $f 1)) "t" (print "#/web/fuer/" (index $f 0))) }}{{ end }}
+      </ul></nav>
+      {{ end }}
       <nav aria-labelledby="f-preise"><h2 id="f-preise">{{ i18n "w.f.preise" }}</h2><ul>
         {{ partial "inline/foot-link.html" (dict "k" "w.f.tarife" "t" "#/web/preise") }}{{ partial "inline/foot-link.html" (dict "k" "w.f.dfy" "t" "#/web/preise/service") }}
         {{ if $src }}{{ partial "inline/foot-link.html" (dict "k" "w.f.selbst" "t" "#/web/open-source") }}{{ end }}

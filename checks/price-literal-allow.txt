@@ -3,7 +3,3 @@ Homeoffice: 60 Tage	the Tagespauschale of the income tax example, not a price
 Home office: 60 days	the same in English
 6 € für jeden Tag	the Tagespauschale in the FAQ answer
 €6 for each day	the same in English
-"pr.c.est9"	app string of the prototype with the Einkommensteuer price typed in; to be replaced by a placeholder in the prototype (reported)
-"pr.c.estPro"	same
-"pr.est.line"	same
-"pr.r.est.tip"	same
