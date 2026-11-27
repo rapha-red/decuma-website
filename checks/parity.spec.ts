@@ -72,8 +72,9 @@ const pick = (name: string, i: number) => async (p: Page) => {
   await b.click()
 }
 const settings = async (p: Page) => {
-  await p.getByRole('button', { name: 'Einstellungen', exact: true }).click()
-  await p.getByRole('button', { name: 'Auswahl speichern' }).waitFor()
+  const en = /[?&]lang=en|\/en\//.test(p.url())
+  await p.getByRole('button', { name: en ? 'Settings' : 'Einstellungen', exact: true }).click()
+  await p.getByRole('button', { name: en ? 'Save choice' : 'Auswahl speichern' }).waitFor()
 }
 const CASES: Case[] = [
   ...[1280, 390].flatMap((width) => [
@@ -110,7 +111,7 @@ const CASES: Case[] = [
   },
 ]
 
-for (const lang of ['de']) {
+for (const lang of (process.env.LANGS ?? 'de,en').split(',')) {
   for (const c of CASES.filter((c) => !c.states || c.states.includes(LABEL))) {
     test(`${LABEL} ${lang} ${c.name}`, async ({ browser }, info) => {
       const opts = { viewport: { width: c.width, height: c.height }, reducedMotion: 'reduce' as const, deviceScaleFactor: 1 }
