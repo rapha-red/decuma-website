@@ -1,0 +1,164 @@
+{{/* The price page in its two views (the prototype's Preise.svelte), each its own address: "Selbst machen" (/preise:
+     plan cards, the lanes Privat and Selbst hosten, the comparison, questions) and "Wir machen das für dich"
+     (/preise/service: Done-for-you, no list price). Every amount comes from data/offer.json. */}}
+{{ define "main" }}
+{{ $o := hugo.Data.offer }}
+{{ $l := site.Language.Lang }}
+{{ $service := eq .Params.translationKey "preise/service" }}
+{{ $src := partial "flag.html" "source_link" }}
+{{ $scope := hugo.Data.capture.preise_class }}
+{{ $booking := site.Params.booking }}
+{{/* the plan columns that are on, in offer order, with their plan */}}
+{{ $plans := slice }}
+{{ range $o.offer.columns }}
+  {{ $on := .plan }}
+  {{ range .flags }}{{ if not (partial "flag.html" .) }}{{ $on = false }}{{ end }}{{ end }}
+  {{ if $on }}{{ $plans = $plans | append (index (where $o.plans "plan" .key) 0) }}{{ end }}
+{{ end }}
+{{ $col := dict }}
+{{ range $o.offer.columns }}{{ $col = merge $col (dict .key .) }}{{ end }}
+<section class="w-hero">
+  <div class="w-wrap">
+    <div class="w-hero-text">
+      {{ if $service }}
+        <h1 class="w-h1">{{ i18n "w.d.h1" }}</h1>
+        <p class="w-lead">{{ i18n "w.d.sub" }}</p>
+        <div class="w-ctas"><a class="btn primary large" href="{{ $booking }}" target="_blank" rel="noopener">{{ i18n "w.call" }} ↗</a></div>
+      {{ else }}
+        <h1 class="w-h1">{{ i18n "w.p.h1" }}</h1>
+        <p class="w-lead">{{ i18n "w.p.sub" }}</p>
+        <div class="w-ctas"><a class="btn primary large" href="{{ partial "link.html" "#/registrieren" }}">{{ i18n "w.start" }}</a></div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<div class="w-wrap w-ansicht {{ $scope }}">
+  <nav class="w-seg" aria-label="{{ i18n "w.p.view" }}">
+    <a href="{{ partial "link.html" "#/web/preise" }}"{{ if not $service }} aria-current="page"{{ end }}>{{ i18n "w.p.diy" }}</a>
+    <a href="{{ partial "link.html" "#/web/preise/service" }}"{{ if $service }} aria-current="page"{{ end }}>{{ i18n "w.p.dfy" }}</a>
+  </nav>
+</div>
+
+{{ if not $service }}
+  <section class="w-sec" aria-label="{{ i18n "w.p.diy" }}">
+    <div class="w-wrap">
+      {{ partial "plan-cards.html" . }}
+      {{ with $col.privat }}
+        <div class="w-extra mit-linie">
+          <div><h2 class="w-h3">{{ index . $l }}</h2><p>{{ i18n (cond (partial "flag.html" "auftrag") "w.p.privat.t.auftrag" "w.p.privat.t") }}</p><p class="w-small">{{ i18n "w.p.privat.line" }}</p></div>
+          <p><span class="w-big">{{ partial "euro.html" $o.einkommensteuererklaerung }}</span><br><span class="w-small">{{ i18n "w.p.privat.unit" }}</span></p>
+          <div class="knopf">{{ with partial "link.html" .href }}<a class="btn large" href="{{ . }}">{{ index $col.privat (print "cta_" $l) }}</a>{{ end }}</div>
+        </div>
+      {{ end }}
+      {{ with $col.self_hosted }}{{ if $src }}
+        {{ $gh := hugo.Data.icons.github }}
+        <div class="w-extra">
+          <div><h2 class="w-h3 os {{ $scope }}"><svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="{{ $gh }}"></path></svg>{{ index . $l }}</h2><p>{{ i18n "w.p.os.t" }}</p></div>
+          <p><span class="w-big">{{ partial "euro.html" "0" }}</span></p>
+          <div class="knopf">
+            <a class="btn large" href="{{ site.Params.repo }}" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="{{ $gh }}"></path></svg>{{ index . (print "cta_" $l) }} ↗</a>
+            <a class="w-more" href="{{ $booking }}" target="_blank" rel="noopener">{{ i18n "w.p.os.call" }} ↗</a>
+          </div>
+        </div>
+      {{ end }}{{ end }}
+    </div>
+  </section>
+
+  {{ partial "comparison.html" . }}
+
+  {{ $pro := index (where $plans "plan" "pro") 0 }}
+  {{ $privat := partial "euro.html" $o.einkommensteuererklaerung }}
+  {{ $fragen := slice
+    (dict "q" (i18n "w.p.q12") "a" (i18n "w.p.a12"))
+    (dict "q" (i18n "w.p.q1") "a" (i18n "w.p.a1" (dict "belege" $o.belege_per_month "mb" $o.storage_mb "monate" $o.deletion_after_months)))
+    (dict "q" (i18n "w.p.q13") "a" (i18n "w.p.a13"))
+  }}
+  {{ $a2 := i18n "w.p.a2.pro" (dict "pro" (partial "euro.html" $pro.monthly)) }}
+  {{ with where $plans "plan" "agent" }}{{ $a2 = i18n "w.p.a2" (dict "pro" (partial "euro.html" $pro.monthly) "agent" (partial "euro.html" (index . 0).monthly)) }}{{ end }}
+  {{ $fragen = $fragen | append (dict "q" (i18n "pr.q1" (dict "n" $o.intro_discount_months)) "a" $a2) }}
+  {{ $rest := slice (slice "w.p.q14" "w.p.a14" "") (slice "w.p.q15" "pr.a7" "") (slice "w.p.q17" "w.p.a17" "") (slice "w.p.q5" "w.p.a5" "model_steps") (slice "w.p.q8" "w.p.a8" "") (slice "w.p.q9" "w.p.a9" "") (slice "w.p.q10" "w.p.a10" "") (slice "w.p.q16" "w.p.a16" "") (slice "w.p.q11" "w.p.a11" "source_link") }}
+  {{ $vars := dict "w.p.a9" (dict "n" $pro.persons) "w.p.a10" (dict "n" $privat) }}
+  {{ range $rest }}
+    {{ if or (eq (index . 2) "") (partial "flag.html" (index . 2)) }}
+      {{ $fragen = $fragen | append (dict "q" (i18n (index . 0)) "a" (i18n (index . 1) (index $vars (index . 1) | default (dict)))) }}
+    {{ end }}
+  {{ end }}
+  {{ partial "faq.html" (dict "id" "p-faq" "fragen" $fragen) }}
+
+  <section class="w-sec w-last">
+    <div class="w-wrap"><p class="w-lead">{{ i18n "w.p.cross" }} <a class="w-more" href="{{ partial "link.html" "#/web/preise/service" }}">{{ i18n "w.p.cross.a" }} →</a></p></div>
+  </section>
+{{ else }}
+  <section class="w-sec" aria-labelledby="d-take">
+    <div class="w-wrap">
+      <div class="w-sec-head">{{ partial "fragment.html" "preise-dfy" }}<h2 id="d-take" class="w-h2">{{ i18n "w.d.take" }}</h2></div>
+      <ul class="w-leistungen">
+        {{ range slice (slice 1 "belege" "") (slice 2 "einnahmen" "") (slice 3 "lohn" "lohn") (slice 4 "box" "") (slice 9 "todo" "") (slice 5 "verlauf" "") (slice 6 "rule" "") (slice 7 "plug" "source_link") (slice 8 "kanzlei" "") }}
+          {{ if or (eq (index . 2) "") (partial "flag.html" (index . 2)) }}
+            <li><span class="w-glyphe" aria-hidden="true">{{ partial "icon.html" (dict "name" (index . 1) "size" 22) }}</span><b>{{ i18n (print "w.d.w" (index . 0)) }}</b><span class="w-small">{{ i18n (print "w.d.w" (index . 0) ".t") }}</span></li>
+          {{ end }}
+        {{ end }}
+      </ul>
+    </div>
+  </section>
+
+  <section class="w-sec" aria-labelledby="d-how">
+    <div class="w-wrap">
+      <div class="w-sec-head"><h2 id="d-how" class="w-h2">{{ i18n "w.d.how" }}</h2></div>
+      <ol class="w-steps">
+        {{ range $i, $s := slice (slice "chat" "sv.s1" "sv.s1.line") (slice "clip" "sv.s2" "w.d.s2.t") (slice "check" "w.d.s3" "w.d.s3.t") }}
+          <li><span class="kopf"><span class="w-glyphe" aria-hidden="true">{{ partial "icon.html" (dict "name" (index $s 0) "size" 22) }}</span><span class="nr">{{ add $i 1 }}</span></span><b>{{ i18n (index $s 1) }}</b><span class="w-small">{{ i18n (index $s 2) }}</span></li>
+        {{ end }}
+      </ol>
+    </div>
+  </section>
+
+  {{ $opts := cond $src (slice "os" "diy" "stb" "dfy") (slice "diy" "stb" "dfy") }}
+  {{/* the cost of doing it yourself: from the cheapest to the dearest plan that is on, list price a month */}}
+  {{ $min := 0.0 }}{{ $max := 0.0 }}
+  {{ range $i, $p := $plans }}{{ $x := float $p.monthly }}{{ if or (eq $i 0) (lt $x $min) }}{{ $min = $x }}{{ end }}{{ if gt $x $max }}{{ $max = $x }}{{ end }}{{ end }}
+  {{ $kv := dict "min" (partial "euro.html" $min) "max" (partial "euro.html" $max) }}
+  <section class="w-sec" aria-labelledby="d-opt">
+    <div class="w-wrap">
+      <div class="w-sec-head">{{ partial "fragment.html" "preise-selbsthosten" }}<h2 id="d-opt" class="w-h2">{{ i18n "w.d.opt" }}</h2></div>
+      <div class="w-seg klein w-nur-handy" role="group" aria-label="{{ i18n "w.d.spalte" }}" data-pick hidden>
+        {{ range $opts }}<button type="button" aria-pressed="{{ eq . "dfy" }}">{{ i18n (print "w.d.o." .) }}</button>{{ end }}
+      </div>
+      <div class="w-table-scroll" data-columns>
+        <table class="w-table">
+          <thead><tr><th scope="col"><span class="sr">{{ i18n "w.d.opt" }}</span></th>{{ range $opts }}<th scope="col"{{ if eq . "dfy" }} class="betont"{{ end }}>{{ i18n (print "w.d.o." .) }}</th>{{ end }}</tr></thead>
+          <tbody>
+            {{ range $r := slice "bucht" "melde" "frei" "daten" "regeln" "kosten" "ende" }}
+              <tr><th scope="row">{{ i18n (print "w.d.o." $r) }}</th>{{ range $opts }}<td{{ if eq . "dfy" }} class="betont"{{ end }}>{{ i18n (print "w.d.o." $r "." .) $kv }}</td>{{ end }}</tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-sec" aria-labelledby="d-yours">
+    <div class="w-wrap w-split">
+      <div><h2 id="d-yours" class="w-h2">{{ i18n "w.d.yours.h" }}</h2></div>
+      <div class="stapel {{ $scope }}">
+        <p class="w-lead">{{ i18n "w.d.yours.t" }}</p>
+        <p><b>{{ i18n "sv.price" }}.</b> {{ i18n "sv.price.line" }}</p>
+      </div>
+    </div>
+  </section>
+
+  {{ $fragen := slice }}
+  {{ range slice 1 2 3 4 6 7 8 }}{{ if or (ne . 6) $src }}{{ $fragen = $fragen | append (dict "q" (i18n (print "w.d.q" .)) "a" (i18n (print "w.d.a" .))) }}{{ end }}{{ end }}
+  {{ partial "faq.html" (dict "id" "d-faq" "fragen" $fragen) }}
+
+  <section class="w-band" aria-labelledby="d-end">
+    <div class="w-wrap">
+      <h2 id="d-end" class="w-h2">{{ i18n "w.d.end.h" }}</h2>
+      <a class="btn primary large" href="{{ $booking }}" target="_blank" rel="noopener">{{ i18n "w.call" }} ↗</a>
+      <p class="w-small">{{ i18n "w.d.end.line" }}</p>
+      <p class="w-small">{{ i18n "w.d.cross" }} <a class="w-more" href="{{ partial "link.html" "#/web/preise" }}">{{ i18n "w.d.cross.a" }} →</a></p>
+    </div>
+  </section>
+{{ end }}
+{{ end }}
