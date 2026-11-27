@@ -9,10 +9,14 @@ JSON-LD; an internal link or asset that does not resolve in the tree; a page out
 without its hreflang partner, a /kb page with a partner or an /en/ copy; a missing llms.txt, robots.txt (or one with
 Disallow) or sitemap.xml; a price of data/offer.json typed into layouts/, i18n/ or data/pages/; an internal decision
 id or private path in the tree; a looping motion (an `infinite` CSS animation, `setInterval` or
-`requestAnimationFrame` in a script).
+`requestAnimationFrame` in a script); a placeholder of the legal frames (data/pages/recht.json) on a built page, unless
+SITE_DRAFT=1 (local review only); while source_link is off in data/offer.json, a page or line about the open source
+(the /open-source page, the repository address, "Open Source", "AGPL").
 """
 import json
+import os
 import re
+import tomllib
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -188,6 +192,27 @@ def main():
                     for x in sorted(lit):
                         if re.search(r"(?<![\d.,€])" + re.escape(x) + r"(?![\d]|[.,]\d)", line) and not any(a in line for a in allow):
                             fails.append(f"{f.relative_to(repo)}:{n}: price literal {x} (amounts come from data/offer.json)")
+    # the go-live guard: no legal frame placeholder ({Text dieses Abschnitts}, {datum}, ...) on a built page
+    recht = (repo / "data/pages/recht.json").read_text()
+    holders = set(re.findall(r"\{[^{}\"]+\}", recht)) | {"{Hinweis Übersetzung}"}
+    draft = os.environ.get("SITE_DRAFT") == "1"
+    held = 0
+    for f in pages:
+        text = f.read_text(errors="replace")
+        for h in sorted(x for x in holders if x in text):
+            held += 1
+            if not draft:
+                fails.append(f"placeholder on {address(tree, f)}: {h}")
+    if draft and held:
+        print(f"check_site: SITE_DRAFT=1, {held} legal placeholders allowed (never ship this tree)")
+    # nothing about the open source while its flag is off
+    if not json.loads((repo / "data/offer.json").read_text())["flags"]["source_link"]:
+        repo_url = tomllib.loads((repo / "hugo.toml").read_text())["params"]["repo"]
+        about = re.compile(r"open[ -]?source|\bAGPL|" + re.escape(repo_url.split("://", 1)[1]), re.I)
+        for f in sorted(tree.rglob("*")):
+            if f.is_file() and f.suffix in (".html", ".txt", ".xml", ".md") and not f.relative_to(tree).as_posix().startswith("pagefind/"):
+                for m in about.finditer(f.read_text(errors="replace")):
+                    fails.append(f"/{f.relative_to(tree).as_posix()}: source_link is off but the page says {m.group(0)!r}")
     for x in fails:
         print("FAIL " + x)
     print(f"check_site: {len(pages)} pages, {len(fails)} findings")

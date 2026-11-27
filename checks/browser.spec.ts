@@ -116,7 +116,7 @@ test.describe('consent', () => {
 })
 
 test.describe('axe', () => {
-  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/datenversprechen']) {
+  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
     test(`no serious or critical finding on ${path}, banner and Produkt menu open`, async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 900 })
       await page.goto(path)
@@ -149,12 +149,13 @@ import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 const REPO = join(import.meta.dirname, '..')
-function buildWith(change: (o: any) => void) {
+function buildWith(change: (o: any) => void, files: Record<string, string> = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'offer-'))
   for (const d of ['hugo.toml', 'content', 'layouts', 'i18n', 'data', 'assets', 'static']) cpSync(join(REPO, d), join(dir, d), { recursive: true })
   const o = JSON.parse(readFileSync(join(dir, 'data/offer.json'), 'utf8'))
   change(o)
   writeFileSync(join(dir, 'data/offer.json'), JSON.stringify(o))
+  for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, f), text)
   execFileSync(join(REPO, 'tools/bin/hugo'), ['--minify', '--logLevel', 'error', '-s', dir, '-d', join(dir, 'public')])
   return join(dir, 'public')
 }
@@ -324,4 +325,42 @@ test.describe('price page on a phone', () => {
       expect(await page.locator('[data-columns]').evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(true)
     })
   })
+})
+
+test.describe('open source, Neu in Decuma, legal pages', () => {
+  test.use({ viewport: { width: 1280, height: 900 } })
+
+  test('/open-source with source_link on: built, the GitHub button leads to the repository, html-validate and axe clean', async ({ page }) => {
+    const root = buildWith(ALL_ON)
+    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html')], { stdio: 'pipe' })
+    await serve(page, root)
+    await page.goto(SITE + '/open-source')
+    await expect(page.locator('.w-hero a.btn')).toHaveAttribute('href', 'https://github.com/rapha-red/open-decuma')
+    const r = await new AxeBuilder({ page }).analyze()
+    expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+  })
+
+  test('a new changelog entry shows first with its date after a rebuild', async ({ page }) => {
+    const yaml = (extra: string) => `- {date: 2026-11-20, de: "Ältere Zeile.", en: "Older line."}\n${extra}`
+    await serve(page, buildWith(() => {}, { 'data/changelog.yaml': yaml('- {date: 2026-12-04, de: "Neue Zeile.", en: "New line."}\n') }))
+    await page.goto(SITE + '/neu-in-decuma')
+    await expect(page.locator('.w-neu li').first()).toHaveText('4. Dezember 2026Neue Zeile.')
+    await expect(page.locator('.w-neu li time').first()).toHaveAttribute('datetime', '2026-12-04')
+    await page.goto(SITE + '/en/whats-new')
+    await expect(page.locator('.w-neu li').first()).toHaveText('4 December 2026New line.')
+  })
+
+  for (const path of ['/impressum', '/datenschutz']) {
+    test(`${path} at 390 px: the open consent bar never hides the text for good`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 })
+      await page.goto(path)
+      await expect(page.locator('[data-consent]')).toBeVisible()
+      for (const el of await page.locator('main .recht > *').all()) {
+        await el.evaluate((e) => e.scrollIntoView({ block: 'center' }))
+        const box = (await el.boundingBox())!
+        const hit = await page.evaluate(([x, y]) => !!document.elementFromPoint(x, y)?.closest('main'), [box.x + 4, box.y + Math.min(box.height / 2, 400)])
+        expect(hit, 'covered by the consent bar').toBe(true)
+      }
+    })
+  }
 })

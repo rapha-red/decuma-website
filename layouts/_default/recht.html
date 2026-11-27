@@ -1,0 +1,53 @@
+{{/* The data promise and the frames of the legal pages (the prototype's Recht.svelte), from data/pages/recht.json. A legal
+     page renders the owner's Markdown body of its German file; while that body is missing, the prototype's headings
+     with their placeholders. English legal pages show the German text with a note that the German version is binding.
+     The Stand date is the German file's `stand`; without it the line keeps its placeholder. check_site.py refuses any
+     placeholder in a built page unless SITE_DRAFT=1. */}}
+{{ define "main" }}
+{{ $d := hugo.Data.pages.recht }}
+{{ $c := hugo.Data.capture.recht_class }}
+{{ $de := cond (eq site.Language.Lang "de") . (index (where .Translations "Language.Lang" "de") 0) }}
+{{ $i := cond (eq site.Language.Lang "de") 0 1 }}
+{{ $key := .Params.translationKey }}
+{{ $kontakt := partial "link.html" "#/web/impressum" }}
+{{ $stand := index $d.DV.stand $i }}
+{{ with $de.Params.stand }}{{ $stand = replace $stand "{datum}" (time.Format ":date_long" .) }}{{ end }}
+<div class="w-wrap recht {{ $c }}">
+{{ if eq $key "datenversprechen" }}
+  {{ $v := $d.DV }}
+  <section class="kopf {{ $c }}">
+    <div class="w-hero-text {{ $c }}"><h1 class="w-h1 {{ $c }}">{{ index $v.h1 $i }}</h1><p class="w-lead {{ $c }}">{{ index $v.lead $i }}</p></div>
+    <div class="bild {{ $c }}">{{ partial "fragment.html" "z-selbsthosten" }}</div>
+  </section>
+  <section class="block {{ $c }}" aria-labelledby="dv-ort"><h2 id="dv-ort" class="w-h3 {{ $c }}">{{ index $v.ort $i }}</h2><p class="{{ $c }}">{{ index $v.ortT $i }}</p></section>
+  <section class="block {{ $c }}" aria-labelledby="dv-wer"><h2 id="dv-wer" class="w-h3 {{ $c }}">{{ index $v.wer $i }}</h2><p class="{{ $c }}">{{ index $v.anfrage $i }} <a class="w-more {{ $c }}" href="{{ $kontakt }}">{{ index $v.kontakt $i }} →</a></p></section>
+  <section class="block {{ $c }}" aria-labelledby="dv-tun">
+    <h2 id="dv-tun" class="w-h3 {{ $c }}">{{ index $v.tun $i }}</h2>
+    <dl class="fakten {{ $c }}">{{ range $v.fakten }}<div class="{{ $c }}"><dt class="{{ $c }}">{{ index (index . 0) $i }}</dt><dd class="{{ $c }}">{{ replace (index (index . 1) $i) "{monate}" (string hugo.Data.offer.deletion_after_months) }}</dd></div>{{ end }}</dl>
+  </section>
+  {{ if partial "flag.html" "source_link" }}
+    <section class="block {{ $c }}" aria-labelledby="dv-selbst">
+      <h2 id="dv-selbst" class="w-h3 {{ $c }}">{{ index $v.selbst $i }}</h2>
+      <p class="{{ $c }}">{{ index $v.selbstLead $i }}</p>
+      <dl class="fakten {{ $c }}">{{ range $v.selbstFakten }}{{ if or (lt (len .) 3) (partial "flag.html" (index . 2)) }}<div class="{{ $c }}"><dt class="{{ $c }}">{{ index (index . 0) $i }}</dt><dd class="{{ $c }}">{{ index (index . 1) $i }}</dd></div>{{ end }}{{ end }}</dl>
+    </section>
+  {{ end }}
+  <p class="w-small {{ $c }}">{{ $stand }}</p>
+  <p class="w-small {{ $c }}">{{ range $j, $l := slice (slice "w.f.uav" "#/web/unterauftragnehmer") (slice "w.f.datenschutz" "#/web/datenschutz") (slice "w.start" "#/registrieren") }}{{ if $j }} · {{ end }}<a class="w-more {{ $c }}" href="{{ partial "link.html" (index $l 1) }}">{{ i18n (index $l 0) }}</a>{{ end }}</p>
+{{ else }}
+  {{ $r := index $d.RECHT $key }}
+  {{ if not $r }}{{ errorf "recht.html: no legal frame %q in data/pages/recht.json" $key }}{{ end }}
+  <section class="kopf {{ $c }}"><div class="w-hero-text {{ $c }}"><h1 class="w-h1 {{ $c }}">{{ index $r.h1 $i }}</h1>{{ with $r.lead }}<p class="w-lead {{ $c }}">{{ index . 0 }}</p>{{ end }}</div></section>
+  {{/* the English note that the German version is binding: its wording is the owner's (copy deck 8) */}}
+  {{ if $i }}<p class="{{ $c }}">{Hinweis Übersetzung}</p>{{ end }}
+  {{ with $de.Content }}
+    <div class="{{ $c }}" lang="de">{{ . }}</div>
+  {{ else }}
+    {{ range $r.teile }}<section class="block {{ $c }}"{{ if $i }} lang="de"{{ end }}><h2 class="w-h3 {{ $c }}">{{ index . 0 }}</h2>{{ if ne $key "impressum" }}<p class="platzhalter {{ $c }}">{{ index $d.RECHT_TEXT 0 }}</p>{{ end }}</section>{{ end }}
+  {{ end }}
+  {{ if $r.anfrage }}<p class="{{ $c }}"><a class="w-more {{ $c }}" href="{{ $kontakt }}">{{ index $d.DV.kontakt $i }} →</a></p>{{ end }}
+  {{ if eq $key "impressum" }}<p class="{{ $c }}"{{ if $i }} lang="de"{{ end }}>Decuma ist eine Software und keine Steuerberatung.</p>{{ end }}
+  <p class="w-small {{ $c }}">{{ $stand }}</p>
+{{ end }}
+</div>
+{{ end }}

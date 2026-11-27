@@ -1,3 +1,4 @@
 ---
 translationKey: agb
+layout: recht
 ---

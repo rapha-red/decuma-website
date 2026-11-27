@@ -48,6 +48,7 @@ const browser = await chromium.launch()
 const page = await browser.newPage({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } })
 let css = ''
 let iconClass = ''
+let rechtClass = ''
 for (const l of ['de', 'en']) {
   for (const [name, [flags, menu, sel]] of Object.entries(STUECKE)) {
     await page.goto(`${base}?lang=${l}&flags=${flags}#/web`)
@@ -60,6 +61,21 @@ for (const l of ['de', 'en']) {
     mkdirSync(join(site, 'layouts/partials/fragments', l), { recursive: true })
     writeFileSync(join(site, 'layouts/partials/fragments', l, name + '.html'), sauber(html) + '\n')
   }
+  // the line drawings (Zeichnung.svelte) by name, z-<art>.html, from the open-source page with every flag on (a drawing
+  // never changes with a flag): each section head and row that names one in data/pages/seiten.json
+  const seiten = JSON.parse(readFileSync(join(site, 'data/pages/seiten.json'), 'utf8'))
+  await page.goto(`${base}?lang=${l}&flags=${ALL}#/web/open-source`)
+  await page.locator('main .w-sec').first().waitFor()
+  const zeichnungen = new Map()
+  seiten['open-source'].abschnitte.forEach((a, i) => {
+    const sec = `main [aria-labelledby=ab-open-source${i}]`
+    if (a.z) zeichnungen.set(a.z, `${sec} .w-sec-head > svg`)
+    for (const b of a.bloecke) (b.zeilen ?? []).forEach((z, j) => z.z && !zeichnungen.has(z.z) && zeichnungen.set(z.z, `${sec} .w-zeile:nth-child(${j + 1}) > svg`))
+  })
+  for (const [art, sel] of zeichnungen) writeFileSync(join(site, 'layouts/partials/fragments', l, `z-${art}.html`), sauber(await page.locator(sel).evaluate((e) => e.outerHTML)) + '\n')
+  // the scope class of the data promise and legal frames (Recht.svelte's rules in site.css)
+  await page.goto(`${base}?lang=${l}#/web/datenversprechen`)
+  rechtClass ||= (await page.locator('main .recht').getAttribute('class')).match(/svelte-\w+/)[0]
   iconClass ||= await page.locator('.w-nav button svg').first().getAttribute('class')
   css ||= await page.evaluate(() =>
     [...document.querySelectorAll('style[data-vite-dev-id]')]
@@ -77,7 +93,7 @@ async function start(l, on) {
     const got = {}
     for (const route of new Set(Object.values(VISUALS).map(([r]) => r))) {
       await page.goto(`${base}?lang=${l}&flags=${on.join(',') || 'aus'}${route}`)
-      await page.locator('.w-hero').waitFor()
+      await page.locator('main > *').first().waitFor()
       for (const [name, [r, sel]] of Object.entries(VISUALS)) {
         if (r !== route) continue
         const el = page.locator('main ' + sel)
@@ -122,5 +138,5 @@ for (const l of ['de', 'en']) {
 await browser.close()
 css = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n+/g, '\n')
 writeFileSync(join(site, 'assets/css/site.css'), `/* compiled component rules of the website at ${commit}, captured by checks/capture.mjs; do not edit */\n${css}`)
-writeFileSync(join(site, 'data/capture.json'), JSON.stringify({ commit, icon_class: iconClass, preise_class: preiseClass, deps }) + '\n')
+writeFileSync(join(site, 'data/capture.json'), JSON.stringify({ commit, icon_class: iconClass, preise_class: preiseClass, recht_class: rechtClass, deps }) + '\n')
 console.log(`captured ${Object.keys(STUECKE).length * 2} menu fragments, start visuals (flags: ${JSON.stringify(deps)}) and ${css.length} bytes of component CSS at ${commit}`)

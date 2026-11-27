@@ -1,3 +1,4 @@
 ---
 translationKey: avv
+layout: recht
 ---
