@@ -1,0 +1,7 @@
+# Decuma
+
+> {{ i18n "w.s.sub" }}
+
+## Seiten
+{{ range (index hugo.Sites 0).Pages }}{{ if .RelPermalink }}
+- [{{ partial "title.html" . }}]({{ partial "abs.html" .RelPermalink }}){{ end }}{{ end }}

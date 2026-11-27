@@ -1,0 +1,46 @@
+{{/* Footer: four link columns, the open-source line, the copyright year of the build, the language switch as links to
+     the hreflang partner, "Cookie-Einstellungen". Every link to a page that is not built is left out. */}}
+{{ $src := partial "flag.html" "source_link" }}
+{{ define "partials/inline/foot-link.html" }}{{ with partial "link.html" .t }}<li><a href="{{ . }}">{{ i18n $.k }}</a></li>{{ end }}{{ end }}
+<footer class="w-foot">
+  <div class="w-wrap">
+    <div class="w-foot-cols">
+      <div><a class="w-brand" href="{{ partial "link.html" "#/web" }}"><img src="/icon.svg" alt="" width="22" height="22">Decuma</a></div>
+      <nav aria-labelledby="f-produkt"><h2 id="f-produkt">{{ i18n "w.f.produkt" }}</h2><ul>
+        {{ range slice (slice "w.f.buch" "#/web/buchhaltung") (slice "w.f.rech" "#/web/rechnungen") (slice "w.f.ust" "#/web/umsatzsteuer") (slice "w.f.abschluss" "#/web/jahresabschluss") (slice "w.f.gruendung" "#/web/gruendung") (slice "w.f.est" "#/web/privat") (slice "w.f.dev" "#/web/entwickler") }}{{ partial "inline/foot-link.html" (dict "k" (index . 0) "t" (index . 1)) }}{{ end }}
+      </ul></nav>
+      <nav aria-labelledby="f-preise"><h2 id="f-preise">{{ i18n "w.f.preise" }}</h2><ul>
+        {{ partial "inline/foot-link.html" (dict "k" "w.f.tarife" "t" "#/web/preise") }}{{ partial "inline/foot-link.html" (dict "k" "w.f.dfy" "t" "#/web/preise/service") }}
+        {{ if $src }}{{ partial "inline/foot-link.html" (dict "k" "w.f.selbst" "t" "#/web/open-source") }}{{ end }}
+        <li><a href="{{ site.Params.booking }}" target="_blank" rel="noopener">{{ i18n "w.f.call" }} ↗</a></li>
+      </ul></nav>
+      <nav aria-labelledby="f-res"><h2 id="f-res">{{ i18n "w.f.res" }}</h2><ul>
+        {{ range slice (slice "w.f.wissen" "#/kb") (slice "w.f.neu" "#/web/neu") (slice "w.f.vs" "#/web/datenversprechen") }}{{ partial "inline/foot-link.html" (dict "k" (index . 0) "t" (index . 1)) }}{{ end }}
+        {{ if $src }}<li><a href="{{ site.Params.repo }}" target="_blank" rel="noopener">{{ i18n "w.f.github" }} ↗</a></li>{{ end }}
+        <li><a href="/llms.txt">llms.txt</a></li>
+      </ul></nav>
+      <nav aria-labelledby="f-recht"><h2 id="f-recht">{{ i18n "w.f.recht" }}</h2><ul>
+        {{ range slice "impressum" "datenschutz" "agb" "avv" "uav" }}{{ partial "inline/foot-link.html" (dict "k" (print "w.f." .) "t" (print "#/web/" (cond (eq . "uav") "unterauftragnehmer" .))) }}{{ end }}
+        <li><button type="button" class="w-linkknopf" data-consent-open>{{ i18n "w.f.cookies" }}</button></li>
+      </ul></nav>
+    </div>
+    <div class="w-foot-lines">
+      {{ if $src }}<p>{{ i18n "w.f.os" }}</p>{{ end }}
+    </div>
+    <div class="w-foot-bar">
+      <span>{{ i18n "w.f.copy" (dict "jahr" now.Year) }}</span>
+      <span class="w-lang" role="group" aria-label="{{ i18n "w.lang" }}">
+        {{ range slice "de" "en" }}
+          {{ $l := . }}
+          {{ $href := "" }}
+          {{ if eq $l site.Language.Lang }}{{ $href = partial "url.html" $.RelPermalink }}
+          {{ else }}
+            {{ range $.Translations }}{{ if eq .Language.Lang $l }}{{ $href = partial "url.html" .RelPermalink }}{{ end }}{{ end }}
+            {{ if not $href }}{{ $href = partial "url.html" (index (where hugo.Sites "Language.Lang" $l) 0).Home.RelPermalink }}{{ end }}
+          {{ end }}
+          <a lang="{{ $l }}" hreflang="{{ $l }}" href="{{ $href }}"{{ if eq $l site.Language.Lang }} aria-current="true"{{ end }}>{{ upper $l }}</a>
+        {{ end }}
+      </span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,22 @@
+/* Rules of the static shell itself (no counterpart in the prototype, which renders only what is open). */
+[hidden] {
+  display: none !important;
+}
+/* the language switch is a pair of links here (the prototype's are buttons): same look */
+.web .w-lang a {
+  display: inline-block;
+  min-width: 32px;
+  height: 28px;
+  padding: 0 6px;
+  line-height: 26px;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: var(--r);
+  color: var(--ink-2);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+}
+.web .w-lang a[aria-current='true'] {
+  border-color: var(--line);
+  color: var(--ink);
+}

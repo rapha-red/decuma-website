@@ -1,0 +1,21 @@
+{{/* Consent banner: a non-modal bar at the bottom, hidden until assets/js/consent.js finds no stored choice or the footer
+     link reopens it. "Ablehnen" and "Akzeptieren" are the same button. */}}
+<section class="w-cookies" aria-labelledby="ck-h" data-consent hidden>
+  <div class="w-wrap w-cookies-in">
+    <div class="text">
+      <h2 id="ck-h" class="w-small"><b>{{ i18n "w.ck.h" }}</b></h2>
+      <p class="w-small">{{ i18n "w.ck.t" }} {{ with partial "link.html" "#/web/datenschutz" }}<a href="{{ . }}">{{ i18n "w.ck.mehr" }}</a>{{ end }}</p>
+      <fieldset class="kategorien" data-details hidden>
+        <legend class="sr">{{ i18n "w.ck.kat" }}</legend>
+        <label><input type="checkbox" checked disabled><span><b>{{ i18n "w.ck.notwendig" }}</b> {{ i18n "w.ck.notwendig.l" }}</span></label>
+        <label><input type="checkbox" name="statistik"><span><b>{{ i18n "w.ck.statistik" }}</b> {{ i18n "w.ck.statistik.l" }}</span></label>
+      </fieldset>
+    </div>
+    <div class="knoepfe">
+      <button type="button" class="btn" data-save data-details hidden>{{ i18n "w.ck.speichern" }}</button>
+      <button type="button" class="btn" data-choice="0" data-short>{{ i18n "w.ck.ablehnen" }}</button>
+      <button type="button" class="btn" data-choice="1" data-short>{{ i18n "w.ck.akzeptieren" }}</button>
+      <button type="button" class="w-ck-einst" aria-expanded="false" data-more data-short>{{ i18n "w.ck.einstellungen" }}</button>
+    </div>
+  </div>
+</section>

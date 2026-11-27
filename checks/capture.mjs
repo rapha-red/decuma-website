@@ -31,7 +31,11 @@ for (const l of ['de', 'en']) {
   for (const [name, [flags, menu, sel]] of Object.entries(STUECKE)) {
     await page.goto(`${base}?lang=${l}&flags=${flags}#/web`)
     await page.locator(`button[aria-controls=menu-${menu}]`).hover()
-    const html = await page.locator(`#menu-${menu} ${sel}`).evaluate((e) => e.outerHTML)
+    // a form value set as a property is written into the markup
+    const html = await page.locator(`#menu-${menu} ${sel}`).evaluate((e) => {
+      e.querySelectorAll('input').forEach((i) => i.setAttribute('value', i.value))
+      return e.outerHTML
+    })
     mkdirSync(join(site, 'layouts/partials/fragments', l), { recursive: true })
     writeFileSync(join(site, 'layouts/partials/fragments', l, name + '.html'), sauber(html) + '\n')
   }

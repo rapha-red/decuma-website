@@ -1,0 +1,21 @@
+# Local serving of the built tree for the browser checks: addresses without ".html" and without a trailing slash, as
+# on the server. SITE_ROOT and SITE_PORT come from the caller.
+{
+	admin off
+	auto_https off
+	persist_config off
+}
+http://127.0.0.1:{$SITE_PORT:8099} {
+	root * {$SITE_ROOT}
+	try_files {path}.html {path}/index.html {path}
+	file_server
+	handle_errors {
+		@en path /en/*
+		rewrite @en /en/404.html
+		rewrite * /404.html
+		file_server
+	}
+	log {
+		output discard
+	}
+}

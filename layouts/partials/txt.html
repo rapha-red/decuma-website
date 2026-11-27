@@ -1,0 +1,20 @@
+{{/* A text of data/pages in this language and flag state (as r() of the prototype's Seite.svelte): [de, en], or
+     {t, flag, fb, v}; "" when its flag is off and it has no fallback. Price placeholders are filled by the page kinds. */}}
+{{ $i := cond (eq site.Language.Lang "de") 0 1 }}
+{{ $x := . }}
+{{ $out := "" }}
+{{ if reflect.IsSlice $x }}{{ $out = index $x $i }}
+{{ else if $x }}
+  {{ $on := true }}
+  {{ with $x.flag }}
+    {{ $on = false }}
+    {{ range (cond (reflect.IsSlice .) . (slice .)) }}{{ if partial "flag.html" . }}{{ $on = true }}{{ end }}{{ end }}
+  {{ end }}
+  {{ if not $on }}{{ with $x.fb }}{{ $out = index . $i }}{{ end }}
+  {{ else }}
+    {{ $t := $x.t }}
+    {{ range $x.v }}{{ if and (eq $t $x.t) (partial "flag.html" .flag) }}{{ $t = .t }}{{ end }}{{ end }}
+    {{ $out = index $t $i }}
+  {{ end }}
+{{ end }}
+{{ return $out }}

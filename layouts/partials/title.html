@@ -1,0 +1,9 @@
+{{ $i := cond (eq site.Language.Lang "de") 0 1 }}
+{{ $k := .Params.translationKey | default "" }}
+{{ $keys := dict "start" "w.s.title" "preise" "w.p.title" "preise/service" "w.d.title" "gruendung" "w.g.title" "bots" "w.bp.title" "neu" "w.n.title" "kb" "w.kb.title" }}
+{{ $t := "Decuma" }}
+{{ with index $keys $k }}{{ $t = i18n . }}{{ end }}
+{{ with index hugo.Data.pages.seiten $k }}{{ $t = index .titel $i }}{{ end }}
+{{ if eq $k "datenversprechen" }}{{ $t = index hugo.Data.pages.recht.DV.titel $i }}{{ end }}
+{{ with index hugo.Data.pages.recht.RECHT $k }}{{ $t = print (index .h1 $i) " | Decuma" }}{{ end }}
+{{ return $t }}

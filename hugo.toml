@@ -1,0 +1,39 @@
+baseURL = "https://decuma.de/"
+title = "Decuma"
+defaultContentLanguage = "de"
+defaultContentLanguageInSubdir = false
+uglyURLs = true
+disableAliases = true
+disableDefaultLanguageRedirect = true
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term", "rss", "sitemap"]
+
+[params]
+app = "https://app.decuma.de"
+booking = "https://cal.com/decuma-raphael/30min"
+repo = "https://github.com/rapha-red/open-decuma"
+# the "Für:" row of the Produkt menu; on once the "Lösungen für" pages exist
+menu_fuer = false
+
+[languages.de]
+weight = 1
+locale = "de-DE"
+[languages.en]
+weight = 2
+locale = "en-GB"
+
+[outputFormats.llms]
+mediaType = "text/plain"
+baseName = "llms"
+isPlainText = true
+notAlternative = true
+[outputFormats.sitemapxml]
+mediaType = "application/xml"
+baseName = "sitemap"
+isPlainText = true
+notAlternative = true
+
+[minify.tdewolff.html]
+keepDocumentTags = true
+keepEndTags = true
+keepQuotes = true

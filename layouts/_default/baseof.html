@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="{{ site.Language.Lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{- range slice "model_steps" "agent_tier" "lohn" "bank" "source_link" "eric" "auftrag" }}{{ $_ := partial "flag.html" . }}{{ end }}
+<title>{{ partial "title.html" . }}</title>
+<meta name="description" content="{{ partial "description.html" . }}">
+<link rel="canonical" href="{{ partial "abs.html" .RelPermalink }}">
+{{- if ne .Params.translationKey "kb" }}{{/* the Knowledge Base is German only and has no partner */}}
+{{- range .AllTranslations }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ partial "abs.html" .RelPermalink }}">
+{{- if eq .Language.Lang "de" }}
+<link rel="alternate" hreflang="x-default" href="{{ partial "abs.html" .RelPermalink }}">
+{{- end }}
+{{- end }}
+{{- end }}
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+{{- $css := slice }}
+{{- range slice "fonts" "tokens" "app" "display" "website" "site" "shell" }}{{ $css = $css | append (resources.Get (print "css/" . ".css")) }}{{ end }}
+{{- with $css | resources.Concat "css/site.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{- end }}
+{{- range slice "anim" "menu" "consent" }}
+{{- with resources.Get (print "js/" . ".js") | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{- end }}
+</head>
+<body>
+<div class="web">
+{{ partial "header.html" . }}
+<main>{{ block "main" . }}{{ end }}</main>
+{{ partial "footer.html" . }}
+{{ partial "consent.html" . }}
+</div>
+</body>
+</html>

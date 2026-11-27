@@ -1,0 +1,20 @@
+{{/* A prototype or offer target ("#/web/preise", "#/kb", "#/anmelden", "#/checkout/pro") to its address: a page of
+     this language (or, for the German-only Knowledge Base, the German one), or the app. "" when the page is not built,
+     so the caller leaves the link out. */}}
+{{ $t := . }}
+{{ $app := site.Params.app }}
+{{ $apps := dict "#/anmelden" "/#/anmelden" "#/registrieren" "/#/registrieren" "#/checkout/pro" "/#/registrieren?tarif=pro" "#/checkout/max" "/#/registrieren?tarif=max" }}
+{{ $out := "" }}
+{{ with index $apps $t }}
+  {{ $out = print $app . }}
+{{ else }}
+  {{ $key := "" }}
+  {{ if eq $t "#/web" }}{{ $key = "start" }}
+  {{ else if hasPrefix $t "#/web/" }}{{ $key = strings.TrimPrefix "#/web/" $t }}
+  {{ else if hasPrefix $t "#/kb" }}{{ $key = strings.TrimPrefix "#/" $t }}
+  {{ else }}{{ errorf "link: unknown target %q" $t }}{{ end }}
+  {{ $p := index (where site.Pages "Params.translationkey" $key) 0 }}
+  {{ if not $p }}{{ $p = index (where (index hugo.Sites 0).Pages "Params.translationkey" $key) 0 }}{{ end }}
+  {{ with $p }}{{ $out = partial "url.html" .RelPermalink }}{{ end }}
+{{ end }}
+{{ return $out }}
