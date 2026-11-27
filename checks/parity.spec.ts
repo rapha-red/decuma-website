@@ -10,7 +10,7 @@ const PROTO = `http://127.0.0.1:${process.env.PROTO_PORT ?? '5180'}/`
 const FLAGS = process.env.FLAGS || 'aus'
 const STARS = process.env.STARS ?? '0'
 const LABEL = process.env.LABEL ?? 'offer'
-// owner-approved differences: CSS hiding the part on the prototype side, per case ("*" for all), from parity-exceptions.txt
+// owner-approved differences: CSS hiding the part (on both sides, see exceptions()), per case ("*" for all), from parity-exceptions.txt
 const EXCEPTIONS = readFileSync(new URL('./parity-exceptions.txt', import.meta.url), 'utf8')
   .split('\n')
   .filter((l) => l.trim() && !l.startsWith('#'))
@@ -24,20 +24,25 @@ const EMPTY_MAIN = ' main > * { display: none !important }'
 const PAGES = {
   shell: { route: '#/web/leer', de: '/datenversprechen', en: '/en/data-promise', css: EMPTY_MAIN },
   start: { route: '#/web', de: '/', en: '/en/', css: '' },
+  preise: { route: '#/web/preise', de: '/preise', en: '/en/pricing', css: '' },
+  service: { route: '#/web/preise/service', de: '/preise/service', en: '/en/pricing/service', css: '' },
 }
+// owner-approved differences of a case in this flag state, as CSS hiding the part on both sides (a part the site lacks
+// matches nothing there)
+const exceptions = (c: Case) => EXCEPTIONS.filter(([n, , label]) => (n === '*' || n === c.name) && (!label || label === LABEL)).map(([, css]) => css).join(' ')
 
 async function proto(page: Page, lang: string, c: Case) {
   await page.addInitScript(() => localStorage.setItem('decuma-consent', JSON.stringify({ statistik: false, am: '2027-01-04' })))
   const pg = PAGES[c.page ?? 'shell']
   await page.goto(`${PROTO}?lang=${lang}&flags=${FLAGS}&sterne=${STARS}${pg.route}`)
-  const extra = EXCEPTIONS.filter(([n, , label]) => (n === '*' || n === c.name) && (!label || label === LABEL)).map(([, css]) => css).join(' ')
-  await page.addStyleTag({ content: PROTO_CSS + pg.css + ' ' + extra })
+  await page.addStyleTag({ content: PROTO_CSS + pg.css + ' ' + exceptions(c) })
   await page.locator('.w-head').waitFor()
 }
 
 async function site(page: Page, lang: string, c: Case) {
   await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: false, am: '2027-01-04' })), url: `http://127.0.0.1:${process.env.SITE_PORT ?? '8099'}` }])
   await page.goto(PAGES[c.page ?? 'shell'][lang as 'de' | 'en'])
+  await page.addStyleTag({ content: exceptions(c) })
   await page.locator('.w-head').waitFor()
 }
 
@@ -45,6 +50,16 @@ type Case = { name: string; page?: keyof typeof PAGES; width: number; height: nu
 const open = (m: string) => async (p: Page) => {
   await p.locator(`button[aria-controls=menu-${m}]`).hover()
   await p.locator(`#menu-${m}`).waitFor()
+}
+const pick = (name: string, i: number) => async (p: Page) => {
+  const b = p.locator('.w-nur-handy button').nth(i)
+  if (!(await b.count())) {
+    if (p.url().startsWith(PROTO)) test.skip(true, `no column ${i} on the prototype in this flag state`)
+    // a column the site lacks is a difference only when parity-exceptions.txt lists it for this case
+    test.skip(exceptions({ name } as Case) !== '', `column ${i}: listed in parity-exceptions.txt`)
+    throw new Error(`the site has no column ${i} of the segmented control`)
+  }
+  await b.click()
 }
 const CASES: Case[] = [
   { name: 'shell-1280', width: 1280, height: 900, full: true },
@@ -54,6 +69,11 @@ const CASES: Case[] = [
   { name: 'produkt-1280', width: 1280, height: 900, full: false, act: open('produkt') },
   { name: 'gruendung-1280', width: 1280, height: 900, full: false, act: open('gruendung') },
   { name: 'ressourcen-1280', width: 1280, height: 900, full: false, act: open('ressourcen') },
+  { name: 'preise-1280', page: 'preise', width: 1280, height: 900, full: true },
+  { name: 'service-1280', page: 'service', width: 1280, height: 900, full: true },
+  // at 390 px once per column of the segmented control above the comparison (a column the prototype lacks is skipped)
+  ...[0, 1, 2].map((i) => ({ name: `preise-390-c${i}`, page: 'preise' as const, width: 390, height: 844, full: true, act: pick(`preise-390-c${i}`, i) })),
+  ...[0, 1, 2, 3].map((i) => ({ name: `service-390-c${i}`, page: 'service' as const, width: 390, height: 844, full: true, act: pick(`service-390-c${i}`, i) })),
   {
     name: 'sheet-390',
     width: 390,

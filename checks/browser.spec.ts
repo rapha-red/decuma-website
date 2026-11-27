@@ -116,7 +116,7 @@ test.describe('consent', () => {
 })
 
 test.describe('axe', () => {
-  for (const path of ['/', '/en/', '/preise', '/en/pricing', '/datenversprechen']) {
+  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/datenversprechen']) {
     test(`no serious or critical finding on ${path}, banner and Produkt menu open`, async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 900 })
       await page.goto(path)
@@ -235,5 +235,93 @@ test.describe('start page', () => {
     await page.locator('[data-billing="yearly"]').click()
     expect(await text()).toContain('108 € im Jahr')
     await expect(page.locator('#k-free')).toHaveCount(0)
+  })
+})
+
+// The price page: the comparison from data/offer.json, its column picker on phones, the unknown-cell stop.
+// A Max column and Max-only rows exist in no price list yet, so the test copy adds them (synthetic test data).
+const visible = (o: any) => {
+  const on = (r: any) => r.flags.every((f: string) => o.flags[f]) && (!r.any_flags.length || r.any_flags.some((f: string) => o.flags[f]))
+  return o.offer.groups.flatMap((g: any) => g.rows.filter(on).map((r: any) => r.key))
+}
+const withMax = (o: any) => {
+  o.plans.push({ ...o.plans.find((p: any) => p.plan === 'pro'), plan: 'agent', name: 'Max', monthly: '20.00', intro: '2.00', yearly_per_month: '15.00', yearly: '180.00' })
+  o.offer.columns.splice(2, 0, { ...o.offer.columns.find((c: any) => c.key === 'pro'), key: 'agent', highlight: false, flags: ['agent_tier'], de: 'Max', en: 'Max', href: '#/checkout/max' })
+  o.offer.groups.forEach((g: any) => g.rows.forEach((r: any) => r.cells.push(r.cells[1])))
+  o.offer.groups[1].rows.splice(1, 0, { key: 'supplier_invoices', de: 'Rechnungen aus Lieferanten-Konten abholen', en: 'x', capability: 'x', flags: ['agent_tier'], any_flags: [], cells: ['no', 'no', 'yes'] })
+  o.offer.groups[1].rows.push({ key: 'payroll', de: 'Lohnabrechnung', en: 'x', capability: 'x', flags: ['lohn'], any_flags: [], cells: ['no', 'yes', 'yes'] })
+  o.offer.groups[3].rows.push({ key: 'founding_transmission', de: 'Übermittlung', en: 'x', capability: 'x', flags: [], any_flags: ['eric', 'auftrag'], cells: ['no', 'yes', 'yes'] })
+}
+
+test.describe('price page', () => {
+  test.use({ viewport: { width: 1280, height: 900 } })
+  const rows = (page: Page) => page.locator('tr[data-row]').evaluateAll((t) => t.map((r) => r.getAttribute('data-row')))
+  const heads = (page: Page) => page.locator('[data-columns] thead th:not(:first-child)').allInnerTexts()
+
+  test('every row and column comes from data/offer.json, flagged ones only while on', async ({ page }) => {
+    const offer = JSON.parse(readFileSync(join(REPO, 'data/offer.json'), 'utf8'))
+    await page.goto('/preise')
+    expect(await rows(page)).toEqual(visible(offer))
+    for (const [state, max] of [[false, false], [true, true]] as const) {
+      let copy: any
+      await serve(page, buildWith((o) => { withMax(o); o.flags.agent_tier = state; o.flags.eric = state; copy = o }))
+      await page.goto(SITE + '/preise')
+      expect(await heads(page)).toEqual(max ? ['Kostenlos', 'Pro', 'Max'] : ['Kostenlos', 'Pro'])
+      const got = await rows(page)
+      expect(got).toEqual(visible(copy))
+      expect(got.includes('supplier_invoices')).toBe(max)
+      expect(got.includes('payroll')).toBe(false) // lohn off
+      expect(got.includes('founding_transmission')).toBe(state) // any of eric, auftrag
+      expect(await page.locator('#agent').count()).toBe(max ? 1 : 0)
+      await page.unroute(SITE + '/**')
+    }
+  })
+
+  test('an unknown cell value stops the build, naming group, row and column', async () => {
+    const cell = (v: string) => () => buildWith((o) => (o.offer.groups[0].rows[2].cells[1] = v))
+    expect(cell('maybe')).toThrow(/offer group "invoices" row "recurring_invoices" column "pro": unknown cell value maybe/)
+    expect(cell('yes')).not.toThrow()
+  })
+
+  test('the booking link is the only outbound link of Done-for-you and opens cal.com directly', async ({ page }) => {
+    await page.goto('/preise/service')
+    const out = await page.locator('a[href^="http"]').evaluateAll((as) =>
+      as.map((a) => [a.getAttribute('href'), a.getAttribute('target')]).filter(([h]) => !/^https:\/\/(app\.)?decuma\.de\//.test(h!)))
+    expect(new Set(out.map(([h]) => h))).toEqual(new Set(['https://cal.com/decuma-raphael/30min']))
+    expect(out.every(([, t]) => t === '_blank')).toBe(true)
+  })
+})
+
+test.describe('price page on a phone', () => {
+  test.use({ viewport: { width: 390, height: 844 } })
+  for (const path of ['/preise', '/preise/service']) {
+    test(`${path}: the control picks the one column shown, by keyboard too; no sideways scroll; axe clean`, async ({ page }) => {
+      await page.goto(path)
+      const pick = page.locator('[data-pick]')
+      const box = page.locator('[data-columns]')
+      const shown = () => box.locator('thead th:not(:first-child)').evaluateAll((t) => t.filter((e) => getComputedStyle(e).display !== 'none').map((e) => e.textContent))
+      const buttons = pick.locator('button')
+      const names = await buttons.allInnerTexts()
+      expect(await shown()).toEqual([await pick.locator('[aria-pressed=true]').innerText()])
+      for (const [i, name] of names.entries()) {
+        await buttons.nth(i).focus()
+        await page.keyboard.press(i % 2 ? 'Enter' : 'Space')
+        await expect(buttons.nth(i)).toHaveAttribute('aria-pressed', 'true')
+        expect(await shown()).toEqual([name])
+      }
+      expect(await box.evaluate((e) => e.scrollWidth <= e.clientWidth)).toBe(true)
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+      const r = await new AxeBuilder({ page }).analyze()
+      expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+    })
+  }
+  test.describe('without JavaScript', () => {
+    test.use({ javaScriptEnabled: false })
+    test('every column shows, in a scroll box', async ({ page }) => {
+      await page.goto('/preise')
+      await expect(page.locator('[data-pick]')).toBeHidden()
+      expect(await page.locator('[data-columns] thead th:visible').count()).toBe(3)
+      expect(await page.locator('[data-columns]').evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(true)
+    })
   })
 })
