@@ -3,6 +3,7 @@
     {
       "plan": "free",
       "name": "Kostenlos",
+      "name_en": "Free",
       "monthly": "0",
       "yearly_per_month": "0",
       "yearly": "0",
@@ -13,6 +14,7 @@
     {
       "plan": "pro",
       "name": "Pro",
+      "name_en": "Pro",
       "monthly": "8.00",
       "yearly_per_month": "6.00",
       "yearly": "72.00",
@@ -48,6 +50,7 @@
     "lohn": false,
     "model_steps": false,
     "source_link": false,
+    "supplier_invoices": false,
     "web_push": false
   },
   "offer": {
@@ -58,7 +61,7 @@
         "highlight": false,
         "flags": [],
         "de": "Kostenlos",
-        "en": "Kostenlos",
+        "en": "Free",
         "cta_de": "Kostenlos starten",
         "cta_en": "Start for free",
         "href": "#/registrieren"
@@ -166,8 +169,8 @@
         "rows": [
           {
             "key": "belege",
-            "de": "Belege erfassen (Handy, Upload, E-Mail, API)",
-            "en": "Capture Belege",
+            "de": "Belege erfassen (Handy, Upload, Belegpostfach mit Weiterleitung, API)",
+            "en": "Capture Belege (phone, upload, Beleg inbox with forwarding, API)",
             "capability": "offen.eingang",
             "flags": [],
             "any_flags": [],
@@ -285,7 +288,7 @@
             "flags": [],
             "any_flags": [],
             "cells": [
-              "no",
+              "yes",
               "yes"
             ]
           },

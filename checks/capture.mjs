@@ -1,7 +1,7 @@
 // Second half of the prototype sync: renders the product visuals of the shell and the start page from the running
 // prototype at PROTOTYPE_COMMIT and keeps the HTML as partials per language, plus the compiled CSS of the website
-// components as assets/css/site.css. A start-page visual that changes with a website flag is kept once per state of
-// the flags it depends on (start-<name>[--<flag>...].html; Hugo would read a dot as an output format);
+// components as assets/css/site.css. A page visual (start page, price page) that changes with a website flag is kept
+// once per state of the flags it depends on (<page>-<name>[--<flag>...].html; Hugo would read a dot as an output format);
 // data/capture.json lists those flags per visual. Usage: node checks/capture.mjs <prototype url, e.g. http://127.0.0.1:5180/>
 // Re-run after tools/sync.mjs at every new pin; never edit the outputs by hand.
 import { chromium } from '@playwright/test'
@@ -26,16 +26,21 @@ const STUECKE = {
 // a decorative button of a visual gets its type, as every button of the site
 const sauber = (h) => h.replace(/<!---->/g, '').replace(/ data-an="1"/g, '').replace(/<!--[\s\S]*?-->/g, '').replace(/<button (?![^>]*\btype=)/g, '<button type="button" ')
 
-// start-page visuals: name -> selector inside main of #/web
+// page visuals: partial name -> [route, selector inside main]
 const START = {
-  hero: '.w-hero-visual > figure',
-  'z-take': '[aria-labelledby=s-take] .w-sec-head > svg',
-  ...Object.fromEntries([1, 2, 3, 4, 5].map((i) => [`row${i}`, `[aria-labelledby=s-take] .w-row:nth-child(${i}) > div:last-child > *`])),
-  'z-ok': '[aria-labelledby=s-ok] .w-sec-head > svg',
-  verlauf: '[aria-labelledby=s-ok] .w-row > div:last-child > *',
-  bots: '[aria-labelledby=s-ag] .bots',
-  eigen: '[aria-labelledby=s-os] figure.w-eigen',
-  dfy: '.w-dfy > svg',
+  'start-hero': '.w-hero-visual > figure',
+  'start-z-take': '[aria-labelledby=s-take] .w-sec-head > svg',
+  ...Object.fromEntries([1, 2, 3, 4, 5].map((i) => [`start-row${i}`, `[aria-labelledby=s-take] .w-row:nth-child(${i}) > div:last-child > *`])),
+  'start-z-ok': '[aria-labelledby=s-ok] .w-sec-head > svg',
+  'start-verlauf': '[aria-labelledby=s-ok] .w-row > div:last-child > *',
+  'start-bots': '[aria-labelledby=s-ag] .bots',
+  'start-eigen': '[aria-labelledby=s-os] figure.w-eigen',
+  'start-dfy': '.w-dfy > svg',
+}
+const VISUALS = {
+  ...Object.fromEntries(Object.entries(START).map(([n, sel]) => [n, ['#/web', sel]])),
+  'preise-dfy': ['#/web/preise/service', '[aria-labelledby=d-take] .w-sec-head > svg'],
+  'preise-selbsthosten': ['#/web/preise/service', '[aria-labelledby=d-opt] .w-sec-head > svg'],
 }
 const FLAGS = ALL.split(',')
 
@@ -63,17 +68,23 @@ for (const l of ['de', 'en']) {
       .join('\n'),
   )
 }
-// the start page in one flag state: visual name -> markup, null where it is not shown
+// the pages in one flag state: visual name -> markup, null where it is not shown
 const states = new Map()
+let preiseClass = ''
 async function start(l, on) {
   const key = l + ':' + on.join(',')
   if (!states.has(key)) {
-    await page.goto(`${base}?lang=${l}&flags=${on.join(',') || 'aus'}#/web`)
-    await page.locator('.w-hero').waitFor()
     const got = {}
-    for (const [name, sel] of Object.entries(START)) {
-      const el = page.locator('main ' + sel)
-      got[name] = (await el.count()) ? sauber(await el.evaluate((e) => e.outerHTML)) : null
+    for (const route of new Set(Object.values(VISUALS).map(([r]) => r))) {
+      await page.goto(`${base}?lang=${l}&flags=${on.join(',') || 'aus'}${route}`)
+      await page.locator('.w-hero').waitFor()
+      for (const [name, [r, sel]] of Object.entries(VISUALS)) {
+        if (r !== route) continue
+        const el = page.locator('main ' + sel)
+        got[name] = (await el.count()) ? sauber(await el.evaluate((e) => e.outerHTML)) : null
+      }
+      // the scope class of the price page's own rules (.w-ansicht, .os, .stapel in site.css)
+      if (route === '#/web/preise/service') preiseClass ||= (await page.locator('main .w-ansicht').getAttribute('class')).match(/svelte-\w+/)[0]
     }
     states.set(key, got)
   }
@@ -84,14 +95,14 @@ const deps = {}
 for (const l of ['de', 'en']) {
   const dir = join(site, 'layouts/partials/fragments', l)
   const aus = await start(l, [])
-  for (const name of Object.keys(START)) {
+  for (const name of Object.keys(VISUALS)) {
     const d = []
     for (const f of FLAGS) if ((await start(l, [f]))[name] !== aus[name]) d.push(f)
     if (deps[name] && deps[name].join() !== d.join()) throw new Error(`${name}: flags differ between languages`)
     deps[name] = d
     for (const on of subsets(d)) {
       const html = (await start(l, on))[name]
-      if (html !== null) writeFileSync(join(dir, ['start-' + name, ...on].join('--') + '.html'), html + '\n')
+      if (html !== null) writeFileSync(join(dir, [name, ...on].join('--') + '.html'), html + '\n')
     }
   }
   // the hero chat (model_steps): its markup before it plays, then the inside of each of its steps
@@ -111,5 +122,5 @@ for (const l of ['de', 'en']) {
 await browser.close()
 css = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n+/g, '\n')
 writeFileSync(join(site, 'assets/css/site.css'), `/* compiled component rules of the website at ${commit}, captured by checks/capture.mjs; do not edit */\n${css}`)
-writeFileSync(join(site, 'data/capture.json'), JSON.stringify({ commit, icon_class: iconClass, deps }) + '\n')
+writeFileSync(join(site, 'data/capture.json'), JSON.stringify({ commit, icon_class: iconClass, preise_class: preiseClass, deps }) + '\n')
 console.log(`captured ${Object.keys(STUECKE).length * 2} menu fragments, start visuals (flags: ${JSON.stringify(deps)}) and ${css.length} bytes of component CSS at ${commit}`)

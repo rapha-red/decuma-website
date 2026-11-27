@@ -16,7 +16,7 @@
       {{ if $ms }}
         {{ partial (print "fragments/" site.Language.Lang "/start-chat.html") . }}
         {{ range seq 6 }}<template data-chat="{{ . }}">{{ partial (print "fragments/" site.Language.Lang "/start-chat-" . ".html") . }}</template>{{ end }}
-      {{ else }}{{ partial "fragment.html" "hero" }}{{ end }}
+      {{ else }}{{ partial "fragment.html" "start-hero" }}{{ end }}
     </div>
   </div>
 </section>
@@ -47,7 +47,7 @@
 }}
 <section class="w-sec" aria-labelledby="s-take">
   <div class="w-wrap">
-    <div class="w-sec-head">{{ partial "fragment.html" "z-take" }}<h2 id="s-take" class="w-h2">{{ i18n "w.s.take" }}</h2></div>
+    <div class="w-sec-head">{{ partial "fragment.html" "start-z-take" }}<h2 id="s-take" class="w-h2">{{ i18n "w.s.take" }}</h2></div>
     <div class="w-rows">
       {{ range $i, $r := $rows }}
         <div class="w-row">
@@ -58,7 +58,7 @@
             {{ with $r.extra }}<p>{{ i18n . }}</p>{{ end }}
             {{ with $r.link }}{{ with partial "link.html" (index . 0) }}<a class="w-more" href="{{ . }}">{{ i18n (index $r.link 1) }} →</a>{{ end }}{{ end }}
           </div>
-          <div>{{ partial "fragment.html" (print "row" (add $i 1)) }}</div>
+          <div>{{ partial "fragment.html" (print "start-row" (add $i 1)) }}</div>
         </div>
       {{ end }}
     </div>
@@ -67,10 +67,10 @@
 
 <section class="w-sec" aria-labelledby="s-ok">
   <div class="w-wrap">
-    <div class="w-sec-head">{{ partial "fragment.html" "z-ok" }}<h2 id="s-ok" class="w-h2">{{ i18n "w.s.ok.h" }}</h2></div>
+    <div class="w-sec-head">{{ partial "fragment.html" "start-z-ok" }}<h2 id="s-ok" class="w-h2">{{ i18n "w.s.ok.h" }}</h2></div>
     <div class="w-row">
       <div class="text"><p>{{ i18n "w.s.ok.t" }}</p><p>{{ i18n "w.s.ok.t2" }}</p></div>
-      <div>{{ partial "fragment.html" "verlauf" }}</div>
+      <div>{{ partial "fragment.html" "start-verlauf" }}</div>
     </div>
   </div>
 </section>
@@ -81,7 +81,7 @@
     <div class="w-sec-head"><h2 id="s-ag" class="w-h2">{{ i18n "w.s.ag.h" }}</h2></div>
     <div class="w-stapel">
       <div class="text"><p>{{ i18n "w.s.ag.t" }}</p><p>{{ i18n "w.s.ag.t2" }}</p>{{ with partial "link.html" "#/web/bots" }}<a class="w-more" href="{{ . }}">{{ i18n "w.s.ag.cta" }} →</a>{{ end }}</div>
-      {{ partial "fragment.html" "bots" }}
+      {{ partial "fragment.html" "start-bots" }}
     </div>
   </div>
 </section>
@@ -96,7 +96,7 @@
         <p>{{ i18n "w.s.os.t" }}</p>
         <div class="w-ctas"><a class="btn large" href="{{ site.Params.repo }}" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="16" height="16"><path d="{{ hugo.Data.icons.github }}"></path></svg>{{ i18n "w.s.os.gh" }}</a>{{ with partial "link.html" "#/web/open-source" }}<a class="w-more" href="{{ . }}">{{ i18n "w.s.os.cta" }} →</a>{{ end }}</div>
       </div>
-      {{ partial "fragment.html" "eigen" }}
+      {{ partial "fragment.html" "start-eigen" }}
     </div>
   </div>
 </section>
@@ -124,7 +124,7 @@
           {{ with partial "link.html" "#/web/preise/service" }}<a class="btn large" href="{{ . }}">{{ i18n "w.s.dfy.cta" }}</a>{{ end }}
         </div>
       </div>
-      {{ partial "fragment.html" "dfy" }}
+      {{ partial "fragment.html" "start-dfy" }}
     </div>
   </div>
 </section>
