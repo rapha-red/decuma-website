@@ -1,12 +1,12 @@
 // Visual parity of the shell with the prototype: the prototype shot is the baseline, the site shot is compared with
 // maxDiffPixelRatio 0.02. Both with reduced motion, a stored consent choice, the prototype bar hidden, the footer year
-// masked. Run by checks/parity.sh, which serves the site and passes PROTO_URL, FLAGS (the flags that are on), STARS and
+// masked. Run by checks/parity.sh, which passes FLAGS (the flags that are on), STARS and
 // LABEL (the flag state: "offer" or "all").
 import { test, expect, type Page } from '@playwright/test'
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 
-const PROTO = process.env.PROTO_URL ?? 'http://127.0.0.1:5180/'
+const PROTO = `http://127.0.0.1:${process.env.PROTO_PORT ?? '5180'}/`
 const FLAGS = process.env.FLAGS || 'aus'
 const STARS = process.env.STARS ?? '0'
 const LABEL = process.env.LABEL ?? 'offer'
@@ -17,7 +17,8 @@ const EXCEPTIONS = readFileSync(new URL('./parity-exceptions.txt', import.meta.u
   .map((l) => l.split('\t'))
 
 // the prototype shows a later-phase note in main; the shell is compared on an empty main
-const PROTO_CSS = 'aside.proto { display: none !important } main > * { display: none !important }'
+// and its page scroller is opened up so a full-page shot covers the whole page, as on the site
+const PROTO_CSS = 'aside.proto { display: none !important } main > * { display: none !important } .viewport, .bare { height: auto !important; overflow: visible !important }'
 
 async function proto(page: Page, lang: string, name: string) {
   await page.addInitScript(() => localStorage.setItem('decuma-consent', JSON.stringify({ statistik: false, am: '2027-01-04' })))
@@ -28,7 +29,7 @@ async function proto(page: Page, lang: string, name: string) {
 }
 
 async function site(page: Page, lang: string) {
-  await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: false, am: '2027-01-04' })), url: process.env.SITE_URL ?? 'http://127.0.0.1:8099' }])
+  await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: false, am: '2027-01-04' })), url: `http://127.0.0.1:${process.env.SITE_PORT ?? '8099'}` }])
   await page.goto(lang === 'de' ? '/datenversprechen' : '/en/data-promise')
   await page.locator('.w-head').waitFor()
 }
@@ -72,11 +73,11 @@ for (const lang of ['de']) {
       const path = info.snapshotPath(name)
       mkdirSync(dirname(path), { recursive: true })
       writeFileSync(path, base)
-      const b = await browser.newContext({ ...opts, baseURL: process.env.SITE_URL })
+      const b = await browser.newContext({ ...opts, baseURL: `http://127.0.0.1:${process.env.SITE_PORT ?? '8099'}` })
       const pb = await b.newPage()
       await site(pb, lang)
       await c.act?.(pb)
-      await expect(pb).toHaveScreenshot(name, { ...shot, mask: [pb.locator('.w-foot-bar > span:first-child')], maxDiffPixelRatio: 0.02 })
+      await expect(pb).toHaveScreenshot(name, { ...shot, mask: [pb.locator('.w-foot-bar > span:first-child')], maxDiffPixelRatio: Number(process.env.PARITY_RATIO ?? 0.02) })
       await b.close()
     })
   }

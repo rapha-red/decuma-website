@@ -6,3 +6,4 @@ checks/node_modules/
 checks/test-results/
 checks/playwright-report/
 checks/.parity/
+checks/.proto/
