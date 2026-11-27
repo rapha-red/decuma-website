@@ -1,0 +1,14 @@
+{
+  "name": "decuma-website-checks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test browser.spec.ts",
+    "parity": "playwright test parity.spec.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.1",
+    "@playwright/test": "1.65.1",
+    "html-validate": "11.23.0"
+  }
+}
