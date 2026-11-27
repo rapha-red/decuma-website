@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test browser.spec.ts",
+    "test": "html-validate --config .htmlvalidate.json \"${SITE_ROOT:-../public}/**/*.html\" && echo \"html-validate: 0 errors\" && playwright test browser.spec.ts",
     "parity": "playwright test parity.spec.ts"
   },
   "devDependencies": {
