@@ -1,6 +1,6 @@
 {{/* The data promise and the frames of the legal pages (the prototype's Recht.svelte), from data/pages/recht.json. A legal
      page renders the owner's Markdown body of its German file; while that body is missing, the prototype's headings
-     with their placeholders. English legal pages show the German text with a note that the German version is binding.
+     with their placeholders. English legal pages show the German body under the English heading and the note RECHT_EN_HINWEIS (owner decision).
      The Stand date is the German file's `stand`; without it the line keeps its placeholder. check_site.py refuses any
      placeholder in a built page unless SITE_DRAFT=1. */}}
 {{ define "main" }}
@@ -37,16 +37,14 @@
 {{ else }}
   {{ $r := index $d.RECHT $key }}
   {{ if not $r }}{{ errorf "recht.html: no legal frame %q in data/pages/recht.json" $key }}{{ end }}
-  <section class="kopf {{ $c }}"><div class="w-hero-text {{ $c }}"><h1 class="w-h1 {{ $c }}">{{ index $r.h1 $i }}</h1>{{ with $r.lead }}<p class="w-lead {{ $c }}">{{ index . 0 }}</p>{{ end }}</div></section>
-  {{/* the English note that the German version is binding: its wording is the owner's (copy deck 8) */}}
-  {{ if $i }}<p class="{{ $c }}">{Hinweis Übersetzung}</p>{{ end }}
+  <section class="kopf {{ $c }}"><div class="w-hero-text {{ $c }}"><h1 class="w-h1 {{ $c }}">{{ index $r.h1 $i }}</h1>{{ if $i }}<p class="w-small {{ $c }}" lang="en">{{ $d.RECHT_EN_HINWEIS }}</p>{{ end }}{{ with $r.lead }}<p class="w-lead {{ $c }}">{{ index . $i }}</p>{{ end }}</div></section>
   {{ with $de.Content }}
     <div class="{{ $c }}" lang="de">{{ . }}</div>
   {{ else }}
-    {{ range $r.teile }}<section class="block {{ $c }}"{{ if $i }} lang="de"{{ end }}><h2 class="w-h3 {{ $c }}">{{ index . 0 }}</h2>{{ if ne $key "impressum" }}<p class="platzhalter {{ $c }}">{{ index $d.RECHT_TEXT 0 }}</p>{{ end }}{{ if and (eq $key "datenschutz") (hasPrefix (index . 0) "Diese Website") }}{{ partial "consent-table.html" . }}{{ end }}</section>{{ end }}
+    {{ range $r.teile }}<section class="block {{ $c }}"><h2 class="w-h3 {{ $c }}">{{ index . $i }}</h2>{{ if ne $key "impressum" }}<p class="platzhalter {{ $c }}">{{ index $d.RECHT_TEXT $i }}</p>{{ end }}{{ if and (eq $key "datenschutz") (hasPrefix (index . 0) "Diese Website") }}{{ partial "consent-table.html" . }}{{ end }}</section>{{ end }}
   {{ end }}
   {{ if $r.anfrage }}<p class="{{ $c }}"><a class="w-more {{ $c }}" href="{{ $kontakt }}">{{ index $d.DV.kontakt $i }} →</a></p>{{ end }}
-  {{ if eq $key "impressum" }}<p class="{{ $c }}"{{ if $i }} lang="de"{{ end }}>Decuma ist eine Software und keine Steuerberatung.</p>{{ end }}
+  {{ if eq $key "impressum" }}<p class="{{ $c }}">{{ index (slice "Decuma ist eine Software und keine Steuerberatung." "Decuma is software, not tax advice.") $i }}</p>{{ end }}
   <p class="w-small {{ $c }}">{{ $stand }}</p>
 {{ end }}
 </div>

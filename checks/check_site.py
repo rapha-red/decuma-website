@@ -207,7 +207,7 @@ def main():
                             fails.append(f"{f.relative_to(repo)}:{n}: price literal {x} (amounts come from data/offer.json)")
     # the go-live guard: no legal frame placeholder ({Text dieses Abschnitts}, {datum}, ...) on a built page
     recht = (repo / "data/pages/recht.json").read_text()
-    holders = set(re.findall(r"\{[^{}\"]+\}", recht)) | {"{Hinweis Übersetzung}"}
+    holders = set(re.findall(r"\{[^{}\"]+\}", recht))
     draft = os.environ.get("SITE_DRAFT") == "1"
     held = 0
     for f in pages:
