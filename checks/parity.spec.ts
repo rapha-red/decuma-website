@@ -38,20 +38,21 @@ const PAGES = {
 }
 // owner-approved differences of a case in this flag state, as CSS hiding the part on both sides (a part the site lacks
 // matches nothing there)
-const exceptions = (c: Case) => EXCEPTIONS.filter(([n, , label]) => (n === '*' || n === c.name) && (!label || label === LABEL)).map(([, css]) => css).join(' ')
+// a case written as <case>@<lang> applies to that language only
+const exceptions = (c: Case, lang?: string) => EXCEPTIONS.filter(([n, , label]) => (n === '*' || n === c.name || n === `${c.name}@${lang}`) && (!label || label === LABEL)).map(([, css]) => css).join(' ')
 
 async function proto(page: Page, lang: string, c: Case) {
   if (!c.bar) await page.addInitScript(() => localStorage.setItem('decuma-consent', JSON.stringify({ statistik: false, am: '2027-01-04' })))
   const pg = PAGES[c.page ?? 'shell']
   await page.goto(`${PROTO}?lang=${lang}&flags=${FLAGS}&sterne=${STARS}${pg.route}`)
-  await page.addStyleTag({ content: PROTO_CSS + pg.css + ' ' + exceptions(c) })
+  await page.addStyleTag({ content: PROTO_CSS + pg.css + ' ' + exceptions(c, lang) })
   await page.locator('.w-head').waitFor()
 }
 
 async function site(page: Page, lang: string, c: Case) {
   if (!c.bar) await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: false, am: '2027-01-04' })), url: `http://127.0.0.1:${process.env.SITE_PORT ?? '8099'}` }])
   await page.goto(PAGES[c.page ?? 'shell'][lang as 'de' | 'en'])
-  await page.addStyleTag({ content: PAGES[c.page ?? 'shell'].css + ' ' + exceptions(c) })
+  await page.addStyleTag({ content: PAGES[c.page ?? 'shell'].css + ' ' + exceptions(c, lang) })
   await page.locator('.w-head').waitFor()
 }
 
@@ -72,8 +73,9 @@ const pick = (name: string, i: number) => async (p: Page) => {
   await b.click()
 }
 const settings = async (p: Page) => {
-  await p.getByRole('button', { name: 'Einstellungen', exact: true }).click()
-  await p.getByRole('button', { name: 'Auswahl speichern' }).waitFor()
+  const en = /[?&]lang=en|\/en\//.test(p.url())
+  await p.getByRole('button', { name: en ? 'Settings' : 'Einstellungen', exact: true }).click()
+  await p.getByRole('button', { name: en ? 'Save choice' : 'Auswahl speichern' }).waitFor()
 }
 const CASES: Case[] = [
   ...[1280, 390].flatMap((width) => [
@@ -110,7 +112,7 @@ const CASES: Case[] = [
   },
 ]
 
-for (const lang of ['de']) {
+for (const lang of (process.env.LANGS ?? 'de,en').split(',')) {
   for (const c of CASES.filter((c) => !c.states || c.states.includes(LABEL))) {
     test(`${LABEL} ${lang} ${c.name}`, async ({ browser }, info) => {
       const opts = { viewport: { width: c.width, height: c.height }, reducedMotion: 'reduce' as const, deviceScaleFactor: 1 }

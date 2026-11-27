@@ -73,7 +73,7 @@ test.describe('menus at 1280 px', () => {
 })
 
 test.describe('axe', () => {
-  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
+  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/en/pricing/service', '/en/data-promise', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
     test(`no serious or critical finding on ${path}, banner and Produkt menu open`, async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 900 })
       await page.goto(path)
@@ -289,12 +289,15 @@ test.describe('open source, Neu in Decuma, legal pages', () => {
 
   test('/open-source with source_link on: built, the GitHub button leads to the repository, html-validate and axe clean', async ({ page }) => {
     const root = buildWith(ALL_ON)
-    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html')], { stdio: 'pipe' })
+    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html'), join(root, 'en/pricing/index.html'), join(root, 'en/data-promise.html')], { stdio: 'pipe' })
     await serve(page, root)
     await page.goto(SITE + '/open-source')
     await expect(page.locator('.w-hero a.btn')).toHaveAttribute('href', 'https://github.com/rapha-red/open-decuma')
-    const r = await new AxeBuilder({ page }).analyze()
-    expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+    for (const path of ['/open-source', '/en/open-source']) {
+      await page.goto(SITE + path)
+      const r = await new AxeBuilder({ page }).analyze()
+      expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => path + ' ' + v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+    }
   })
 
   test('a new changelog entry shows first with its date after a rebuild', async ({ page }) => {
@@ -454,4 +457,38 @@ test.describe('consent', () => {
       ['decuma_consent', 'speichert deine Auswahl in diesem Banner', '6 Monate', 'Notwendig'],
     ])
   })
+})
+
+// No German UI string on an English page: the visible text of each English page (the German legal bodies, marked
+// lang="de", left out; closed menus and the sheet opened) against every German string of i18n/de.yaml and data/pages/*.json that differs from its English
+// side. A run of four or more words of a German string found on an English page is a finding, unless
+// checks/german-terms.txt lists it as a German law or tax term of the copy deck.
+const words = (s: string) => s.replace(/\{\{[^}]*\}\}|<[^>]+>/g, ' ').toLowerCase().match(/[\p{L}\p{N}§€.,-]+/gu)?.map((w) => w.replace(/[.,]+$/, '')).filter(Boolean) ?? []
+const grams = (ws: string[], n = 4) => ws.slice(0, Math.max(0, ws.length - n + 1)).map((_, i) => ws.slice(i, i + n).join(' '))
+function pairs(): [string, string][] {
+  const yaml = (l: string) => Object.fromEntries(readFileSync(join(REPO, `i18n/${l}.yaml`), 'utf8').split('\n').filter((x) => x.startsWith('"')).map((x) => { const i = x.indexOf('": '); return [JSON.parse(x.slice(0, i + 1)), JSON.parse(x.slice(i + 3))] }))
+  const de = yaml('de'), en = yaml('en')
+  const out: [string, string][] = Object.keys(de).map((k) => [de[k], en[k] ?? ''])
+  const walk = (v: any) => {
+    if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'string' && typeof v[1] === 'string') out.push([v[0], v[1]])
+    else if (v && typeof v === 'object') Object.values(v).forEach(walk)
+  }
+  for (const f of ['recht', 'seiten']) walk(JSON.parse(readFileSync(join(REPO, `data/pages/${f}.json`), 'utf8')))
+  return out.filter(([d, e]) => d !== e)
+}
+test.describe('English pages', () => {
+  const english = new Set(pairs().flatMap(([, e]) => grams(words(e))))
+  const german = new Map<string, string>()
+  for (const [d] of pairs()) for (const g of grams(words(d))) if (!english.has(g)) german.set(g, d)
+  const terms = readFileSync(join(REPO, 'checks/german-terms.txt'), 'utf8').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t')[0].toLowerCase())
+  for (const path of ALL_PAGES.filter((p) => p.startsWith('/en/'))) {
+    test(`${path}: no German UI string (runs of four words or more)`, async ({ page, baseURL }) => {
+      await decided(page, baseURL)
+      await page.goto(path)
+      await page.addStyleTag({ content: '[hidden], .w-menu { display: block !important } [lang=de] { display: none !important }' })
+      const text = await page.locator('body').innerText()
+      const found = [...new Set(grams(words(text)).filter((g) => german.has(g) && !terms.some((t) => t.includes(g))))]
+      expect(found.map((g) => `${g}  (from "${german.get(g)}")`)).toEqual([])
+    })
+  }
 })

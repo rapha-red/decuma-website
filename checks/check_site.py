@@ -6,7 +6,9 @@ usage: check_site.py <tree> [<repository>]
 Fails, naming the page and the URL, on: a request to another origin (src, srcset, stylesheet/preload/icon href,
 @import and url() in CSS the page loads or carries, iframe, script, form action); an inline script other than
 JSON-LD; an internal link or asset that does not resolve in the tree; a page outside /kb without canonical or
-without its hreflang partner, a /kb page with a partner or an /en/ copy; a missing llms.txt, robots.txt (or one with
+without its hreflang partner, hreflang that is not reciprocal (self, partner built and pointing back, x-default the German
+page; sitemap.xml alternates equal to the page's), a link on an English page that leaves /en/ (except the Knowledge Base
+and the language switch, both hreflang="de"), a /kb page with a partner or an /en/ copy; a missing llms.txt, robots.txt (or one with
 Disallow) or sitemap.xml; a price of data/offer.json typed into layouts/, i18n/ or data/pages/; an internal decision
 id or private path in the tree; a looping motion (an `infinite` CSS animation, `setInterval` or
 `requestAnimationFrame` in a script); a `<script src>` outside the first-party set (a non-essential script is listed
@@ -42,7 +44,7 @@ def external(url):
 class Page(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
-        self.loads, self.links, self.css, self.alternates = [], [], [], {}
+        self.loads, self.links, self.css, self.alternates, self.anchors = [], [], [], {}, []
         self.canonical, self.inline_scripts, self.styles, self.scripts, self.registry = None, 0, [], [], None
         self._style = False
 
@@ -77,6 +79,7 @@ class Page(HTMLParser):
                     self.css.append(a["href"])
         if tag == "a" and a.get("href"):
             self.links.append(a["href"])
+            self.anchors.append((a["href"], a.get("hreflang")))
 
     def handle_endtag(self, tag):
         if tag == "style":
@@ -132,6 +135,8 @@ def main():
     fails = []
     pages = sorted(f for f in tree.rglob("*.html") if f.name != "404.html" and not f.relative_to(tree).as_posix().startswith("pagefind/"))
     css_cache = {}
+    alts = {}  # address -> its hreflang alternates, as addresses
+    filled = {}  # address -> whether its <main> has content (a partner pair is filled on both sides or neither)
 
     def css_external(css_file):
         if css_file not in css_cache:
@@ -180,6 +185,37 @@ def main():
             other = "en" if not page.startswith("/en/") else "de"
             if other not in p.alternates or "x-default" not in p.alternates:
                 fails.append(f"{page}: no hreflang partner ({other}, x-default)")
+            alts[page] = {k: urlsplit(v).path or "/" for k, v in p.alternates.items()}
+            m = re.search(r"<main>(.*?)</main>", f.read_text(errors="replace"), re.S)
+            filled[page] = bool(m and m.group(1).strip())
+            if page.startswith("/en/"):
+                # an English page links inside /en/, except the German-only Knowledge Base (hreflang="de"), the language
+                # switch (hreflang="de"), llms.txt and the assets
+                for h, hl in p.anchors:
+                    u = urlsplit(h)
+                    if external(h) or u.scheme or not u.path.startswith("/") or u.path.startswith("/en/") or u.path == "/llms.txt":
+                        continue
+                    if hl != "de":
+                        fails.append(f"{page}: link {h} leaves /en/ without hreflang=\"de\"")
+    # hreflang: each page lists itself, its partner (built) and x-default (the German page), and the partner lists the same
+    for page, a in sorted(alts.items()):
+        lang = "en" if page.startswith("/en/") else "de"
+        if a.get(lang) != page:
+            fails.append(f"{page}: hreflang {lang} is {a.get(lang)}, not the page itself")
+        if a.get("x-default") != a.get("de"):
+            fails.append(f"{page}: hreflang x-default {a.get('x-default')} is not the German page {a.get('de')}")
+        for l in ("de", "en"):
+            if a.get(l) and a[l] != page and alts.get(a[l]) != a:
+                fails.append(f"{page}: hreflang {l} {a[l]} is not built or does not point back ({alts.get(a[l])})")
+            elif a.get(l) and filled[page] and not filled.get(a[l], True):
+                fails.append(f"{page}: its partner {a[l]} has an empty <main> (layout missing in its content file?)")
+    sm = tree / "sitemap.xml"
+    if sm.is_file():
+        for loc, body in re.findall(r"<url><loc>([^<]+)</loc>(.*?)</url>", re.sub(r">\s+<", "><", sm.read_text())):
+            page = urlsplit(loc).path or "/"
+            got = {m[0]: urlsplit(m[1]).path or "/" for m in re.findall(r'hreflang="([^"]+)" href="([^"]+)"', body)}
+            if page in alts and got != alts[page]:
+                fails.append(f"/sitemap.xml: alternates of {page} {got} differ from the page's {alts[page]}")
     if (tree / "en/kb").exists():
         fails.append("/en/kb: the Knowledge Base has no English pages")
     for name in ("llms.txt", "robots.txt", "sitemap.xml"):
@@ -207,7 +243,7 @@ def main():
                             fails.append(f"{f.relative_to(repo)}:{n}: price literal {x} (amounts come from data/offer.json)")
     # the go-live guard: no legal frame placeholder ({Text dieses Abschnitts}, {datum}, ...) on a built page
     recht = (repo / "data/pages/recht.json").read_text()
-    holders = set(re.findall(r"\{[^{}\"]+\}", recht)) | {"{Hinweis Übersetzung}"}
+    holders = set(re.findall(r"\{[^{}\"]+\}", recht))
     draft = os.environ.get("SITE_DRAFT") == "1"
     held = 0
     for f in pages:

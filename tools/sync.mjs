@@ -56,7 +56,7 @@ for (const [i, l] of ['de', 'en'].entries()) {
 const seiten = await import(pathToFileURL(join(dir, 'seiten.ts')).href)
 const recht = await import(pathToFileURL(join(dir, 'recht.ts')).href)
 out('data/pages/seiten.json', JSON.stringify(seiten.SEITEN, null, 1) + '\n')
-out('data/pages/recht.json', JSON.stringify({ DV: recht.DV, RECHT: recht.RECHT, RECHT_TEXT: recht.RECHT_TEXT }, null, 1) + '\n')
+out('data/pages/recht.json', JSON.stringify({ DV: recht.DV, RECHT: recht.RECHT, RECHT_TEXT: recht.RECHT_TEXT, RECHT_EN_HINWEIS: recht.RECHT_EN_HINWEIS }, null, 1) + '\n')
 
 // ---- icons: the 20 px line set and the GitHub mark, as path data
 const icon = readFileSync(join(tmp, ui, 'lib/Icon.svelte'), 'utf8')

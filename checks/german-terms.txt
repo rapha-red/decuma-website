@@ -1,0 +1,2 @@
+# German law and tax terms of the copy deck that stay German on English pages (four words or more). One per line:
+# term<TAB>reason

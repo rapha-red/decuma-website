@@ -369,5 +369,6 @@
  "RECHT_TEXT": [
   "{Text dieses Abschnitts}",
   "{Text of this section}"
- ]
+ ],
+ "RECHT_EN_HINWEIS": "This page is available in German only. The German version is legally binding."
 }

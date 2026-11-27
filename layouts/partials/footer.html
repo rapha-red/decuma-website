@@ -1,7 +1,7 @@
 {{/* Footer: four link columns, the open-source line, the copyright year of the build, the language switch as links to
      the hreflang partner, "Cookie-Einstellungen". Every link to a page that is not built is left out. */}}
 {{ $src := partial "flag.html" "source_link" }}
-{{ define "partials/inline/foot-link.html" }}{{ with partial "link.html" .t }}<li><a href="{{ . }}">{{ i18n $.k }}</a></li>{{ end }}{{ end }}
+{{ define "partials/inline/foot-link.html" }}{{ with partial "link.html" .t }}<li><a href="{{ . }}"{{ if and (hasPrefix . "/kb") (ne site.Language.Lang "de") }} hreflang="de"{{ end }}>{{ i18n $.k }}</a></li>{{ end }}{{ end }}
 <footer class="w-foot">
   <div class="w-wrap">
     <div class="w-foot-cols">
