@@ -39,3 +39,7 @@ notAlternative = true
 keepDocumentTags = true
 keepEndTags = true
 keepQuotes = true
+
+# plain Markdown links (the built-in link hook escapes tel: in the Impressum)
+[markup.goldmark.renderHooks.link]
+useEmbedded = "never"

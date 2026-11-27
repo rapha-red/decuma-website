@@ -17,7 +17,7 @@ const EXCEPTIONS = readFileSync(new URL('./parity-exceptions.txt', import.meta.u
   .map((l) => l.split('\t'))
 
 // the prototype bar is hidden and its page scroller opened up so a full-page shot covers the whole page, as on the
-// site; the shell is compared on an empty main (the prototype shows a later-phase note there)
+// site; the shell is compared on an empty main on both sides
 // (the prototype lifts the consent bar above its own bar, which is hidden here)
 const PROTO_CSS = 'aside.proto { display: none !important } .viewport, .bare { height: auto !important; overflow: visible !important } .web .w-cookies { bottom: 0 !important }'
 const EMPTY_MAIN = ' main > * { display: none !important }'
@@ -27,6 +27,14 @@ const PAGES = {
   start: { route: '#/web', de: '/', en: '/en/', css: '' },
   preise: { route: '#/web/preise', de: '/preise', en: '/en/pricing', css: '' },
   service: { route: '#/web/preise/service', de: '/preise/service', en: '/en/pricing/service', css: '' },
+  os: { route: '#/web/open-source', de: '/open-source', en: '/en/open-source', css: '' },
+  dv: { route: '#/web/datenversprechen', de: '/datenversprechen', en: '/en/data-promise', css: '' },
+  neu: { route: '#/web/neu', de: '/neu-in-decuma', en: '/en/whats-new', css: '' },
+  impressum: { route: '#/web/impressum', de: '/impressum', en: '/en/imprint', css: '' },
+  datenschutz: { route: '#/web/datenschutz', de: '/datenschutz', en: '/en/privacy', css: '' },
+  agb: { route: '#/web/agb', de: '/agb', en: '/en/terms', css: '' },
+  avv: { route: '#/web/avv', de: '/avv', en: '/en/dpa', css: '' },
+  unterauftragnehmer: { route: '#/web/unterauftragnehmer', de: '/unterauftragnehmer', en: '/en/subprocessors', css: '' },
 }
 // owner-approved differences of a case in this flag state, as CSS hiding the part on both sides (a part the site lacks
 // matches nothing there)
@@ -43,12 +51,12 @@ async function proto(page: Page, lang: string, c: Case) {
 async function site(page: Page, lang: string, c: Case) {
   if (!c.bar) await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: false, am: '2027-01-04' })), url: `http://127.0.0.1:${process.env.SITE_PORT ?? '8099'}` }])
   await page.goto(PAGES[c.page ?? 'shell'][lang as 'de' | 'en'])
-  await page.addStyleTag({ content: exceptions(c) })
+  await page.addStyleTag({ content: PAGES[c.page ?? 'shell'].css + ' ' + exceptions(c) })
   await page.locator('.w-head').waitFor()
 }
 
-// bar: no stored choice, so the consent bar shows (the viewport shot holds it)
-type Case = { name: string; page?: keyof typeof PAGES; width: number; height: number; full: boolean; bar?: boolean; act?: (p: Page) => Promise<void> }
+// states: the flag states the case runs in (both when absent); bar: no stored choice, so the consent bar shows (the viewport shot holds it)
+type Case = { name: string; page?: keyof typeof PAGES; width: number; height: number; full: boolean; states?: string[]; bar?: boolean; act?: (p: Page) => Promise<void> }
 const open = (m: string) => async (p: Page) => {
   await p.locator(`button[aria-controls=menu-${m}]`).hover()
   await p.locator(`#menu-${m}`).waitFor()
@@ -84,6 +92,11 @@ const CASES: Case[] = [
   // at 390 px once per column of the segmented control above the comparison (a column the prototype lacks is skipped)
   ...[0, 1, 2].map((i) => ({ name: `preise-390-c${i}`, page: 'preise' as const, width: 390, height: 844, full: true, act: pick(`preise-390-c${i}`, i) })),
   ...[0, 1, 2, 3].map((i) => ({ name: `service-390-c${i}`, page: 'service' as const, width: 390, height: 844, full: true, act: pick(`service-390-c${i}`, i) })),
+  // the open-source page exists only with source_link (off in data/offer.json); the legal frames and Neu in Decuma do
+  // not change with a flag
+  ...(['os', 'dv', 'neu', 'impressum', 'datenschutz', 'agb', 'avv', 'unterauftragnehmer'] as const).flatMap((pg) =>
+    [1280, 390].map((w) => ({ name: `${pg}-${w}`, page: pg, width: w, height: w === 1280 ? 900 : 844, full: true, states: pg === 'os' ? ['all'] : pg === 'dv' ? undefined : ['offer'] })),
+  ),
   {
     name: 'sheet-390',
     width: 390,
@@ -98,7 +111,7 @@ const CASES: Case[] = [
 ]
 
 for (const lang of ['de']) {
-  for (const c of CASES) {
+  for (const c of CASES.filter((c) => !c.states || c.states.includes(LABEL))) {
     test(`${LABEL} ${lang} ${c.name}`, async ({ browser }, info) => {
       const opts = { viewport: { width: c.width, height: c.height }, reducedMotion: 'reduce' as const, deviceScaleFactor: 1 }
       const shot = { fullPage: c.full, mask: [] as ReturnType<Page['locator']>[], animations: 'disabled' as const }

@@ -73,7 +73,7 @@ test.describe('menus at 1280 px', () => {
 })
 
 test.describe('axe', () => {
-  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/datenversprechen']) {
+  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
     test(`no serious or critical finding on ${path}, banner and Produkt menu open`, async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 900 })
       await page.goto(path)
@@ -284,6 +284,44 @@ test.describe('price page on a phone', () => {
   })
 })
 
+test.describe('open source, Neu in Decuma, legal pages', () => {
+  test.use({ viewport: { width: 1280, height: 900 } })
+
+  test('/open-source with source_link on: built, the GitHub button leads to the repository, html-validate and axe clean', async ({ page }) => {
+    const root = buildWith(ALL_ON)
+    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html')], { stdio: 'pipe' })
+    await serve(page, root)
+    await page.goto(SITE + '/open-source')
+    await expect(page.locator('.w-hero a.btn')).toHaveAttribute('href', 'https://github.com/rapha-red/open-decuma')
+    const r = await new AxeBuilder({ page }).analyze()
+    expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+  })
+
+  test('a new changelog entry shows first with its date after a rebuild', async ({ page }) => {
+    const yaml = (extra: string) => `- {date: 2026-11-20, de: "Ältere Zeile.", en: "Older line."}\n${extra}`
+    await serve(page, buildWith(() => {}, { 'data/changelog.yaml': yaml('- {date: 2026-12-04, de: "Neue Zeile.", en: "New line."}\n') }))
+    await page.goto(SITE + '/neu-in-decuma')
+    await expect(page.locator('.w-neu li').first()).toHaveText('4. Dezember 2026Neue Zeile.')
+    await expect(page.locator('.w-neu li time').first()).toHaveAttribute('datetime', '2026-12-04')
+    await page.goto(SITE + '/en/whats-new')
+    await expect(page.locator('.w-neu li').first()).toHaveText('4 December 2026New line.')
+  })
+
+  for (const path of ['/impressum', '/datenschutz']) {
+    test(`${path} at 390 px: the open consent bar never hides the text for good`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 })
+      await page.goto(path)
+      await expect(page.locator('[data-consent]')).toBeVisible()
+      for (const el of await page.locator('main .recht > *').all()) {
+        await el.evaluate((e) => e.scrollIntoView({ block: 'center' }))
+        const box = (await el.boundingBox())!
+        const hit = await page.evaluate(([x, y]) => !!document.elementFromPoint(x, y)?.closest('main'), [box.x + 4, box.y + Math.min(box.height / 2, 400)])
+        expect(hit, 'covered by the consent bar').toBe(true)
+      }
+    })
+  }
+})
+
 // Consent (D-313 in the specs): nothing non-essential before a choice, on every built page; the gate for registered
 // scripts; the bar by keyboard. FIRST_PARTY is the set of check_site.py.
 const FIRST_PARTY = /^\/js\/(?:anim|hero|menu|consent|search|plans|columns)(?:\.min)?(?:\.[0-9a-f]{64})?\.js$|^\/pagefind\//
@@ -408,8 +446,7 @@ test.describe('consent', () => {
 
   test('the cookie table of the Datenschutzerklärung lists the registry', async ({ page }) => {
     await serve(page, buildWith(() => {}, {
-      'content/datenschutz.md': '---\ntranslationKey: datenschutz\n---\n{{< cookie-table >}}\n',
-      'layouts/_default/single.html': '{{ define "main" }}{{ .Content }}{{ end }}', // the legal frame may not render content yet
+      'content/datenschutz.md': '---\ntranslationKey: datenschutz\nlayout: recht\n---\n{{< cookie-table >}}\n',
     }))
     await page.goto(SITE + '/datenschutz')
     expect(await page.locator('.w-cookie-table tr').evaluateAll((r) => r.map((x) => (x as HTMLElement).innerText.split('\t')))).toEqual([

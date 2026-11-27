@@ -1,3 +1,4 @@
 ---
 translationKey: unterauftragnehmer
+layout: recht
 ---

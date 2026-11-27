@@ -1,0 +1,18 @@
+{{/* "Neu in Decuma" (the prototype's Neu.svelte): one line per release with its date, newest first, from
+     data/changelog.yaml (date, de, en; appended by the release script of the hosted repository). */}}
+{{ define "main" }}
+<section class="w-sec w-last">
+  <div class="w-wrap w-neu">
+    <h1 class="w-h1">{{ i18n "w.n.h1" }}</h1>
+    <p class="w-lead">{{ i18n "w.n.lead" }}</p>
+    {{ with hugo.Data.changelog }}
+      <ol>
+        {{ range sort . "date" "desc" }}
+          {{ $d := time.AsTime .date }}
+          <li><time datetime="{{ $d.Format "2006-01-02" }}">{{ time.Format ":date_long" $d }}</time><span>{{ index . site.Language.Lang }}</span></li>
+        {{ end }}
+      </ol>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

@@ -1,7 +1,9 @@
 {{/* Pages that exist only while their flag is on in data/offer.json: added here instead of a file, so that a flag flip
      plus a build is the only change when the capability goes live. English slugs; German in _content.gotmpl. */}}
-{{ range slice (slice "bots" "agent_tier" "bots") (slice "open-source" "source_link" "open-source") (slice "ai-bookkeeping" "model_steps" "ki-buchhaltung") }}
+{{ range slice (slice "bots" "agent_tier" "bots") (slice "open-source" "source_link" "open-source" "product") (slice "ai-bookkeeping" "model_steps" "ki-buchhaltung") }}
   {{ if index hugo.Data.offer.flags (index . 1) }}
-    {{ $.AddPage (dict "path" (index . 0) "kind" "page" "params" (dict "translationKey" (index . 2) "flag" (index . 1))) }}
+    {{ $p := dict "path" (index . 0) "kind" "page" "params" (dict "translationKey" (index . 2) "flag" (index . 1)) }}
+    {{ if gt (len .) 3 }}{{ $p = merge $p (dict "layout" (index . 3)) }}{{ end }}
+    {{ $.AddPage $p }}
   {{ end }}
 {{ end }}
