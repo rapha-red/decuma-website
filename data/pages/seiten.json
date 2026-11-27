@@ -350,8 +350,8 @@
     "bloecke": [
      {
       "p": [
-       "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
-       "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
+       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
       ]
      }
     ]
@@ -4535,8 +4535,8 @@
     "bloecke": [
      {
       "p": [
-       "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
-       "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
+       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
       ]
      },
      {
@@ -4748,8 +4748,8 @@
      "How do I know how much to set aside?"
     ],
     "a": [
-     "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
-     "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+     "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
+     "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
     ]
    },
    {
@@ -4800,8 +4800,8 @@
   },
   "ablauf": {
    "titel": [
-    "Steuerschätzung 2026, Fahrradwerkstatt Kranich",
-    "Tax estimate 2026, Fahrradwerkstatt Kranich"
+    "Steuerschätzung 2026, Fahrradwerkstatt Kranich (Schätzung, kein Bescheid)",
+    "Tax estimate 2026, Fahrradwerkstatt Kranich (estimate, not an assessment)"
    ],
    "zustand": [
     [
@@ -4956,8 +4956,8 @@
     "bloecke": [
      {
       "p": [
-       "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
-       "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
+       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
       ]
      },
      {
@@ -5186,8 +5186,8 @@
      "How much tax do I need to set aside?"
     ],
     "a": [
-     "Decuma rechnet mit jeder Buchung mit, wie viel Steuer auf dich zukommt, und schlägt dir vor, wie viel du jeden Monat zurücklegst. So überrascht dich kein Bescheid.",
-     "With every booking Decuma works out how much tax is coming your way and suggests how much to set aside each month. So no assessment takes you by surprise."
+     "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
+     "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
     ]
    },
    {
