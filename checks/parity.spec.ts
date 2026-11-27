@@ -26,6 +26,14 @@ const PAGES = {
   start: { route: '#/web', de: '/', en: '/en/', css: '' },
   preise: { route: '#/web/preise', de: '/preise', en: '/en/pricing', css: '' },
   service: { route: '#/web/preise/service', de: '/preise/service', en: '/en/pricing/service', css: '' },
+  os: { route: '#/web/open-source', de: '/open-source', en: '/en/open-source', css: '' },
+  dv: { route: '#/web/datenversprechen', de: '/datenversprechen', en: '/en/data-promise', css: '' },
+  neu: { route: '#/web/neu', de: '/neu-in-decuma', en: '/en/whats-new', css: '' },
+  impressum: { route: '#/web/impressum', de: '/impressum', en: '/en/imprint', css: '' },
+  datenschutz: { route: '#/web/datenschutz', de: '/datenschutz', en: '/en/privacy', css: '' },
+  agb: { route: '#/web/agb', de: '/agb', en: '/en/terms', css: '' },
+  avv: { route: '#/web/avv', de: '/avv', en: '/en/dpa', css: '' },
+  unterauftragnehmer: { route: '#/web/unterauftragnehmer', de: '/unterauftragnehmer', en: '/en/subprocessors', css: '' },
 }
 // owner-approved differences of a case in this flag state, as CSS hiding the part on both sides (a part the site lacks
 // matches nothing there)
@@ -46,7 +54,8 @@ async function site(page: Page, lang: string, c: Case) {
   await page.locator('.w-head').waitFor()
 }
 
-type Case = { name: string; page?: keyof typeof PAGES; width: number; height: number; full: boolean; act?: (p: Page) => Promise<void> }
+// states: the flag states the case runs in (both when absent)
+type Case = { name: string; page?: keyof typeof PAGES; width: number; height: number; full: boolean; states?: string[]; act?: (p: Page) => Promise<void> }
 const open = (m: string) => async (p: Page) => {
   await p.locator(`button[aria-controls=menu-${m}]`).hover()
   await p.locator(`#menu-${m}`).waitFor()
@@ -74,6 +83,11 @@ const CASES: Case[] = [
   // at 390 px once per column of the segmented control above the comparison (a column the prototype lacks is skipped)
   ...[0, 1, 2].map((i) => ({ name: `preise-390-c${i}`, page: 'preise' as const, width: 390, height: 844, full: true, act: pick(`preise-390-c${i}`, i) })),
   ...[0, 1, 2, 3].map((i) => ({ name: `service-390-c${i}`, page: 'service' as const, width: 390, height: 844, full: true, act: pick(`service-390-c${i}`, i) })),
+  // the open-source page exists only with source_link (off in data/offer.json); the legal frames and Neu in Decuma do
+  // not change with a flag
+  ...(['os', 'dv', 'neu', 'impressum', 'datenschutz', 'agb', 'avv', 'unterauftragnehmer'] as const).flatMap((pg) =>
+    [1280, 390].map((w) => ({ name: `${pg}-${w}`, page: pg, width: w, height: w === 1280 ? 900 : 844, full: true, states: pg === 'os' ? ['all'] : pg === 'dv' ? undefined : ['offer'] })),
+  ),
   {
     name: 'sheet-390',
     width: 390,
@@ -88,7 +102,7 @@ const CASES: Case[] = [
 ]
 
 for (const lang of ['de']) {
-  for (const c of CASES) {
+  for (const c of CASES.filter((c) => !c.states || c.states.includes(LABEL))) {
     test(`${LABEL} ${lang} ${c.name}`, async ({ browser }, info) => {
       const opts = { viewport: { width: c.width, height: c.height }, reducedMotion: 'reduce' as const, deviceScaleFactor: 1 }
       const shot = { fullPage: c.full, mask: [] as ReturnType<Page['locator']>[], animations: 'disabled' as const }
