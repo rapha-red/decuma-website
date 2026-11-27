@@ -1,0 +1,12 @@
+{{/* The FAQ block (the prototype's Faq.svelte): heading centred, the questions in one column; `code` in an answer.
+     (dict "id" "s-faq" "fragen" (slice (dict "q" question "a" answer) ...)) */}}
+<section class="w-sec w-faq-block" aria-labelledby="{{ .id }}">
+  <div class="w-wrap">
+    <h2 class="w-h2" id="{{ .id }}">{{ i18n "w.faq" }}</h2>
+    <div class="w-faq">
+      {{ range .fragen }}
+        <details><summary>{{ .q }}</summary><p>{{ range $i, $teil := split .a "`" }}{{ if modBool $i 2 }}{{ $teil }}{{ else }}<code>{{ $teil }}</code>{{ end }}{{ end }}</p></details>
+      {{ end }}
+    </div>
+  </div>
+</section>

@@ -21,7 +21,9 @@
 {{- with $css | resources.Concat "css/site.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
 {{- end }}
-{{- range slice "anim" "menu" "consent" }}
+{{- $js := slice "anim" "menu" "consent" }}
+{{- if .IsHome }}{{ $js = $js | append "hero" "plans" }}{{ end }}
+{{- range $js }}
 {{- with resources.Get (print "js/" . ".js") | minify | fingerprint }}
 <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
 {{- end }}
