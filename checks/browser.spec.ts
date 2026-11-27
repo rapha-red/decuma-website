@@ -173,12 +173,21 @@ test.describe('start page', () => {
 
   test('motion: the hero plays its six steps once and stops; each visual plays once in view; nothing loops', async ({ page }) => {
     await serve(page, buildWith(ALL_ON))
-    const t0 = Date.now()
+    // the page's own clock: when each step was reached, from the moment the chat started (hero.js marks data-an)
+    await page.addInitScript(() => {
+      const w = window as any
+      w.steps = {}
+      new MutationObserver((m) => m.forEach((x) => {
+        const e = x.target as Element
+        if (e.classList?.contains('chat-app')) w.steps[x.attributeName === 'data-an' ? 'start' : e.getAttribute('data-stufe')!] = performance.now()
+      })).observe(document, { subtree: true, attributes: true, attributeFilter: ['data-stufe', 'data-an'] })
+    })
     await page.goto(SITE + '/')
     await expect(page.locator('.chat-app[data-stufe="6"]')).toBeAttached({ timeout: 12000 })
-    const took = Date.now() - t0
-    expect(took).toBeGreaterThan(6500)
-    expect(took).toBeLessThan(9500)
+    const s = await page.evaluate(() => (window as any).steps)
+    const took = s['6'] - s.start
+    expect(took).toBeGreaterThan(7400) // 900 + 1500 + 1400 + 1300 + 1300 + 1100 ms
+    expect(took).toBeLessThan(8500)
     const later = page.locator('.w-anim').last()
     expect(await later.getAttribute('data-an')).toBeNull() // not in view yet
     const changes = await page.evaluate(() => new Promise<number>((done) => {
@@ -218,7 +227,7 @@ test.describe('start page', () => {
     }))
     await page.goto(SITE + '/')
     const pro = page.locator('.w-tier:has(#k-pro)')
-    const text = async () => (await pro.locator('.preis:visible, .notiz:visible').allInnerTexts()).join(' | ').replace(/ /g, ' ')
+    const text = async () => (await pro.locator('.preis:visible, .notiz:visible').allInnerTexts()).join(' | ').replace(/\s+/g, ' ')
     expect(await text()).toBe('9 € statt 12 € | im Monat (zzgl. USt.), 108 € im Jahr, jährlich abgerechnet')
     await page.locator('[data-billing="monthly"]').click()
     expect(await text()).toBe('1,20 € statt 12 € | im Monat (zzgl. USt.) für die ersten 3 Monate, danach 12 €. Monatlich kündbar.')
