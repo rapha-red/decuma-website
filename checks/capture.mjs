@@ -23,7 +23,8 @@ const STUECKE = {
   'menu-eigen': [ALL, 'ressourcen', '.w-menu-card > :first-child'],
 }
 // runtime marks and framework comments are not part of the markup
-const sauber = (h) => h.replace(/<!---->/g, '').replace(/ data-an="1"/g, '').replace(/<!--[\s\S]*?-->/g, '')
+// a decorative button of a visual gets its type, as every button of the site
+const sauber = (h) => h.replace(/<!---->/g, '').replace(/ data-an="1"/g, '').replace(/<!--[\s\S]*?-->/g, '').replace(/<button (?![^>]*\btype=)/g, '<button type="button" ')
 
 // start-page visuals: name -> selector inside main of #/web
 const START = {

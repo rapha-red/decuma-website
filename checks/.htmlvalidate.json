@@ -11,6 +11,12 @@
     "no-trailing-whitespace": "off",
     "doctype-style": "off",
     "presentation-role-style": "off",
-    "no-implicit-input-type": "off"
+    "no-implicit-input-type": "off",
+    "no-raw-characters": [
+      "error",
+      {
+        "relaxed": true
+      }
+    ]
   }
 }
