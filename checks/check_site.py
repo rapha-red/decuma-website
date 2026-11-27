@@ -8,7 +8,8 @@ Fails, naming the page and the URL, on: a request to another origin (src, srcset
 JSON-LD; an internal link or asset that does not resolve in the tree; a page outside /kb without canonical or
 without its hreflang partner, a /kb page with a partner or an /en/ copy; a missing llms.txt, robots.txt (or one with
 Disallow) or sitemap.xml; a price of data/offer.json typed into layouts/, i18n/ or data/pages/; an internal decision
-id or private path in the tree.
+id or private path in the tree; a looping motion (an `infinite` CSS animation, `setInterval` or
+`requestAnimationFrame` in a script).
 """
 import json
 import re
@@ -173,6 +174,10 @@ def main():
         if f.is_file() and f.suffix in (".html", ".css", ".js", ".txt", ".xml", ".json", ".md"):
             for m in INTERNAL.finditer(f.read_text(errors="replace")):
                 fails.append(f"/{f.relative_to(tree).as_posix()}: internal reference {m.group(0)}")
+    for f in sorted(tree.rglob("*")):
+        if f.is_file() and f.suffix in (".css", ".js", ".html") and not f.relative_to(tree).as_posix().startswith("pagefind/"):
+            for m in re.finditer(r"\binfinite\b|\bsetInterval\b|\brequestAnimationFrame\b", f.read_text(errors="replace")):
+                fails.append(f"/{f.relative_to(tree).as_posix()}: looping motion ({m.group(0)})")
     lit = prices(repo)
     # lines that carry the same number without being a price, each with its reason (checks/price-literal-allow.txt)
     allow = [l.split("\t")[0] for l in (repo / "checks/price-literal-allow.txt").read_text().splitlines() if l.strip() and not l.startswith("#")]

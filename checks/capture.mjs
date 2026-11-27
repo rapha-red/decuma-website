@@ -1,7 +1,8 @@
 // Second half of the prototype sync: renders the product visuals of the shell and the start page from the running
 // prototype at PROTOTYPE_COMMIT and keeps the HTML as partials per language, plus the compiled CSS of the website
 // components as assets/css/site.css. A start-page visual that changes with a website flag is kept once per state of
-// the flags it depends on (start-<name>[.<flag>...].html); data/capture.json lists those flags per visual. Usage: node checks/capture.mjs <prototype url, e.g. http://127.0.0.1:5180/>
+// the flags it depends on (start-<name>[--<flag>...].html; Hugo would read a dot as an output format);
+// data/capture.json lists those flags per visual. Usage: node checks/capture.mjs <prototype url, e.g. http://127.0.0.1:5180/>
 // Re-run after tools/sync.mjs at every new pin; never edit the outputs by hand.
 import { chromium } from '@playwright/test'
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs'
@@ -89,7 +90,7 @@ for (const l of ['de', 'en']) {
     deps[name] = d
     for (const on of subsets(d)) {
       const html = (await start(l, on))[name]
-      if (html !== null) writeFileSync(join(dir, ['start-' + name, ...on].join('.') + '.html'), html + '\n')
+      if (html !== null) writeFileSync(join(dir, ['start-' + name, ...on].join('--') + '.html'), html + '\n')
     }
   }
   // the hero chat (model_steps): its markup before it plays, then the inside of each of its steps
