@@ -5,6 +5,7 @@
 {{ $menus := slice
   (dict "m" "produkt" "prefix" "w.m." "groups" (slice
     (dict "key" "buch" "titel" "w.m.buch" "href" "#/web/buchhaltung" "items" (slice
+      (dict "key" "ki" "icon" "chat" "href" "#/web/ki-buchhaltung" "flag" "model_steps")
       (dict "key" "bots" "icon" "chat" "href" "#/web/bots" "flag" "agent_tier")
       (dict "key" "belege" "icon" "belege" "href" "#/web/buchhaltung" "flag" "model_steps" "fb" true)
       (dict "key" "bank" "icon" "bank" "href" "#/web/buchhaltung")
@@ -92,8 +93,8 @@
               {{ if and (eq $m "produkt") site.Params.menu_fuer }}
                 <div class="w-menu-foot">
                   <span class="w-small">{{ i18n "w.m.fuer" }}</span>
-                  {{ range $f := slice "gmbh" "ug" "holding" "frei" "selbst" "dev" }}
-                    {{ with partial "link.html" (cond (eq $f "dev") "#/web/entwickler" (print "#/web/fuer/" $f)) }}<a href="{{ . }}">{{ i18n (print "w.m.fuer." $f) }}</a>{{ end }}
+                  {{ range $f := site.Params.fuer }}
+                    {{ with partial "link.html" (print "#/web/fuer/" (index $f 0)) }}<a href="{{ . }}">{{ i18n (print "w.m.fuer." (index $f 1)) }}</a>{{ end }}
                   {{ end }}
                 </div>
               {{ end }}

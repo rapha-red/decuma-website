@@ -1,0 +1,4 @@
+{{- /* The copy deck's title and description of a page (data/meta.json, keyed by the German address), or nil. */ -}}
+{{- $de := . -}}
+{{- range .AllTranslations }}{{ if eq .Language.Lang "de" }}{{ $de = . }}{{ end }}{{ end -}}
+{{- return index hugo.Data.meta (partial "url.html" $de.RelPermalink) -}}

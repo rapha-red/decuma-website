@@ -1,4 +1,4 @@
-{{/* The copy deck has no meta descriptions yet: the page's subline, else the start page's. */}}
+{{/* The description of the copy deck's Meta table; a page it does not list: its subline, else the start page's. */}}
 {{ $i := cond (eq site.Language.Lang "de") 0 1 }}
 {{ $k := .Params.translationKey | default "" }}
 {{ $subs := dict "preise" "w.p.sub" "preise/service" "w.d.sub" "gruendung" "w.g.sub" "bots" "w.bp.sub" }}
@@ -6,4 +6,5 @@
 {{ with index $subs $k }}{{ $d = i18n . }}{{ end }}
 {{ if not $d }}{{ with index hugo.Data.pages.seiten $k }}{{ $d = partial "txt.html" .sub }}{{ end }}{{ end }}
 {{ if not $d }}{{ $d = i18n "w.s.sub" }}{{ end }}
+{{ with partial "meta.html" . }}{{ $d = index .description $i }}{{ end }}
 {{ return $d }}

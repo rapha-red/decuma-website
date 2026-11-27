@@ -61,7 +61,7 @@
               <li>{{ partial "icon.html" (dict "name" "check" "size" 16) }}{{ i18n (index . 0) $vars }}</li>
             {{ end }}
           {{ end }}
-          {{ if eq $k "pro" }}<li class="w-small" style="display: block"><button type="button" class="term" title="{{ i18n "pr.rule.tip" }}">{{ i18n "pr.rule" }}</button></li>{{ end }}
+          {{ if eq $k "pro" }}<li class="w-small block"><button type="button" class="term" title="{{ i18n "pr.rule.tip" }}">{{ i18n "pr.rule" }}</button></li>{{ end }}
         </ul>
       </section>
     {{ end }}

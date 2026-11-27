@@ -31,7 +31,7 @@
 <section class="w-sec" aria-labelledby="s-so">
   <div class="w-wrap">
     <div class="w-sec-head"><h2 id="s-so" class="w-h2">{{ i18n "w.s.so.h" }}</h2></div>
-    <ol class="w-steps" style="--n: 4">
+    <ol class="w-steps n-4">
       {{ range $i, $icon := slice "konto" "belege" "auswertungen" "check" }}<li><span class="kopf"><span class="w-glyphe" aria-hidden="true">{{ partial "icon.html" (dict "name" $icon "size" 22) }}</span><span class="nr">{{ add $i 1 }}</span></span><span>{{ i18n (print "w.s.so." (add $i 1)) }}</span></li>{{ end }}
     </ol>
   </div>
