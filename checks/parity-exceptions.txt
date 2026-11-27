@@ -23,3 +23,5 @@ avv-1280	.recht > p.w-small:last-child { visibility: hidden !important }		the St
 avv-390	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
 unterauftragnehmer-1280	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
 unterauftragnehmer-390	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+datenschutz-1280	.w-cookie-table { display: none !important }		the cookie table from data/consent.yaml under "Diese Website" (orchestrator, consent registry #100); the prototype frame has none
+datenschutz-390	.w-cookie-table { display: none !important }		the same at 390 px

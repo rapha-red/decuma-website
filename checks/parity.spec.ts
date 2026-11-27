@@ -17,7 +17,7 @@ const EXCEPTIONS = readFileSync(new URL('./parity-exceptions.txt', import.meta.u
   .map((l) => l.split('\t'))
 
 // the prototype bar is hidden and its page scroller opened up so a full-page shot covers the whole page, as on the
-// site; the shell is compared on an empty main (the prototype shows a later-phase note there)
+// site; the shell is compared on an empty main on both sides
 const PROTO_CSS = 'aside.proto { display: none !important } .viewport, .bare { height: auto !important; overflow: visible !important }'
 const EMPTY_MAIN = ' main > * { display: none !important }'
 // page: prototype route and site address per language; the shell pages compare only header and footer
@@ -50,7 +50,7 @@ async function proto(page: Page, lang: string, c: Case) {
 async function site(page: Page, lang: string, c: Case) {
   await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: false, am: '2027-01-04' })), url: `http://127.0.0.1:${process.env.SITE_PORT ?? '8099'}` }])
   await page.goto(PAGES[c.page ?? 'shell'][lang as 'de' | 'en'])
-  await page.addStyleTag({ content: exceptions(c) })
+  await page.addStyleTag({ content: PAGES[c.page ?? 'shell'].css + ' ' + exceptions(c) })
   await page.locator('.w-head').waitFor()
 }
 

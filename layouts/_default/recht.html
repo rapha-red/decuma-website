@@ -43,7 +43,7 @@
   {{ with $de.Content }}
     <div class="{{ $c }}" lang="de">{{ . }}</div>
   {{ else }}
-    {{ range $r.teile }}<section class="block {{ $c }}"{{ if $i }} lang="de"{{ end }}><h2 class="w-h3 {{ $c }}">{{ index . 0 }}</h2>{{ if ne $key "impressum" }}<p class="platzhalter {{ $c }}">{{ index $d.RECHT_TEXT 0 }}</p>{{ end }}</section>{{ end }}
+    {{ range $r.teile }}<section class="block {{ $c }}"{{ if $i }} lang="de"{{ end }}><h2 class="w-h3 {{ $c }}">{{ index . 0 }}</h2>{{ if ne $key "impressum" }}<p class="platzhalter {{ $c }}">{{ index $d.RECHT_TEXT 0 }}</p>{{ end }}{{ if and (eq $key "datenschutz") (hasPrefix (index . 0) "Diese Website") }}{{ partial "consent-table.html" . }}{{ end }}</section>{{ end }}
   {{ end }}
   {{ if $r.anfrage }}<p class="{{ $c }}"><a class="w-more {{ $c }}" href="{{ $kontakt }}">{{ index $d.DV.kontakt $i }} →</a></p>{{ end }}
   {{ if eq $key "impressum" }}<p class="{{ $c }}"{{ if $i }} lang="de"{{ end }}>Decuma ist eine Software und keine Steuerberatung.</p>{{ end }}

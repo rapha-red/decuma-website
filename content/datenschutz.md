@@ -11,6 +11,8 @@ Zapiens GmbH, Hostertstraße 16, 53332 Bornheim, E-Mail: [kontakt@decuma.de](mai
 
 Diese Website besteht aus statischen Seiten. Sie setzt keine Cookies, bindet keine Inhalte von Dritten ein und nutzt keine Analyse- oder Werbedienste.
 
+{{< cookie-table >}}
+
 Beim Aufruf verarbeitet der Hosting-Anbieter GitHub (GitHub, Inc., San Francisco, USA; Dienst GitHub Pages) technisch notwendige Zugriffsdaten: IP-Adresse, Zeitpunkt, aufgerufene Seite, übertragene Datenmenge und die vom Browser gesendeten Angaben. Das ist erforderlich, um die Seite auszuliefern und den Betrieb zu sichern (Art. 6 Abs. 1 Buchstabe f DSGVO). Dabei können Daten in die USA übertragen werden. Einzelheiten stehen in der [Datenschutzerklärung von GitHub](https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement).
 
 ## E-Mail
