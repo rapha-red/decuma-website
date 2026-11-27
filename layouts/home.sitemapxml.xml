@@ -5,6 +5,9 @@
     <loc>{{ partial "abs.html" .RelPermalink }}</loc>
     {{- if and .IsTranslated (ne .Params.translationKey "kb") }}{{ range .AllTranslations }}
     <xhtml:link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ partial "abs.html" .RelPermalink }}"/>
+    {{- if eq .Language.Lang "de" }}
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ partial "abs.html" .RelPermalink }}"/>
+    {{- end }}
     {{- end }}{{ end }}
   </url>
 {{- end }}{{ end }}{{ end }}

@@ -41,7 +41,7 @@
     {{ $on := or (not .flag) (partial "flag.html" .flag) }}
     {{ $href := partial "link.html" .href }}
     {{ if and (or $on .fb) $href }}
-      <li><a class="w-item" href="{{ $href }}">{{ partial "icon.html" (dict "name" .icon "size" 16) }}<b>{{ i18n (print $.prefix .key) }}</b><span>{{ i18n (print $.prefix .key (cond $on ".l" ".l.fb")) }}</span></a></li>
+      <li><a class="w-item" href="{{ $href }}"{{ if and (hasPrefix $href "/kb") (ne site.Language.Lang "de") }} hreflang="de"{{ end }}>{{ partial "icon.html" (dict "name" .icon "size" 16) }}<b>{{ i18n (print $.prefix .key) }}</b><span>{{ i18n (print $.prefix .key (cond $on ".l" ".l.fb")) }}</span></a></li>
     {{ end }}
   {{ end }}
 {{ end }}
