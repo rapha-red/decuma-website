@@ -18,7 +18,8 @@ const EXCEPTIONS = readFileSync(new URL('./parity-exceptions.txt', import.meta.u
 
 // the prototype bar is hidden and its page scroller opened up so a full-page shot covers the whole page, as on the
 // site; the shell is compared on an empty main (the prototype shows a later-phase note there)
-const PROTO_CSS = 'aside.proto { display: none !important } .viewport, .bare { height: auto !important; overflow: visible !important }'
+// (the prototype lifts the consent bar above its own bar, which is hidden here)
+const PROTO_CSS = 'aside.proto { display: none !important } .viewport, .bare { height: auto !important; overflow: visible !important } .web .w-cookies { bottom: 0 !important }'
 const EMPTY_MAIN = ' main > * { display: none !important }'
 // page: prototype route and site address per language; the shell pages compare only header and footer
 const PAGES = {
@@ -32,7 +33,7 @@ const PAGES = {
 const exceptions = (c: Case) => EXCEPTIONS.filter(([n, , label]) => (n === '*' || n === c.name) && (!label || label === LABEL)).map(([, css]) => css).join(' ')
 
 async function proto(page: Page, lang: string, c: Case) {
-  await page.addInitScript(() => localStorage.setItem('decuma-consent', JSON.stringify({ statistik: false, am: '2027-01-04' })))
+  if (!c.bar) await page.addInitScript(() => localStorage.setItem('decuma-consent', JSON.stringify({ statistik: false, am: '2027-01-04' })))
   const pg = PAGES[c.page ?? 'shell']
   await page.goto(`${PROTO}?lang=${lang}&flags=${FLAGS}&sterne=${STARS}${pg.route}`)
   await page.addStyleTag({ content: PROTO_CSS + pg.css + ' ' + exceptions(c) })
@@ -40,13 +41,14 @@ async function proto(page: Page, lang: string, c: Case) {
 }
 
 async function site(page: Page, lang: string, c: Case) {
-  await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: false, am: '2027-01-04' })), url: `http://127.0.0.1:${process.env.SITE_PORT ?? '8099'}` }])
+  if (!c.bar) await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: false, am: '2027-01-04' })), url: `http://127.0.0.1:${process.env.SITE_PORT ?? '8099'}` }])
   await page.goto(PAGES[c.page ?? 'shell'][lang as 'de' | 'en'])
   await page.addStyleTag({ content: exceptions(c) })
   await page.locator('.w-head').waitFor()
 }
 
-type Case = { name: string; page?: keyof typeof PAGES; width: number; height: number; full: boolean; act?: (p: Page) => Promise<void> }
+// bar: no stored choice, so the consent bar shows (the viewport shot holds it)
+type Case = { name: string; page?: keyof typeof PAGES; width: number; height: number; full: boolean; bar?: boolean; act?: (p: Page) => Promise<void> }
 const open = (m: string) => async (p: Page) => {
   await p.locator(`button[aria-controls=menu-${m}]`).hover()
   await p.locator(`#menu-${m}`).waitFor()
@@ -61,7 +63,15 @@ const pick = (name: string, i: number) => async (p: Page) => {
   }
   await b.click()
 }
+const settings = async (p: Page) => {
+  await p.getByRole('button', { name: 'Einstellungen', exact: true }).click()
+  await p.getByRole('button', { name: 'Auswahl speichern' }).waitFor()
+}
 const CASES: Case[] = [
+  ...[1280, 390].flatMap((width) => [
+    { name: `cookies-${width}`, width, height: width === 390 ? 844 : 900, full: false, bar: true },
+    { name: `cookies-details-${width}`, width, height: width === 390 ? 844 : 900, full: false, bar: true, act: settings },
+  ]),
   { name: 'shell-1280', width: 1280, height: 900, full: true },
   { name: 'shell-390', width: 390, height: 844, full: true },
   { name: 'start-1280', page: 'start', width: 1280, height: 900, full: true },
