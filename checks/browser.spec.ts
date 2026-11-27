@@ -72,49 +72,6 @@ test.describe('menus at 1280 px', () => {
   })
 })
 
-test.describe('consent', () => {
-  test('first visit shows the bar; both choices look alike; a choice writes only decuma_consent; no other origin', async ({ page, baseURL }) => {
-    const foreign: string[] = []
-    page.on('request', (r) => new URL(r.url()).origin !== new URL(baseURL!).origin && foreign.push(r.url()))
-    await page.goto('/')
-    const bar = page.locator('[data-consent]')
-    await expect(bar).toBeVisible()
-    const [nein, ja] = [bar.locator('[data-choice="0"]'), bar.locator('[data-choice="1"]')]
-    const look = (l: typeof nein) =>
-      l.evaluate((e) => {
-        const s = getComputedStyle(e)
-        const r = e.getBoundingClientRect()
-        return [r.width, r.height, s.backgroundColor, s.color, s.border, s.font, s.padding, e.className]
-      })
-    expect(await look(nein)).toEqual(await look(ja))
-    await nein.click()
-    await expect(bar).toBeHidden()
-    const cookies = await page.context().cookies()
-    expect(cookies.map((c) => c.name)).toEqual(['decuma_consent'])
-    expect(cookies[0].expires * 1000 - Date.now()).toBeGreaterThan(180 * 24 * 3600 * 1000)
-    expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0)
-    await page.reload()
-    await expect(bar).toBeHidden()
-    expect(foreign).toEqual([])
-  })
-
-  test('the footer link reopens it with the details', async ({ page, baseURL }) => {
-    await decided(page, baseURL)
-    await page.goto('/')
-    await page.locator('[data-consent-open]').click()
-    const bar = page.locator('[data-consent]')
-    await expect(bar).toBeVisible()
-    await expect(bar.locator('input[type=checkbox]').first()).toBeChecked()
-    await expect(bar.locator('input[type=checkbox]').first()).toBeDisabled()
-    await expect(bar.locator('input[name=statistik]')).not.toBeChecked()
-    await bar.locator('input[name=statistik]').check()
-    await bar.locator('[data-save]').click()
-    await expect(bar).toBeHidden()
-    const c = (await page.context().cookies()).find((x) => x.name === 'decuma_consent')!
-    expect(JSON.parse(decodeURIComponent(c.value)).statistik).toBe(true)
-  })
-})
-
 test.describe('axe', () => {
   for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
     test(`no serious or critical finding on ${path}, banner and Produkt menu open`, async ({ page }) => {
@@ -363,4 +320,138 @@ test.describe('open source, Neu in Decuma, legal pages', () => {
       }
     })
   }
+})
+
+// Consent (D-313 in the specs): nothing non-essential before a choice, on every built page; the gate for registered
+// scripts; the bar by keyboard. FIRST_PARTY is the set of check_site.py.
+const FIRST_PARTY = /^\/js\/(?:anim|hero|menu|consent|search|plans|columns)(?:\.min)?(?:\.[0-9a-f]{64})?\.js$|^\/pagefind\//
+const TREE = process.env.SITE_ROOT ?? join(REPO, 'public')
+const ALL_PAGES = [...readFileSync(join(TREE, 'sitemap.xml'), 'utf8').matchAll(/<loc>https:\/\/decuma\.de([^<]*)<\/loc>/g)].map((m) => m[1]).concat('/404', '/en/404')
+const stored = (page: Page) =>
+  page.evaluate(async () => [...Object.keys(localStorage), ...Object.keys(sessionStorage), ...(await indexedDB.databases()).map((d) => 'idb:' + d.name)])
+const scripts = (page: Page) => page.locator('script[src]').evaluateAll((s) => s.map((e) => { const u = new URL((e as HTMLScriptElement).src); return u.origin === location.origin ? u.pathname : u.href }))
+
+test.describe('consent on every page', () => {
+  for (const path of ALL_PAGES) {
+    test(`${path}: no stored choice and after "Ablehnen": own files only, nothing stored before a click, only decuma_consent after, first-party scripts only`, async ({ browser, baseURL }, info) => {
+      const ctx = await browser.newContext({ baseURL })
+      const page = await ctx.newPage()
+      const requests: string[] = []
+      page.on('request', (r) => requests.push(r.url()))
+      await page.goto(path, { waitUntil: 'networkidle' })
+      const before = { cookies: (await ctx.cookies()).map((c) => c.name), storage: await stored(page), scripts: await scripts(page) }
+      await page.locator('[data-choice="0"]').click()
+      const at = requests.length
+      await page.reload({ waitUntil: 'networkidle' })
+      const after = { cookies: (await ctx.cookies()).map((c) => c.name), storage: await stored(page), scripts: await scripts(page) }
+      await expect(page.locator('[data-consent]')).toBeHidden()
+      // network log and storage dump of this page, kept as evidence in the test's output directory
+      writeFileSync(info.outputPath('consent-log.json'), JSON.stringify({ path, before, after, requests: requests.map((u) => u.replace(baseURL!, '')), afterReject: requests.slice(at).map((u) => u.replace(baseURL!, '')) }))
+      await ctx.close()
+      expect.soft(requests.filter((u) => new URL(u).origin !== new URL(baseURL!).origin), 'requests to another origin').toEqual([])
+      expect.soft(before.cookies, 'cookies before a click').toEqual([])
+      expect.soft(before.storage, 'storage before a click').toEqual([])
+      expect.soft(after.cookies, 'cookies after "Ablehnen"').toEqual(['decuma_consent'])
+      expect.soft(after.storage, 'storage after "Ablehnen"').toEqual([])
+      expect.soft([...before.scripts, ...after.scripts].filter((s) => !FIRST_PARTY.test(s)), 'scripts outside the first-party set').toEqual([])
+    })
+  }
+})
+
+test.describe('consent', () => {
+  for (const width of [1280, 390]) {
+    test(`at ${width} px "Ablehnen" and "Akzeptieren" look alike and take one click; the choice lasts 6 months`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 })
+      await page.goto('/')
+      const bar = page.locator('[data-consent]')
+      const [nein, ja] = [bar.locator('[data-choice="0"]'), bar.locator('[data-choice="1"]')]
+      const look = (l: typeof nein) =>
+        l.evaluate((e) => {
+          const s = getComputedStyle(e)
+          const r = e.getBoundingClientRect()
+          return [r.width, r.height, s.backgroundColor, s.color, s.border, s.font, s.padding, e.className]
+        })
+      expect(await look(nein)).toEqual(await look(ja))
+      await (width === 1280 ? ja : nein).click()
+      await expect(bar).toBeHidden()
+      const c = (await page.context().cookies()).find((x) => x.name === 'decuma_consent')!
+      expect(JSON.parse(decodeURIComponent(c.value)).statistik).toBe(width === 1280)
+      expect(c.expires * 1000 - Date.now()).toBeGreaterThan(180 * 24 * 3600 * 1000)
+    })
+  }
+
+  test('keyboard only: controls in order, Escape is no choice, region and labels named; axe clean with the details open', async ({ page }) => {
+    await page.goto('/')
+    const bar = page.getByRole('region', { name: 'Cookies' })
+    await expect(bar).toBeVisible()
+    await bar.getByRole('link').focus()
+    for (const name of ['Ablehnen', 'Akzeptieren', 'Einstellungen']) {
+      await page.keyboard.press('Tab')
+      await expect(bar.getByRole('button', { name })).toBeFocused()
+    }
+    await page.keyboard.press('Escape')
+    await expect(bar).toBeVisible()
+    expect(await page.context().cookies()).toEqual([])
+    await page.keyboard.press('Enter')
+    await expect(bar.getByRole('group', { name: 'Kategorien' })).toBeVisible()
+    await expect(bar.getByRole('checkbox', { name: /^Statistik/ })).toBeFocused()
+    await expect(bar.getByRole('checkbox', { name: /^Notwendig/ })).toBeDisabled()
+    const r = await new AxeBuilder({ page }).analyze()
+    expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+    await page.keyboard.press('Space')
+    await page.keyboard.press('Tab')
+    await expect(bar.getByRole('button', { name: 'Auswahl speichern' })).toBeFocused()
+    await page.keyboard.press('Enter')
+    await expect(bar).toBeHidden()
+    const c = (await page.context().cookies()).find((x) => x.name === 'decuma_consent')!
+    expect(JSON.parse(decodeURIComponent(c.value)).statistik).toBe(true)
+  })
+
+  // a dummy script registered under statistik (synthetic, test copy of the site)
+  const STATS = { 'static/stats.js': 'window.dummyStats = (window.dummyStats || 0) + 1\n' }
+  const registry = (version: number) => readFileSync(join(REPO, 'data/consent.yaml'), 'utf8')
+    .replace(/^version: \d+$/m, `version: ${version}`)
+    .replace(/^scripts: \[\]$/m, 'scripts:\n  - src: /stats.js\n    category: statistik\n    purpose: {de: Test, en: test}\n    storage: {de: nichts, en: nothing}')
+
+  test('a registered statistik script loads only after accepting; revoked from the footer it is gone, on the next page too', async ({ page }) => {
+    await serve(page, buildWith(() => {}, { ...STATS, 'data/consent.yaml': registry(1) }))
+    const loads: string[] = []
+    page.on('request', (r) => r.url().endsWith('/stats.js') && loads.push(new URL(r.url()).pathname))
+    const ran = () => page.evaluate(() => (window as any).dummyStats ?? 0)
+    await page.goto(SITE + '/')
+    await page.waitForLoadState('networkidle')
+    expect([loads.length, await ran()]).toEqual([0, 0])
+    await page.locator('[data-choice="1"]').click()
+    await expect.poll(ran).toBe(1)
+    await page.goto(SITE + '/preise')
+    await expect.poll(ran).toBe(1)
+    expect(loads.length).toBe(2)
+    await page.locator('[data-consent-open]').click()
+    await expect(page.locator('input[name=statistik]')).toBeChecked()
+    await page.locator('input[name=statistik]').uncheck()
+    await Promise.all([page.waitForEvent('load'), page.locator('[data-save]').click()]) // revoking reloads
+    await page.goto(SITE + '/buchhaltung')
+    await page.waitForLoadState('networkidle')
+    expect([loads.length, await ran(), await page.locator('script[src$="/stats.js"]').count()]).toEqual([2, 0, 0])
+  })
+
+  test('a changed registry version asks again and loads nothing until then', async ({ page }) => {
+    await serve(page, buildWith(() => {}, { ...STATS, 'data/consent.yaml': registry(2) }))
+    await page.context().addCookies([{ name: 'decuma_consent', value: encodeURIComponent(JSON.stringify({ v: 1, statistik: true, am: '2027-01-04' })), url: SITE }])
+    await page.goto(SITE + '/')
+    await expect(page.locator('[data-consent]')).toBeVisible()
+    await page.waitForLoadState('networkidle')
+    expect(await page.evaluate(() => (window as any).dummyStats ?? 0)).toBe(0)
+  })
+
+  test('the cookie table of the Datenschutzerklärung lists the registry', async ({ page }) => {
+    await serve(page, buildWith(() => {}, {
+      'content/datenschutz.md': '---\ntranslationKey: datenschutz\nlayout: recht\n---\n{{< cookie-table >}}\n',
+    }))
+    await page.goto(SITE + '/datenschutz')
+    expect(await page.locator('.w-cookie-table tr').evaluateAll((r) => r.map((x) => (x as HTMLElement).innerText.split('\t')))).toEqual([
+      ['Name', 'Zweck', 'Dauer', 'Kategorie'],
+      ['decuma_consent', 'speichert deine Auswahl in diesem Banner', '6 Monate', 'Notwendig'],
+    ])
+  })
 })

@@ -1,0 +1,11 @@
+{{/* The cookie table of the Datenschutzerklärung, generated from data/consent.yaml so that banner and text cannot
+     disagree. The owner's text includes it with the shortcode {{< cookie-table >}}. */}}
+{{- $reg := hugo.Data.consent }}{{ $l := site.Language.Lang }}{{ $h := index $reg.table $l }}
+<table class="w-cookie-table">
+<thead><tr><th scope="col">{{ $h.name }}</th><th scope="col">{{ $h.purpose }}</th><th scope="col">{{ $h.duration }}</th><th scope="col">{{ $h.category }}</th></tr></thead>
+<tbody>
+{{- range $reg.cookies }}
+<tr><td><code>{{ .name }}</code></td><td>{{ index .purpose $l }}</td><td>{{ index .duration $l }}</td><td>{{ i18n (print "w.ck." .category) }}</td></tr>
+{{- end }}
+</tbody>
+</table>

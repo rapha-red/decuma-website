@@ -9,7 +9,9 @@ JSON-LD; an internal link or asset that does not resolve in the tree; a page out
 without its hreflang partner, a /kb page with a partner or an /en/ copy; a missing llms.txt, robots.txt (or one with
 Disallow) or sitemap.xml; a price of data/offer.json typed into layouts/, i18n/ or data/pages/; an internal decision
 id or private path in the tree; a looping motion (an `infinite` CSS animation, `setInterval` or
-`requestAnimationFrame` in a script); a placeholder of the legal frames (data/pages/recht.json) on a built page, unless
+`requestAnimationFrame` in a script); a `<script src>` outside the first-party set (a non-essential script is listed
+in data/consent.yaml and injected by consent.js after consent, never written into a page); a registered script that is
+not a first-party file of the tree; a placeholder of the legal frames (data/pages/recht.json) on a built page, unless
 SITE_DRAFT=1 (local review only); while source_link is off in data/offer.json, a page or line about the open source
 (the /open-source page, the repository address, "Open Source", "AGPL").
 """
@@ -24,6 +26,7 @@ from urllib.parse import urlsplit, unquote
 
 SITE_HOSTS = {"decuma.de"}
 CSS_URL = re.compile(r"""@import\s+(?:url\()?\s*['"]?([^'")\s;]+)|url\(\s*['"]?([^'")]+)['"]?\s*\)""", re.I)
+FIRST_PARTY_JS = re.compile(r"^/js/(?:anim|hero|menu|consent|search|plans|columns)(?:\.min)?(?:\.[0-9a-f]{64})?\.js$|^/pagefind/")
 INTERNAL = re.compile(r"\bD-\d{3}\b|prototype/ui|docs/(?:specs|adr|requirements)|decuma-personal|/home/\w+")
 
 
@@ -40,7 +43,7 @@ class Page(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.loads, self.links, self.css, self.alternates = [], [], [], {}
-        self.canonical, self.inline_scripts, self.styles = None, 0, []
+        self.canonical, self.inline_scripts, self.styles, self.scripts, self.registry = None, 0, [], [], None
         self._style = False
 
     def handle_starttag(self, tag, attrs):
@@ -57,6 +60,10 @@ class Page(HTMLParser):
             self.loads += [s.strip().split()[0] for s in a["srcset"].split(",") if s.strip()]
         if tag == "form" and a.get("action"):
             self.loads.append(a["action"])
+        if tag == "script" and a.get("src"):
+            self.scripts.append(a["src"])
+        if "data-consent" in a:
+            self.registry = json.loads(a.get("data-scripts") or "[]")
         if tag == "script" and not a.get("src") and a.get("type") != "application/ld+json":
             self.inline_scripts += 1
         if tag == "link" and a.get("href"):
@@ -148,6 +155,12 @@ def main():
                 c = resolve(tree, href)
                 for u in css_external(c) if c else []:
                     fails.append(f"{page}: request to another origin from {href}: {u}")
+        for u in p.scripts:
+            if not FIRST_PARTY_JS.match(u):
+                fails.append(f"{page}: script outside the first-party set: {u} (register it in data/consent.yaml)")
+        for s in p.registry or []:
+            if not s["src"].startswith("/") or s["src"].startswith("//") or not resolve(tree, s["src"]):
+                fails.append(f"{page}: registered script {s['src']} is not a first-party file of the site (CSP: own origin only)")
         if p.inline_scripts:
             fails.append(f"{page}: {p.inline_scripts} inline script(s)")
         for u in p.links + p.loads:
