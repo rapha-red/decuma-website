@@ -73,7 +73,7 @@ test.describe('menus at 1280 px', () => {
 })
 
 test.describe('axe', () => {
-  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
+  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/en/pricing/service', '/en/data-promise', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
     test(`no serious or critical finding on ${path}, banner and Produkt menu open`, async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 900 })
       await page.goto(path)
@@ -289,12 +289,15 @@ test.describe('open source, Neu in Decuma, legal pages', () => {
 
   test('/open-source with source_link on: built, the GitHub button leads to the repository, html-validate and axe clean', async ({ page }) => {
     const root = buildWith(ALL_ON)
-    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html')], { stdio: 'pipe' })
+    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html'), join(root, 'en/index.html'), join(root, 'en/pricing/index.html'), join(root, 'en/data-promise.html')], { stdio: 'pipe' })
     await serve(page, root)
     await page.goto(SITE + '/open-source')
     await expect(page.locator('.w-hero a.btn')).toHaveAttribute('href', 'https://github.com/rapha-red/open-decuma')
-    const r = await new AxeBuilder({ page }).analyze()
-    expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+    for (const path of ['/open-source', '/en/open-source']) {
+      await page.goto(SITE + path)
+      const r = await new AxeBuilder({ page }).analyze()
+      expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => path + ' ' + v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+    }
   })
 
   test('a new changelog entry shows first with its date after a rebuild', async ({ page }) => {

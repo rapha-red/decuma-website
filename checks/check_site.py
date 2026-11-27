@@ -136,6 +136,7 @@ def main():
     pages = sorted(f for f in tree.rglob("*.html") if f.name != "404.html" and not f.relative_to(tree).as_posix().startswith("pagefind/"))
     css_cache = {}
     alts = {}  # address -> its hreflang alternates, as addresses
+    filled = {}  # address -> whether its <main> has content (a partner pair is filled on both sides or neither)
 
     def css_external(css_file):
         if css_file not in css_cache:
@@ -185,6 +186,8 @@ def main():
             if other not in p.alternates or "x-default" not in p.alternates:
                 fails.append(f"{page}: no hreflang partner ({other}, x-default)")
             alts[page] = {k: urlsplit(v).path or "/" for k, v in p.alternates.items()}
+            m = re.search(r"<main>(.*?)</main>", f.read_text(errors="replace"), re.S)
+            filled[page] = bool(m and m.group(1).strip())
             if page.startswith("/en/"):
                 # an English page links inside /en/, except the German-only Knowledge Base (hreflang="de"), the language
                 # switch (hreflang="de"), llms.txt and the assets
@@ -204,6 +207,8 @@ def main():
         for l in ("de", "en"):
             if a.get(l) and a[l] != page and alts.get(a[l]) != a:
                 fails.append(f"{page}: hreflang {l} {a[l]} is not built or does not point back ({alts.get(a[l])})")
+            elif a.get(l) and filled[page] and not filled.get(a[l], True):
+                fails.append(f"{page}: its partner {a[l]} has an empty <main> (layout missing in its content file?)")
     sm = tree / "sitemap.xml"
     if sm.is_file():
         for loc, body in re.findall(r"<url><loc>([^<]+)</loc>(.*?)</url>", re.sub(r">\s+<", "><", sm.read_text())):
