@@ -1,10 +1,23 @@
 // Consent banner: opt-in, nothing non-essential before a choice. The choice is the one first-party cookie
 // decuma_consent (category states, registry version, date; 6 months). The footer link reopens the banner with details.
+// Gate: a non-essential script is never in the HTML; it is listed in the registry (data/consent.yaml, carried on the bar)
+// and injected here only while its category is granted. Revoking a category whose script ran reloads the page.
 ;(function () {
   var bar = document.querySelector('[data-consent]')
   if (!bar) return
   var NAME = 'decuma_consent'
-  var VERSION = 1 // registry version: a new category asks again
+  var VERSION = Number(bar.dataset.version) // registry version: a changed registry asks again
+  var SCRIPTS = JSON.parse(bar.dataset.scripts || '[]')
+  var geladen = {} // categories whose scripts ran on this page
+  function laden(w) {
+    SCRIPTS.forEach(function (s) {
+      if (!w[s.category] || document.querySelector('script[src="' + s.src + '"]')) return
+      var e = document.createElement('script')
+      e.src = s.src
+      document.head.appendChild(e)
+      geladen[s.category] = true
+    })
+  }
   function lesen() {
     var m = document.cookie.match(/(?:^|; )decuma_consent=([^;]*)/)
     if (!m) return null
@@ -33,14 +46,21 @@
     bar.hidden = true
     details(false)
     document.dispatchEvent(new CustomEvent('decuma:consent', { detail: w }))
+    if (Object.keys(geladen).some(function (k) { return !w[k] })) location.reload()
+    else laden(w)
   }
   bar.querySelectorAll('[data-choice]').forEach(function (b) {
     b.addEventListener('click', function () { speichern(b.dataset.choice === '1') })
   })
-  bar.querySelector('[data-more]').addEventListener('click', function () { details(true) })
+  bar.querySelector('[data-more]').addEventListener('click', function () {
+    details(true)
+    statistik.focus() // the pressed button is gone; focus goes to the first choice
+  })
   bar.querySelector('[data-save]').addEventListener('click', function () { speichern(statistik.checked) })
   document.querySelectorAll('[data-consent-open]').forEach(function (b) {
     b.addEventListener('click', function () { zeigen(true) })
   })
-  if (!lesen()) zeigen(false)
+  var w = lesen()
+  if (w) laden(w)
+  else zeigen(false)
 })()
