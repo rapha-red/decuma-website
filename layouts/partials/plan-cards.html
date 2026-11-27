@@ -20,7 +20,7 @@
     (slice "w.p.frei.f1" "") (slice "w.p.frei.f2" "") (slice "w.p.frei.f3" "model_steps") (slice "w.p.frei.f5" "") (slice "w.p.frei.f4" "")))
   "pro" (dict "prefix" "w.p.pro" "f" (slice
     (slice "w.p.pro.f1" "") (slice (cond (partial "flag.html" "lohn") "w.p.pro.f2.lohn" "w.p.pro.f2") "") (slice "w.p.pro.f3" "auftrag") (slice "w.p.pro.f4" "model_steps") (slice "w.p.pro.f5" "")))
-  "max" (dict "prefix" "w.p.agent" "f" (slice
+  "agent" (dict "prefix" "w.p.agent" "f" (slice
     (slice "w.p.agent.f1" "") (slice "w.p.agent.f2" "") (slice "w.p.agent.f3" "") (slice "w.p.agent.f4" "bank") (slice "w.p.agent.f5" "")))
 }}
 {{/* yearly billing: months free on the first paid plan (12 x the discount) */}}
@@ -40,7 +40,7 @@
       {{ $def := index $lines $k }}
       {{ if not $def }}{{ errorf "plan %q has no feature lines in plan-cards.html" $k }}{{ end }}
       {{ $list := partial "euro.html" $p.monthly }}
-      <section class="w-tier{{ if .c.highlight }} betont{{ end }}"{{ if eq $k "max" }} id="agent"{{ end }} aria-labelledby="k-{{ $k }}">
+      <section class="w-tier{{ if .c.highlight }} betont{{ end }}"{{ if eq $k "agent" }} id="agent"{{ end }} aria-labelledby="k-{{ $k }}">
         <div>
           <h3 class="w-h3" id="k-{{ $k }}">{{ index .c $l }}</h3>
           <p class="w-small">{{ i18n (print $def.prefix ".line") }}</p>

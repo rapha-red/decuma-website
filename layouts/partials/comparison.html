@@ -1,0 +1,67 @@
+{{/* The comparison of the price page (the prototype's table in Preise.svelte), entirely from data/offer.json: the plan
+     columns whose flags are on, the groups and their rows whose flags are on (`flags` all, `any_flags` one of them),
+     each cell "yes", "no" or text in this language with `{n}` filled from its `value`. An unknown cell stops the build.
+     Below 760 px the segmented control (assets/js/columns.js) picks the one column shown. */}}
+{{ $o := hugo.Data.offer }}
+{{ $l := site.Language.Lang }}
+{{ $cols := slice }}
+{{ $i := 0 }}
+{{ range $o.offer.columns }}
+  {{ if .plan }}
+    {{ $on := true }}
+    {{ range .flags }}{{ if not (partial "flag.html" .) }}{{ $on = false }}{{ end }}{{ end }}
+    {{ if $on }}{{ $cols = $cols | append (dict "c" . "i" $i) }}{{ end }}
+    {{ $i = add $i 1 }}
+  {{ end }}
+{{ end }}
+{{ $ja := i18n "w.p.ja" }}
+{{ $nein := i18n "w.p.nein" }}
+<section class="w-sec" aria-labelledby="p-cmp">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="p-cmp" class="w-h2">{{ i18n "w.p.cmp" }}</h2></div>
+    <div class="w-seg klein w-nur-handy" role="group" aria-label="{{ i18n "w.p.spalte" }}" data-pick hidden>
+      {{ range $cols }}<button type="button" aria-pressed="{{ .c.highlight }}">{{ index .c $l }}</button>{{ end }}
+    </div>
+    <div class="w-table-scroll" data-columns>
+      <table class="w-table">
+        <thead>
+          <tr><th scope="col"><span class="sr">{{ i18n "w.p.cmp" }}</span></th>{{ range $cols }}<th scope="col"{{ if .c.highlight }} class="betont"{{ end }}>{{ index .c $l }}</th>{{ end }}</tr>
+        </thead>
+        <tbody>
+          {{ range $g := $o.offer.groups }}
+            {{ $rows := slice }}
+            {{ range .rows }}
+              {{ $on := true }}
+              {{ range .flags }}{{ if not (partial "flag.html" .) }}{{ $on = false }}{{ end }}{{ end }}
+              {{ with .any_flags }}{{ $any := false }}{{ range . }}{{ if partial "flag.html" . }}{{ $any = true }}{{ end }}{{ end }}{{ if not $any }}{{ $on = false }}{{ end }}{{ end }}
+              {{ if $on }}{{ $rows = $rows | append . }}{{ end }}
+            {{ end }}
+            {{ if $rows }}
+              <tr class="gruppe"><th colspan="{{ add (len $cols) 1 }}" scope="colgroup">{{ index $g $l }}</th></tr>
+              {{ range $r := $rows }}
+                <tr data-row="{{ $r.key }}">
+                  <th scope="row">{{ index $r $l }}</th>
+                  {{ range $cols }}
+                    {{ $name := index .c $l }}
+                    {{ $cell := index $r.cells .i }}
+                    {{ if not $cell }}{{ errorf "offer group %q row %q: no cell for column %q" $g.key $r.key .c.key }}{{ end }}
+                    <td{{ if .c.highlight }} class="betont"{{ end }}>
+                      {{- if eq $cell "yes" }}{{ partial "icon.html" (dict "name" "check" "size" 16) }}<span class="sr">{{ $name }}: {{ $ja }}</span>
+                      {{- else if eq $cell "no" }}<span aria-hidden="true">–</span><span class="sr">{{ $name }}: {{ $nein }}</span>
+                      {{- else if reflect.IsMap $cell }}
+                        {{- $t := index $cell $l }}
+                        {{- if not $t }}{{ errorf "offer group %q row %q column %q: no %s text" $g.key $r.key .c.key $l }}{{ end }}
+                        {{- with $cell.value }}{{ $x := float . }}{{ $t = replace $t "{n}" (lang.FormatNumber (cond (eq $x (math.Floor $x)) 0 2) $x) }}{{ end }}
+                        {{- $t }}
+                      {{- else }}{{ errorf "offer group %q row %q column %q: unknown cell value %v" $g.key $r.key .c.key $cell }}{{ end -}}
+                    </td>
+                  {{ end }}
+                </tr>
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

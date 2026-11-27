@@ -20,3 +20,9 @@
   border-color: var(--line);
   color: var(--ink);
 }
+/* the comparison tables without JavaScript: every column, in a scroll box (columns.js marks the picked state) */
+@media (max-width: 760px) {
+  .web [data-columns]:not([data-picked]) .w-table {
+    min-width: 560px;
+  }
+}
