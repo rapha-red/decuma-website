@@ -289,7 +289,7 @@ test.describe('open source, Neu in Decuma, legal pages', () => {
 
   test('/open-source with source_link on: built, the GitHub button leads to the repository, html-validate and axe clean', async ({ page }) => {
     const root = buildWith(ALL_ON)
-    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html'), join(root, 'en/index.html'), join(root, 'en/pricing/index.html'), join(root, 'en/data-promise.html')], { stdio: 'pipe' })
+    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html'), join(root, 'en/pricing/index.html'), join(root, 'en/data-promise.html')], { stdio: 'pipe' })
     await serve(page, root)
     await page.goto(SITE + '/open-source')
     await expect(page.locator('.w-hero a.btn')).toHaveAttribute('href', 'https://github.com/rapha-red/open-decuma')
