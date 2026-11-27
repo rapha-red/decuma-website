@@ -291,7 +291,7 @@ const TREE = process.env.SITE_ROOT ?? join(REPO, 'public')
 const ALL_PAGES = [...readFileSync(join(TREE, 'sitemap.xml'), 'utf8').matchAll(/<loc>https:\/\/decuma\.de([^<]*)<\/loc>/g)].map((m) => m[1]).concat('/404', '/en/404')
 const stored = (page: Page) =>
   page.evaluate(async () => [...Object.keys(localStorage), ...Object.keys(sessionStorage), ...(await indexedDB.databases()).map((d) => 'idb:' + d.name)])
-const scripts = (page: Page) => page.locator('script[src]').evaluateAll((s) => s.map((e) => new URL((e as HTMLScriptElement).src).pathname))
+const scripts = (page: Page) => page.locator('script[src]').evaluateAll((s) => s.map((e) => { const u = new URL((e as HTMLScriptElement).src); return u.origin === location.origin ? u.pathname : u.href }))
 
 test.describe('consent on every page', () => {
   for (const path of ALL_PAGES) {
@@ -310,12 +310,12 @@ test.describe('consent on every page', () => {
       // network log and storage dump of this page, kept as evidence in the test's output directory
       writeFileSync(info.outputPath('consent-log.json'), JSON.stringify({ path, before, after, requests: requests.map((u) => u.replace(baseURL!, '')), afterReject: requests.slice(at).map((u) => u.replace(baseURL!, '')) }))
       await ctx.close()
-      expect(requests.filter((u) => new URL(u).origin !== new URL(baseURL!).origin), 'requests to another origin').toEqual([])
-      expect(before.cookies, 'cookies before a click').toEqual([])
-      expect(before.storage, 'storage before a click').toEqual([])
-      expect(after.cookies, 'cookies after "Ablehnen"').toEqual(['decuma_consent'])
-      expect(after.storage, 'storage after "Ablehnen"').toEqual([])
-      expect([...before.scripts, ...after.scripts].filter((s) => !FIRST_PARTY.test(s)), 'scripts outside the first-party set').toEqual([])
+      expect.soft(requests.filter((u) => new URL(u).origin !== new URL(baseURL!).origin), 'requests to another origin').toEqual([])
+      expect.soft(before.cookies, 'cookies before a click').toEqual([])
+      expect.soft(before.storage, 'storage before a click').toEqual([])
+      expect.soft(after.cookies, 'cookies after "Ablehnen"').toEqual(['decuma_consent'])
+      expect.soft(after.storage, 'storage after "Ablehnen"').toEqual([])
+      expect.soft([...before.scripts, ...after.scripts].filter((s) => !FIRST_PARTY.test(s)), 'scripts outside the first-party set').toEqual([])
     })
   }
 })
