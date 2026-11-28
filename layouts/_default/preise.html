@@ -51,9 +51,8 @@
           <div class="knopf">{{ with partial "link.html" .href }}<a class="btn large" href="{{ . }}">{{ index $col.privat (print "cta_" $l) }}</a>{{ end }}</div>
         </div>
       {{ end }}
-      {{/* Selbst hosten as the price list resolves it (button, mark, call). Shown only while source_link is on, as on the
-           prototype: check_site.py allows no word about the open source while it is off, so the price list's "off"
-           variant (the open-source page, which is not built then) stays unrendered. An outside address gets ↗. */}}
+      {{/* Selbst hosten as the price list resolves it (button, mark, call): the column is absent while source_link is
+           off, so the lane and every word about the open source are absent too. An outside address gets ↗. */}}
       {{ with $col.self_hosted }}{{ if $src }}
         {{ $gh := cond (eq .mark "github") hugo.Data.icons.github "" }}
         {{ $out := hasPrefix .href "https://" }}

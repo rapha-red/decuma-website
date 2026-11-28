@@ -126,7 +126,9 @@
         "key": "self_hosted",
         "plan": false,
         "highlight": false,
-        "flags": [],
+        "flags": [
+          "source_link"
+        ],
         "de": "Selbst hosten",
         "en": "Self-host",
         "cta_de": "Auf GitHub ansehen",
