@@ -161,6 +161,15 @@ def twin_of(fm, body):
 KB_BYLINE = ("Decuma Redaktion", "Herausgeber: Zapiens GmbH", "Stand: ", "Lizenz: CC BY-SA 4.0", "Allgemeine Information, keine Steuer- oder Rechtsberatung im Einzelfall.")
 
 
+def walk(x):
+    """Every JSON object inside x, depth first."""
+    if isinstance(x, dict):
+        yield x
+        x = list(x.values())
+    for v in x if isinstance(x, list) else []:
+        yield from walk(v)
+
+
 def kb_checks(tree, repo):
     fails = []
     for src in sorted((repo / "content/kb").rglob("*.md")):
@@ -194,7 +203,7 @@ def kb_checks(tree, repo):
             if w not in text:
                 fails.append(f"{page}: byline part missing: {w!r}")
         lds = [json.loads(m) for m in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)]
-        if "Person" in json.dumps(lds):
+        if any(n.get("@type") == "Person" for n in walk(lds)):
             fails.append(f"{page}: JSON-LD names a Person")
         nodes = [n for ld in lds for n in ld.get("@graph", [ld])]
         art = next((n for n in nodes if n.get("@type") == "Article"), None)

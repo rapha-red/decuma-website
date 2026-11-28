@@ -111,7 +111,7 @@ test.describe('without JavaScript', () => {
 
 // The start page built from a test copy of data/offer.json (Hugo into a temporary directory), served through a route
 // so that each case can change the offer without touching the tree under test.
-import { mkdtempSync, cpSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs'
+import { mkdtempSync, cpSync, readFileSync, writeFileSync, existsSync, statSync, readdirSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -540,6 +540,12 @@ test.describe('English pages', () => {
 // The Knowledge Base, in a tree built with articles (checks/kb.sh: the fixtures as the export, kb_live on); skipped otherwise
 const KB = ['/kb', '/kb/umsatzsteuer', '/kb/umsatzsteuer/kleinunternehmer', '/kb/umsatzsteuer/dauerfristverlaengerung', '/kb/buchfuehrung/belege-und-aufbewahrung']
 const KB_BUILT = existsSync(join(TREE, 'kb/umsatzsteuer/kleinunternehmer.html'))
+// the expected count of a search filter, from the built articles themselves, so the case holds for any export
+const kbCount = (filter: string) => {
+  const n = KB_BUILT ? readdirSync(join(TREE, 'kb'), { recursive: true, encoding: 'utf8' }).filter((f) => f.endsWith('.html'))
+    .map((f) => readFileSync(join(TREE, 'kb', f), 'utf8')).filter((h) => h.includes('data-pagefind-body') && h.includes(`data-pagefind-filter="${filter}"`)).length : 0
+  return n === 1 ? '1 Artikel' : `${n} Artikel`
+}
 // the production policy beyond 'self': Pagefind compiles its WebAssembly
 const CSP = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'"
 test.describe('Knowledge Base', () => {
@@ -572,12 +578,14 @@ test.describe('Knowledge Base', () => {
     await expect(page.locator('.kb-bereiche')).toBeHidden()
     await page.getByRole('searchbox').fill('')
     await page.getByLabel('Bereich').selectOption('Buchführung')
-    await expect.poll(titles).toEqual(['Belege: Belegfunktion, Sicherung und Aufbewahrungsfristen'])
+    await expect(page.locator('.kb-zahl')).toHaveText(kbCount('area:Buchführung'))
+    await expect.poll(titles).toContain('Belege: Belegfunktion, Sicherung und Aufbewahrungsfristen')
+    expect(new Set(await page.locator('.kb-treffer .kb-bereich').allTextContents())).toEqual(new Set(['Buchführung']))
     await page.getByLabel('Bereich').selectOption('')
     await page.getByLabel('Für wen').selectOption('Privat')
-    await expect(page.locator('.kb-zahl')).toHaveText('0 Artikel')
+    await expect(page.locator('.kb-zahl')).toHaveText(kbCount('fuer:Privat'))
     await page.getByLabel('Für wen').selectOption('Selbstständige')
-    await expect(page.locator('.kb-zahl')).toHaveText('3 Artikel')
+    await expect(page.locator('.kb-zahl')).toHaveText(kbCount('fuer:Selbstständige'))
     await page.getByLabel('Für wen').selectOption('')
     await expect(page.locator('.kb-bereiche')).toBeVisible()
     // a result leads to its article

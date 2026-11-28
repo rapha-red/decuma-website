@@ -71,7 +71,10 @@ out('data/icons.json', JSON.stringify({ paths, github: gh }, null, 1) + '\n')
 
 // ---- Knowledge Base topics: the display label of each topic slug (Kb.svelte TAG), for the article chips and the filter
 const tag = readFileSync(join(tmp, ui, 'web/Kb.svelte'), 'utf8').match(/export const TAG[^{]*\{([^}]*)\}/)[1]
-out('data/kb_topics.json', JSON.stringify(Object.fromEntries([...tag.matchAll(/'?([\w-]+)'?: '([^']+)'/g)].map((m) => [m[1], m[2]])), null, 1) + '\n')
+// the kb export brings more topics than the prototype's articles (labels from the plugin mapping's topic list, added
+// to the file); those stay, the prototype's own labels win
+const topics = JSON.parse(readFileSync(join(site, 'data/kb_topics.json'), 'utf8'))
+out('data/kb_topics.json', JSON.stringify({ ...topics, ...Object.fromEntries([...tag.matchAll(/'?([\w-]+)'?: '([^']+)'/g)].map((m) => [m[1], m[2]])) }, null, 1) + '\n')
 
 // ---- titles and descriptions: the Meta table of the copy deck. A title may carry " | Decuma" (or " | Decuma Knowledge
 // Base"), which splits its cell; such a brand cell is joined back to the title before it.

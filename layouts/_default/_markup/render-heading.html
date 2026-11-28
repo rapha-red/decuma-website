@@ -1,0 +1,12 @@
+{{- /* A heading of a Markdown body: its automatic id made valid (an id that does not start with a letter, such as
+       "14c-ustg" from "§ 14c UStG", gets the prefix "h-") and, on a Knowledge Base article, unique across the three
+       body parts the article renders one by one (layouts/kb/single.html resets the page's "hids" before them). */ -}}
+{{- $base := .Anchor -}}
+{{- if not (findRE `^[a-zA-Z]` $base) }}{{ $base = print "h-" (strings.TrimLeft "-" $base) }}{{ end -}}
+{{- $id := $base -}}
+{{- with .Page.Store.Get "hids" -}}
+  {{- $n := 1 -}}
+  {{- range seq 99 }}{{ if index ($.Page.Store.Get "hids") $id }}{{ $n = add $n 1 }}{{ $id = printf "%s-%d" $base $n }}{{ end }}{{ end -}}
+  {{- $.Page.Store.SetInMap "hids" $id true -}}
+{{- end -}}
+<h{{ .Level }} id="{{ $id }}"{{ range $k, $v := .Attributes }}{{ if ne $k "id" }} {{ $k }}="{{ $v }}"{{ end }}{{ end }}>{{ .Text }}</h{{ .Level }}>

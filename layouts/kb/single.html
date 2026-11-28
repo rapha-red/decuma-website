@@ -9,6 +9,7 @@
 {{ define "main" }}
 {{ $c := hugo.Data.capture.kb_class }}
 {{ $p := partial "kb-parts.html" . }}
+{{ .Store.Set "hids" (dict "kb-kurz" true "kb-q" true) }}
 {{ $stand := time.AsTime .Params.stand }}
 {{ $twin := print (partial "url.html" .RelPermalink) ".md" }}
 {{ $kb := site.GetPage "/kb" }}
