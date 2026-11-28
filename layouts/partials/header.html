@@ -92,11 +92,11 @@
               </div>
               {{ if and (eq $m "produkt") site.Params.menu_fuer }}
                 {{ $fuer := slice }}
-                {{ range $f := site.Params.fuer }}{{ with partial "link.html" (print "#/web/fuer/" (index $f 0)) }}{{ $fuer = $fuer | append (slice . (index $f 1)) }}{{ end }}{{ end }}
+                {{ range $f := site.Params.fuer }}{{ with partial "link.html" (print "#/web/fuer/" (index $f 0)) }}{{ $fuer = $fuer | append (dict "href" . "k" (index $f 1)) }}{{ end }}{{ end }}
                 {{ with $fuer }}
                 <div class="w-menu-foot">
                   <span class="w-small">{{ i18n "w.m.fuer" }}</span>
-                  {{ range . }}<a href="{{ index . 0 }}">{{ i18n (print "w.m.fuer." (index . 1)) }}</a>{{ end }}
+                  {{ range . }}<a href="{{ .href }}">{{ i18n (print "w.m.fuer." .k) }}</a>{{ end }}
                 </div>
                 {{ end }}
               {{ end }}

@@ -523,8 +523,8 @@
    "Say it in your own words. Decuma books and shows why."
   ],
   "sub": [
-   "Belege, Korrekturen, die Voranmeldung: Du schreibst, was zu tun ist, Decuma erledigt es Schritt für Schritt, mit dem Grund und der Regel dahinter. Was ans Finanzamt geht, wartet auf dich.",
-   "Belege, corrections, the VAT return: you write what needs doing, Decuma does it step by step, with the reason and the rule behind it. Anything for the tax office waits for you."
+   "Du schreibst, was zu tun ist. Decuma erledigt es mit Grund und Regel, und was ans Finanzamt geht, wartet auf dich.",
+   "You write what needs doing. Decuma does it with the reason and the rule, and anything for the tax office waits for you."
   ],
   "cta1": {
    "t": [
@@ -536,20 +536,20 @@
   "visual": "kichat",
   "schritte": [
    [
-    "Sagen: Beleg reinziehen oder in deinen Worten schreiben, was zu tun ist.",
-    "Say it: drop in a Beleg or write in your own words what needs doing."
+    "Sagen: Beleg reinziehen oder schreiben, was zu tun ist.",
+    "Say it: drop in a Beleg or write what needs doing."
    ],
    [
-    "Nachvollziehen: Jeder Schritt zeigt, was Decuma tut, warum, und nach welcher Regel.",
-    "Follow along: every step shows what Decuma does, why, and by which rule."
+    "Nachvollziehen: was, warum, nach welcher Regel.",
+    "Follow along: what, why, by which rule."
    ],
    [
-    "Korrigieren: Liegt Decuma daneben, sagst du es; auf Wunsch wird daraus eine Regel.",
-    "Correct: if Decuma is off, you say so; if you like, that becomes a rule."
+    "Korrigieren: auf Wunsch wird daraus eine Regel.",
+    "Correct: if you like, it becomes a rule."
    ],
    [
-    "Freigeben: Was Geld bewegt oder ans Finanzamt geht, gibst du selbst frei.",
-    "Release: anything that moves money or goes to the tax office you release yourself."
+    "Freigeben: Geld und Finanzamt nur mit dir.",
+    "Release: money and the tax office only with you."
    ]
   ],
   "abschnitte": [
@@ -564,27 +564,12 @@
       "zeilen": [
        {
         "h": [
-         "Der Grund steht dabei",
-         "The reason is right there"
+         "Grund und Regel stehen dabei",
+         "Reason and rule are right there"
         ],
         "t": [
-         "Decuma sagt nicht nur, was es gebucht hat, sondern warum: Vorsteuer abziehbar, weil alle Angaben da sind; Anlage statt Aufwand, weil der Betrag über der Grenze liegt.",
-         "Decuma says not just what it booked but why: input VAT deductible because every detail is there; an asset instead of an expense because the amount is above the threshold."
-        ]
-       },
-       {
-        "h": [
-         "Die Regel auch",
-         "So is the rule"
-        ],
-        "t": [
-         "Hinter jedem Schritt steht die Norm, aus der er folgt. Die Regeln und ihre Quellen liest du in der Knowledge Base nach. Du musst Decuma nicht glauben.",
-         "Behind every step is the norm it follows from. You can read up on the rules and their sources in the Knowledge Base. You don't have to take Decuma's word for it."
-        ],
-        "href": "#/kb",
-        "mehr": [
-         "Zur Knowledge Base",
-         "To the Knowledge Base"
+         "Decuma sagt, was es gebucht hat, warum, und nach welcher Norm. Du musst Decuma nicht glauben.",
+         "Decuma says what it booked, why, and by which norm. You don't have to take Decuma's word for it."
         ]
        },
        {
@@ -593,8 +578,8 @@
          "Everything one click away"
         ],
         "t": [
-         "Aus dem Chat öffnest du den Beleg, die Buchung und die Quelle. Nichts verschwindet in einer Blackbox.",
-         "From the chat you open the Beleg, the booking and the source. Nothing disappears into a black box."
+         "Aus dem Chat öffnest du den Beleg, die Buchung und die Quelle.",
+         "From the chat you open the Beleg, the booking and the source."
         ]
        }
       ]
@@ -611,14 +596,8 @@
     "bloecke": [
      {
       "p": [
-       "Liegt Decuma daneben, schreibst du es einfach. Die falsche Buchung wird storniert und richtig neu gebucht, beide bleiben sichtbar. Dann fragt Decuma, ob es künftig immer so buchen soll, und legt auf dein Ja eine Regel an.",
-       "If Decuma is off, you just say so. The wrong booking is reversed and booked again correctly, and both stay visible. Then Decuma asks whether to book it this way from now on and, if you say yes, creates a rule."
-      ]
-     },
-     {
-      "p": [
-       "Deine Regeln siehst und änderst du jederzeit. Was eine Regel sicher erkennt, bucht Decuma ohne Rückfrage; wo etwas unklar ist, fragt es kurz nach.",
-       "You can see and change your rules at any time. What a rule recognises for certain, Decuma books without asking; where something is unclear, it asks briefly."
+       "Liegt Decuma daneben, schreibst du es einfach. Die Buchung wird storniert und richtig neu gebucht, beide bleiben sichtbar, und auf dein Ja wird daraus eine Regel. Deine Regeln änderst du jederzeit.",
+       "If Decuma is off, you just say so. The booking is reversed and booked again correctly, both stay visible, and if you say yes it becomes a rule. You can change your rules at any time."
       ]
      }
     ]
@@ -629,12 +608,11 @@
      "What matters, you release"
     ],
     "konto": "Freigabe",
-    "visual": "freigabe",
     "bloecke": [
      {
       "p": [
-       "Belege buchen und Zahlungen zuordnen darf Decuma nach deinen Regeln. Was Geld bewegt oder ans Finanzamt geht, legt es dir vor: mit den Zahlen, den Buchungen dahinter und der Frist. Erst deine Freigabe schickt es los.",
-       "Decuma may book Belege and match payments by your rules. Anything that moves money or goes to the tax office it puts to you: with the figures, the bookings behind them and the deadline. Only your release sends it off."
+       "Belege buchen und Zahlungen zuordnen darf Decuma nach deinen Regeln. Was Geld bewegt oder ans Finanzamt geht, legt es dir mit Zahlen und Frist vor; erst deine Freigabe schickt es los.",
+       "Decuma may book Belege and match payments by your rules. Anything that moves money or goes to the tax office it puts to you with the figures and the deadline; only your release sends it off."
       ]
      },
      {
@@ -660,8 +638,8 @@
          "Connect once, work anywhere"
         ],
         "t": [
-         "Decuma unterstützt MCP. Verbinde dein Decuma einmal mit ChatGPT, Claude oder einem anderen KI-Assistenten und gib ihm dieselben Aufgaben wie im Chat von Decuma. Es gelten dieselben Regeln und dieselben Freigaben.",
-         "Decuma supports MCP. Connect your Decuma once to ChatGPT, Claude or another AI assistant and give it the same tasks as in Decuma's chat. The same rules and the same releases apply."
+         "Decuma unterstützt MCP. Verbinde es einmal mit ChatGPT, Claude oder einem anderen KI-Assistenten; es gelten dieselben Regeln und Freigaben.",
+         "Decuma supports MCP. Connect it once to ChatGPT, Claude or another AI assistant; the same rules and releases apply."
         ],
         "href": "#/web/entwickler",
         "mehr": [
@@ -717,16 +695,6 @@
     "a": [
      "Deine Daten liegen auf Servern in Deutschland und gehören dir; du kannst sie jederzeit vollständig exportieren. Mit deinen Daten wird kein Modell trainiert. Wer in unserem Auftrag Daten verarbeitet, sagen wir dir auf Anfrage.",
      "Your data are on servers in Germany and belong to you; you can export all of them at any time. No model is trained on your data. Who processes data on our behalf, we tell you on request."
-    ]
-   },
-   {
-    "q": [
-     "Kann ich Decuma in ChatGPT oder Claude nutzen?",
-     "Can I use Decuma in ChatGPT or Claude?"
-    ],
-    "a": [
-     "Ja. Decuma unterstützt MCP, den offenen Standard, über den KI-Assistenten mit anderen Programmen arbeiten. Du verbindest dein Decuma einmal; danach gelten dort dieselben Regeln und Freigaben wie in der App.",
-     "Yes. Decuma supports MCP, the open standard through which AI assistants work with other software. You connect your Decuma once; after that the same rules and releases apply there as in the app."
     ]
    },
    {

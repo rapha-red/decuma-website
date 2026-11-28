@@ -1,7 +1,5 @@
 # Owner-approved differences between the prototype and the site. One per line, tab-separated:
 # case (or *; <case>@<lang> for one language)<TAB>CSS that hides the part (on both sides; a part the site lacks matches nothing there)<TAB>flag state it applies to (offer, all; empty: both)<TAB>reason and approval
-produkt-1280	.w-menu-foot { display: none !important }		The "Für:" row is off at launch (switch menu_fuer in hugo.toml) until the "Lösungen für" pages exist; owner decision 2026-11-27
-*	nav[aria-labelledby=f-fuer] { display: none !important }		The footer column "Lösungen für" is off with the "Für:" row (menu_fuer) until the "Lösungen für" pages exist; owner decision 2026-11-27 (orchestrator, this train)
 start-390	#agent { display: none !important }	all	the same at 390 px
 neu-1280	.proto-hinweis { display: none !important }		the prototype's note on its invented sample entries is prototype-only (the site shows real entries)
 neu-390	.proto-hinweis { display: none !important }		the same at 390 px

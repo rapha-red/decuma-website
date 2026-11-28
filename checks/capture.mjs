@@ -13,8 +13,8 @@ const site = join(dirname(fileURLToPath(import.meta.url)), '..')
 const base = process.argv[2]
 if (!base) throw new Error('usage: node checks/capture.mjs <prototype url>')
 const commit = readFileSync(join(site, 'PROTOTYPE_COMMIT'), 'utf8').trim().slice(0, 12)
-const ALL = 'model_steps,agent_tier,lohn,bank,source_link,eric,auftrag'
-const OHNE_AGENT = 'model_steps,lohn,bank,source_link,eric,auftrag'
+const ALL = 'model_steps,agent_tier,lohn,bank,source_link,kb_live,eric,auftrag'
+const OHNE_AGENT = 'model_steps,lohn,bank,source_link,kb_live,eric,auftrag'
 // partial name -> flags, menu, element inside the menu card
 const STUECKE = {
   'menu-frist': [ALL, 'produkt', '.w-menu-card > :first-child'],
@@ -42,7 +42,8 @@ const VISUALS = {
   'preise-dfy': ['#/web/preise/service', '[aria-labelledby=d-take] .w-sec-head > svg'],
   'preise-selbsthosten': ['#/web/preise/service', '[aria-labelledby=d-opt] .w-sec-head > svg'],
 }
-const FLAGS = ALL.split(',')
+// kb_live is a switch of hugo.toml, not of the price list: visuals are captured with it on and never vary by it
+const FLAGS = ALL.split(',').filter((f) => f !== 'kb_live')
 
 const browser = await chromium.launch()
 const page = await browser.newPage({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } })
@@ -154,7 +155,9 @@ for (const [k, s] of Object.entries(seitenP)) {
 }
 PROD.gruendung = { route: '#/web/gruendung', slots: () => ({ hero: '.w-hero-visual > *', fb: '#fragebogen .w-row > div:last-child > *' }) }
 PROD.bots = { route: '#/web/bots', flag: 'agent_tier', slots: () => ({ hero: '.w-hero-visual > *', k0: '.w-botkarte:nth-child(1) > svg', k1: '.w-botkarte:nth-child(2) > svg', k2: '.w-botkarte:nth-child(3) > svg', k3: '.w-botkarte:nth-child(4) > svg', eigen: '.w-komponist', ja: '.w-regeln', bericht: '[aria-labelledby=bp-bericht] .w-row > div:last-child > *' }) }
-const SEQ = '.w-ablauf, .w-kichat'
+// a page slot sits beside the menus' captured cards: its ids get a suffix (the Gründung card is in both), and a labelled
+// <pre> gets role="group" (aria-label is not allowed on a bare <pre>)
+const eigen = (h) => h.replace(/\b(id|for|aria-labelledby|aria-describedby|aria-controls)="([^"]+)"/g, '$1="$2-p"').replace(/<pre (?![^>]*\brole=)([^>]*\baria-label=)/g, '<pre role="group" $1')
 const pstate = new Map()
 let gruendungClass = ''
 const styles = new Map()
@@ -162,13 +165,13 @@ async function prod(l, k, on) {
   const key = `${l}:${k}:${on.join(',')}`
   if (!pstate.has(key)) {
     const got = {}
-    await page.goto(`${base}?lang=${l}&flags=${on.join(',') || 'aus'}${PROD[k].route}`)
+    await page.goto(`${base}?lang=${l}&flags=${[...on, 'kb_live'].join(',')}${PROD[k].route}`)
     await page.locator('main > *').first().waitFor()
     const slots = PROD[k].flag && !on.includes(PROD[k].flag) ? {} : PROD[k].slots(on)
     for (const [slot, sel] of Object.entries(slots)) {
       const el = page.locator('main ' + sel)
       if ((await el.count()) !== 1) throw new Error(`${k} ${slot}: ${sel} matches ${await el.count()} elements`)
-      got[slot] = sauber(await el.evaluate((e) => e.outerHTML))
+      got[slot] = eigen(sauber(await el.evaluate((e) => e.outerHTML)))
     }
     for (const [id, text] of await page.evaluate(() => [...document.querySelectorAll('style[data-vite-dev-id]')].map((s) => [s.dataset.viteDevId, s.textContent]))) styles.set(id, text)
     if (k === 'gruendung') gruendungClass ||= (await page.locator('main .stapel').first().getAttribute('class')).match(/svelte-\w+/)[0]
@@ -181,10 +184,10 @@ async function folge(l, k, on, sel) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
   const p = await ctx.newPage()
   await p.clock.install({ time: new Date('2027-01-04T09:00:00') })
-  await p.goto(`${base}?lang=${l}&flags=${on.join(',') || 'aus'}${PROD[k].route}`)
+  await p.goto(`${base}?lang=${l}&flags=${[...on, 'kb_live'].join(',')}${PROD[k].route}`)
   const el = p.locator('main ' + sel)
   await el.waitFor()
-  const html = () => el.evaluate((e) => e.outerHTML).then(sauber)
+  const html = () => el.evaluate((e) => e.outerHTML).then((h) => eigen(sauber(h)))
   const steps = [await html()]
   let last = steps[0], ms = 0, still = 0
   while (still < 5000) {
@@ -197,7 +200,7 @@ async function folge(l, k, on, sel) {
   return steps
 }
 const pdeps = {}
-const FL = ALL.split(',')
+const FL = FLAGS
 for (const l of ['de', 'en']) {
   const dir = join(site, 'layouts/partials/fragments', l)
   for (const k of Object.keys(PROD)) {

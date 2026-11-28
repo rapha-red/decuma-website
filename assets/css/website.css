@@ -1,4 +1,4 @@
-/* website.css of the design source at 2b0d56fdf7f8, synced by tools/sync.mjs; do not edit */
+/* website.css of the design source at f0d6cbf678c9, synced by tools/sync.mjs; do not edit */
 
 .web {
   --w-max: 1200px;
@@ -756,14 +756,26 @@
   font-weight: var(--fw-semibold);
 }
 .web .w-foot {
-  padding: var(--s7) 0 var(--s6);
+  padding: var(--s7) 0 var(--s5);
   border-top: 1px solid var(--line);
   font-size: var(--fs-sm);
 }
 .web .w-foot-cols {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) repeat(5, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr));
   gap: var(--s6);
+}
+.web .w-foot-marke {
+  display: grid;
+  align-content: start;
+  gap: var(--s3);
+  color: var(--ink-2);
+}
+.web .w-foot-marke a {
+  color: var(--ink);
+}
+.web .w-foot-marke p a {
+  white-space: nowrap;
 }
 .web .w-foot h2 {
   margin-bottom: var(--s3);
@@ -781,21 +793,21 @@
   color: var(--ink);
   text-decoration: underline;
 }
-.web .w-foot-lines {
-  display: grid;
-  gap: var(--s1);
-  margin-top: var(--s7);
-  padding-top: var(--s4);
-  border-top: 1px solid var(--line);
-  color: var(--ink-2);
-}
 .web .w-foot-bar {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
   gap: var(--s3);
-  margin-top: var(--s4);
+  margin-top: var(--s7);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--line);
   color: var(--ink-2);
+}
+.web .w-foot-rechts {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s4);
 }
 .web .w-lang {
   display: inline-flex;
@@ -818,6 +830,7 @@
 @media (max-width: 900px) {
   .web .w-foot-cols {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s6) var(--s5);
   }
   .web .w-foot-cols > :first-child {
     grid-column: 1 / -1;
@@ -1549,44 +1562,28 @@
   border-radius: var(--r);
   font-size: var(--fs-sm);
 }
-.web .w-kichat .fenster {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  height: 470px;
-  overflow: hidden;
-}
 .web .w-kichat .verlauf {
   gap: var(--s3);
+}
+.web .w-kichat .du {
+  flex-wrap: wrap;
 }
 .web .w-kichat .anhang {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-right: var(--s2);
   padding: 2px var(--s2);
   border: 1px solid var(--line);
   border-radius: var(--r);
   background: var(--bg);
   font-size: var(--fs-xs);
 }
-.web .w-kichat .ki-schritt {
-  display: grid;
-  grid-template-columns: 12px minmax(0, 1fr);
-  gap: var(--s3);
-  align-items: start;
-  font-size: var(--fs-sm);
-  animation: w-ein 300ms var(--ease) both;
-}
-.web .w-kichat .ki-schritt > span {
-  margin-top: 6px;
-}
-.web .w-kichat .ki-schritt:not(.fertig) .was {
-  color: var(--ink-2);
-}
 .web .w-kichat .warum {
+  margin-top: calc(-1 * var(--s2));
+  padding-left: calc(7px + var(--s3));
   color: var(--ink-2);
   font-size: var(--fs-xs);
+  animation: w-ein 300ms var(--ease) both;
 }
 .web .w-kichat .norm {
   display: inline-block;
@@ -1596,13 +1593,6 @@
   border-radius: var(--r);
   color: var(--accent);
   font: 500 11px/1.6 var(--font-mono, ui-monospace, monospace);
-}
-.web .w-kichat .ki-frage {
-  justify-self: start;
-  padding: var(--s2) var(--s3);
-  border-left: 3px solid var(--accent);
-  font-size: var(--fs-sm);
-  animation: w-ein 300ms var(--ease) both;
 }
 .web .w-kichat .ki-karte {
   display: grid;
@@ -1615,6 +1605,7 @@
 }
 .web .w-kichat .ki-karte .titel {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--s2);
   font-weight: var(--fw-semibold);
@@ -1622,42 +1613,45 @@
 .web .w-kichat .ki-karte .titel svg {
   color: var(--accent);
 }
-.web .w-kichat .ki-karte dl > div {
+.web .w-kichat .frist {
+  margin-left: auto;
+  color: var(--ink-2);
+  font-weight: var(--fw-regular, 400);
+  font-size: var(--fs-xs);
+}
+.web .w-kichat .zahl {
   display: flex;
   justify-content: space-between;
-  gap: var(--s3);
   padding: 2px 0;
   border-bottom: 1px dashed var(--line);
-}
-.web .w-kichat .ki-karte dt {
-  color: var(--ink-2);
-}
-.web .w-kichat .ki-karte dd {
   font-variant-numeric: tabular-nums;
+}
+.web .w-kichat .zahl span {
+  color: var(--ink-2);
 }
 .web .w-kichat .knoepfe {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
   gap: var(--s2);
 }
-.web .w-kichat .knoepfe span {
+.web .w-kichat .knoepfe .hinweis {
+  margin-right: auto;
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+}
+.web .w-kichat .pruefen,
+.web .w-kichat .freigeben {
   padding: var(--s1) var(--s3);
   border: 1px solid var(--line);
   border-radius: var(--r);
 }
-.web .w-kichat .knoepfe .freigeben {
+.web .w-kichat .freigeben {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--bg);
   font-weight: var(--fw-semibold);
-}
-.web .w-kichat .hinweis {
-  font-weight: var(--fw-semibold);
-}
-@media (max-width: 760px) {
-  .web .w-kichat .fenster {
-    height: 520px;
-  }
 }
 .web .chat-app .mail {
   display: grid;

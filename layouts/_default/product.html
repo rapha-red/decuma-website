@@ -125,7 +125,7 @@
   {{ else if isset $b "liste" }}
     <ul class="w-punkte">{{ range $b.liste }}{{ with partial "inline/p-txt.html" (merge $c (dict "x" .)) }}<li>{{ partial "icon.html" (dict "name" "check" "size" 16) }}<span>{{ partial "inline/p-code.html" . }}</span></li>{{ end }}{{ end }}</ul>
   {{ else if isset $b "fakten" }}
-    <aside class="w-fakten"><h3 class="w-small">{{ partial "inline/p-txt.html" (merge $c (dict "x" $b.titel)) }}</h3><ul>{{ range $b.fakten }}{{ with partial "inline/p-txt.html" (merge $c (dict "x" .)) }}<li>{{ partial "inline/p-code.html" . }}</li>{{ end }}{{ end }}</ul></aside>
+    {{/* a div, not the prototype's aside: two "Gut zu wissen" asides on one page are landmarks with the same name */}}<div class="w-fakten"><h3 class="w-small">{{ partial "inline/p-txt.html" (merge $c (dict "x" $b.titel)) }}</h3><ul>{{ range $b.fakten }}{{ with partial "inline/p-txt.html" (merge $c (dict "x" .)) }}<li>{{ partial "inline/p-code.html" . }}</li>{{ end }}{{ end }}</ul></div>
   {{ else if isset $b "zeilen" }}
     <div class="w-zeilen">
       {{ range $z := $b.zeilen }}
