@@ -1,4 +1,4 @@
-# synced from the prototype at 8a700973f4f3 by tools/sync.mjs; do not edit
+# synced from the prototype at 2b0d56fdf7f8 by tools/sync.mjs; do not edit
 "actor.agent": "Agent"
 "actor.agent.tip": "Der Agent von Decuma. Er handelt nur über dieselben Befehle wie du."
 "actor.api": "API-Schlüssel"
@@ -1065,6 +1065,7 @@
 "w.p.r.rech": "Rechnungen und Angebote"
 "w.p.r.regeln": "Regeln und Automatisierungen"
 "w.p.r.remote": "Remote-MCP für deine KI-App"
+"w.p.r.schaetzung": "Live-Steuerschätzung mit Rücklage"
 "w.p.r.sdk": "SDKs für Python, TypeScript, Rust"
 "w.p.r.serie": "Wiederkehrende Rechnungen"
 "w.p.r.speicher": "Speicher"
