@@ -350,8 +350,8 @@
     "bloecke": [
      {
       "p": [
-       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
-       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
+       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du bis Dezember jeden Monat zurücklegst, zusätzlich zu den Vorauszahlungen an ihren Terminen. Es bleibt eine Schätzung, kein Bescheid.",
+       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month until December, on top of the prepayments on their due dates. It stays an estimate, not an assessment."
       ]
      }
     ]
@@ -413,7 +413,7 @@
   ],
   "stufe": [
    "Belege, Bank-Import, Journal, Auswertungen und Kassenbuch sind in Kostenlos enthalten. Regeln, automatischer Abgleich und mehr als {belege} Belege im Monat gibt es ab Pro.",
-   "Belege, bank import, journal, reports and cash book are included in Kostenlos. Rules, automatic matching and more than {belege} Belege a month come with Pro."
+   "Belege, bank import, journal, reports and cash book are included in Free. Rules, automatic matching and more than {belege} Belege a month come with Pro."
   ],
   "faq": [
    {
@@ -433,7 +433,7 @@
     ],
     "a": [
      "Ja, in jedem Tarif, auch in Kostenlos. Decuma übernimmt deine Buchungen über das DATEV-Format, dazu Kunden, offene Rechnungen und Belege. Wenn du das nicht selbst machen willst: Done-for-you.",
-     "Yes, on every plan, Kostenlos included. Decuma brings in your bookings through the DATEV format, plus customers, open invoices and Belege. If you don't want to do it yourself: Done-for-you."
+     "Yes, on every plan, Free included. Decuma brings in your bookings through the DATEV format, plus customers, open invoices and Belege. If you don't want to do it yourself: Done-for-you."
     ]
    },
    {
@@ -676,7 +676,7 @@
   ],
   "stufe": [
    "Die Decuma-KI ist in jedem Tarif dabei: in Kostenlos inklusive, in Pro mit mehr Power, in Max mit voller Power, mit Agent und Decuma Bots.",
-   "Decuma AI comes with every plan: included in Kostenlos, with more power in Pro, with full power in Max, with the agent and Decuma Bots."
+   "Decuma AI comes with every plan: included in Free, with more power in Pro, with full power in Max, with the agent and Decuma Bots."
   ],
   "faq": [
    {
@@ -1035,7 +1035,7 @@
      {
       "stufe": [
        "Automatische Mahnungen und wiederkehrende Rechnungen ab Pro. In Kostenlos mahnst du von Hand.",
-       "Automatic reminders and recurring invoices from Pro. In Kostenlos you send reminders by hand."
+       "Automatic reminders and recurring invoices from Pro. In Free you send reminders by hand."
       ]
      }
     ]
@@ -1446,7 +1446,7 @@
   ],
   "stufe": [
    "Voranmeldung mit Dauerfristverlängerung und Zusammenfassende Meldung sind in Kostenlos enthalten.",
-   "The VAT return with permanent extension and the EC Sales List are included in Kostenlos."
+   "The VAT return with permanent extension and the EC Sales List are included in Free."
   ],
   "faq": [
    {
@@ -2500,12 +2500,12 @@
   "stufe": {
    "t": [
     "REST, CLI und MCP, auch der Remote-MCP-Server, gibt es in jedem Tarif, auch in Kostenlos. Selbst gehostet sowieso.",
-    "REST, CLI and MCP, including the remote MCP server, come with every plan, Kostenlos included. Self-hosted anyway."
+    "REST, CLI and MCP, including the remote MCP server, come with every plan, Free included. Self-hosted anyway."
    ],
    "flag": "source_link",
    "fb": [
     "REST, CLI und MCP gibt es in jedem Tarif, in Kostenlos mit Mengengrenze.",
-    "REST, CLI and MCP come with every plan, rate-limited in Kostenlos."
+    "REST, CLI and MCP come with every plan, rate-limited in Free."
    ]
   },
   "faq": [
@@ -2547,12 +2547,12 @@
     "a": {
      "t": [
       "Nein. REST, CLI und MCP, auch der Remote-MCP-Server, gibt es in jedem Tarif, auch in Kostenlos.",
-      "No. REST, CLI and MCP, including the remote MCP server, come with every plan, Kostenlos included."
+      "No. REST, CLI and MCP, including the remote MCP server, come with every plan, Free included."
      ],
      "flag": "source_link",
      "fb": [
       "Nein. REST, CLI und MCP gibt es in jedem Tarif, in Kostenlos mit Mengengrenze.",
-      "No. REST, CLI and MCP come with every plan, rate-limited in Kostenlos."
+      "No. REST, CLI and MCP come with every plan, rate-limited in Free."
      ]
     }
    },
@@ -3347,7 +3347,7 @@
    ],
    "lead": [
     "Für den laufenden Betrieb deiner GmbH reicht Kostenlos: Buchhaltung, Rechnungen und Voranmeldung. Für Jahresabschluss und Steuererklärungen nimmst du Pro mit jährlicher Abrechnung. Max, wenn der Agent die Kleinarbeit übernehmen soll.",
-    "For the day-to-day of your GmbH, Kostenlos is enough: bookkeeping, invoices and the VAT return. For the annual accounts and tax returns you take Pro on yearly billing. Max if the agent should take over the small stuff."
+    "For the day-to-day of your GmbH, Free is enough: bookkeeping, invoices and the VAT return. For the annual accounts and tax returns you take Pro on yearly billing. Max if the agent should take over the small stuff."
    ]
   },
   "dfy": true,
@@ -3789,7 +3789,7 @@
    ],
    "lead": [
     "Die meisten UGs starten mit Kostenlos: Buchhaltung, Rechnungen und Voranmeldung. Für den Jahresabschluss mit Rücklage und die Steuererklärungen nimmst du Pro mit jährlicher Abrechnung.",
-    "Most UGs start with Kostenlos: bookkeeping, invoices and the VAT return. For the annual accounts with the reserve and the tax returns you take Pro on yearly billing."
+    "Most UGs start with Free: bookkeeping, invoices and the VAT return. For the annual accounts with the reserve and the tax returns you take Pro on yearly billing."
    ]
   },
   "dfy": true,
@@ -4250,7 +4250,7 @@
    ],
    "lead": [
     "Für die Holding nimmst du Pro mit jährlicher Abrechnung: Jahresabschluss und Steuererklärungen sind darin enthalten. Jedes Unternehmen hat seinen eigenen Tarif; eines davon kann auf Kostenlos laufen, etwa deine Tochter, wenn sie den Abschluss anderswo macht.",
-    "For the holding you take Pro on yearly billing: annual accounts and tax returns are included. Each business has its own plan; one of them can run on Kostenlos, your subsidiary for instance, if it does its year-end elsewhere."
+    "For the holding you take Pro on yearly billing: annual accounts and tax returns are included. Each business has its own plan; one of them can run on Free, your subsidiary for instance, if it does its year-end elsewhere."
    ]
   },
   "faq": [
@@ -4535,8 +4535,8 @@
     "bloecke": [
      {
       "p": [
-       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
-       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
+       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du bis Dezember jeden Monat zurücklegst, zusätzlich zu den Vorauszahlungen an ihren Terminen. Es bleibt eine Schätzung, kein Bescheid.",
+       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month until December, on top of the prepayments on their due dates. It stays an estimate, not an assessment."
       ]
      },
      {
@@ -4748,8 +4748,8 @@
      "How do I know how much to set aside?"
     ],
     "a": [
-     "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
-     "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
+     "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du bis Dezember jeden Monat zurücklegst, zusätzlich zu den Vorauszahlungen an ihren Terminen. Es bleibt eine Schätzung, kein Bescheid.",
+     "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month until December, on top of the prepayments on their due dates. It stays an estimate, not an assessment."
     ]
    },
    {
@@ -4956,8 +4956,8 @@
     "bloecke": [
      {
       "p": [
-       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
-       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
+       "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du bis Dezember jeden Monat zurücklegst, zusätzlich zu den Vorauszahlungen an ihren Terminen. Es bleibt eine Schätzung, kein Bescheid.",
+       "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month until December, on top of the prepayments on their due dates. It stays an estimate, not an assessment."
       ]
      },
      {
@@ -5186,8 +5186,8 @@
      "How much tax do I need to set aside?"
     ],
     "a": [
-     "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du jeden Monat zurücklegst. Es bleibt eine Schätzung, kein Bescheid.",
-     "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month. It stays an estimate, not an assessment."
+     "Decuma schätzt mit jeder Buchung, wie viel Steuer auf dich zukommt, jeden Schritt mit seiner Norm, und schlägt dir vor, wie viel du bis Dezember jeden Monat zurücklegst, zusätzlich zu den Vorauszahlungen an ihren Terminen. Es bleibt eine Schätzung, kein Bescheid.",
+     "With every booking Decuma estimates how much tax is coming your way, each step with its legal basis, and suggests how much to set aside each month until December, on top of the prepayments on their due dates. It stays an estimate, not an assessment."
     ]
    },
    {
@@ -5591,7 +5591,7 @@
    ],
    "lead": [
     "API und MCP gibt es in jedem Tarif, auch in Kostenlos. Pro, wenn du das Jahr abschließt; Max, wenn Decumas eigener Agent die Kleinarbeit übernehmen soll.",
-    "API and MCP come with every plan, Kostenlos included. Pro when you close the year; Max if Decuma’s own agent should take over the small stuff."
+    "API and MCP come with every plan, Free included. Pro when you close the year; Max if Decuma’s own agent should take over the small stuff."
    ]
   },
   "faq": [

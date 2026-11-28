@@ -124,7 +124,8 @@ async function serve(page: Page, root: string) {
     return f ? r.fulfill({ path: f }) : r.fulfill({ status: 404 })
   })
 }
-const ALL_ON = (o: any) => Object.keys(o.flags).forEach((k) => (o.flags[k] = true))
+// every flag on: the price list's own --all-flags answer (check-site.sh holds it to DECUMA_BIN)
+const ALL_ON = (o: any) => Object.assign(o, JSON.parse(readFileSync(join(REPO, 'checks/offer-all-flags.json'), 'utf8')))
 
 test.describe('start page', () => {
   test.use({ viewport: { width: 1280, height: 900 } })
@@ -289,10 +290,13 @@ test.describe('open source, Neu in Decuma, legal pages', () => {
 
   test('/open-source with source_link on: built, the GitHub button leads to the repository, html-validate and axe clean', async ({ page }) => {
     const root = buildWith(ALL_ON)
-    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html'), join(root, 'en/pricing/index.html'), join(root, 'en/data-promise.html')], { stdio: 'pipe' })
+    execFileSync(join(REPO, 'checks/node_modules/.bin/html-validate'), ['--config', join(REPO, 'checks/.htmlvalidate.json'), join(root, 'open-source.html'), join(root, 'en/open-source.html'), join(root, 'datenversprechen.html'), join(root, 'en/index.html'), join(root, 'en/pricing/index.html'), join(root, 'en/data-promise.html')], { stdio: 'pipe' })
     await serve(page, root)
     await page.goto(SITE + '/open-source')
     await expect(page.locator('.w-hero a.btn')).toHaveAttribute('href', 'https://github.com/rapha-red/open-decuma')
+    await page.goto(SITE + '/preise') // the Selbst-hosten lane: the repository with its mark (price list column self_hosted)
+    await expect(page.locator('.w-extra:not(.mit-linie) a.btn')).toHaveAttribute('href', 'https://github.com/rapha-red/open-decuma')
+    await expect(page.locator('.w-extra:not(.mit-linie) a.btn svg')).toHaveCount(1)
     for (const path of ['/open-source', '/en/open-source']) {
       await page.goto(SITE + path)
       const r = await new AxeBuilder({ page }).analyze()

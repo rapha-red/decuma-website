@@ -51,14 +51,19 @@
           <div class="knopf">{{ with partial "link.html" .href }}<a class="btn large" href="{{ . }}">{{ index $col.privat (print "cta_" $l) }}</a>{{ end }}</div>
         </div>
       {{ end }}
+      {{/* Selbst hosten as the price list resolves it (button, mark, call). Shown only while source_link is on, as on the
+           prototype: check_site.py allows no word about the open source while it is off, so the price list's "off"
+           variant (the open-source page, which is not built then) stays unrendered. An outside address gets ↗. */}}
       {{ with $col.self_hosted }}{{ if $src }}
-        {{ $gh := hugo.Data.icons.github }}
+        {{ $gh := cond (eq .mark "github") hugo.Data.icons.github "" }}
+        {{ $out := hasPrefix .href "https://" }}
+        {{ $href := .href }}{{ if not $out }}{{ $href = partial "link.html" .href }}{{ end }}
         <div class="w-extra">
-          <div><h2 class="w-h3 os {{ $scope }}"><svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="{{ $gh }}"></path></svg>{{ index . $l }}</h2><p>{{ i18n "w.p.os.t" }}</p></div>
+          <div><h2 class="w-h3 os {{ $scope }}">{{ with $gh }}<svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="{{ . }}"></path></svg>{{ end }}{{ index . $l }}</h2><p>{{ i18n "w.p.os.t" }}</p></div>
           <p><span class="w-big">{{ partial "euro.html" "0" }}</span></p>
           <div class="knopf">
-            <a class="btn large" href="{{ site.Params.repo }}" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="{{ $gh }}"></path></svg>{{ index . (print "cta_" $l) }} ↗</a>
-            <a class="w-more" href="{{ $booking }}" target="_blank" rel="noopener">{{ i18n "w.p.os.call" }} ↗</a>
+            {{ with $href }}<a class="btn large" href="{{ . }}"{{ if $out }} target="_blank" rel="noopener"{{ end }}>{{ with $gh }}<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="{{ . }}"></path></svg>{{ end }}{{ index $col.self_hosted (print "cta_" $l) }}{{ if $out }} ↗{{ end }}</a>{{ end }}
+            {{ with .call }}<a class="w-more" href="{{ .href }}" target="_blank" rel="noopener">{{ index . $l }} ↗</a>{{ end }}
           </div>
         </div>
       {{ end }}{{ end }}
