@@ -17,7 +17,7 @@ repo = "https://github.com/rapha-red/open-decuma"
 kb_live = false
 # the website shows the target state of the product: every capability flag of data/offer.json counts as on (owner),
 # except the ones in real_flags, which follow data/offer.json because they point at something that must exist
-# (the public repository)
+# (the public repository); plans, columns and rows then come from data/offer_all.json, the price list's --all-flags answer
 show_all_flags = true
 real_flags = ["source_link"]
 # the "Für:" row of the Produkt menu and the footer column "Lösungen für" (each shows only while one of its pages is built)

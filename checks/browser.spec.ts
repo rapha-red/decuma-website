@@ -140,7 +140,7 @@ async function serve(page: Page, root: string) {
   })
 }
 // every flag on: the price list's own --all-flags answer (check-site.sh holds it to DECUMA_BIN)
-const ALL_ON = (o: any) => Object.assign(o, JSON.parse(readFileSync(join(REPO, 'checks/offer-all-flags.json'), 'utf8')))
+const ALL_ON = (o: any) => Object.assign(o, JSON.parse(readFileSync(join(REPO, 'data/offer_all.json'), 'utf8')))
 
 test.describe('product pages', () => {
   test.use({ viewport: { width: 1280, height: 900 } })
@@ -263,9 +263,11 @@ test.describe('price page', () => {
   const heads = (page: Page) => page.locator('[data-columns] thead th:not(:first-child)').allInnerTexts()
 
   test('every row and column comes from data/offer.json, flagged ones only while on', async ({ page }) => {
-    const offer = JSON.parse(readFileSync(join(REPO, 'data/offer.json'), 'utf8'))
-    const toml = readFileSync(join(REPO, 'hugo.toml'), 'utf8')
-    if (/^show_all_flags = true$/m.test(toml)) for (const k of Object.keys(offer.flags)) if (k !== 'source_link') offer.flags[k] = true
+    // the target state renders the price list's all-flags answer, every flag on except source_link (real)
+    const real = JSON.parse(readFileSync(join(REPO, 'data/offer.json'), 'utf8'))
+    const all = /^show_all_flags = true$/m.test(readFileSync(join(REPO, 'hugo.toml'), 'utf8'))
+    const offer = all ? JSON.parse(readFileSync(join(REPO, 'data/offer_all.json'), 'utf8')) : real
+    if (all) for (const k of Object.keys(offer.flags)) offer.flags[k] = k === 'source_link' ? real.flags.source_link : true
     await page.goto('/preise')
     expect(await rows(page)).toEqual(visible(offer))
     for (const [state, max] of [[false, false], [true, true]] as const) {
@@ -326,7 +328,7 @@ test.describe('price page on a phone', () => {
     test('every column shows, in a scroll box', async ({ page }) => {
       await page.goto('/preise')
       await expect(page.locator('[data-pick]')).toBeHidden()
-      expect(await page.locator('[data-columns] thead th:visible').count()).toBe(3)
+      expect(await page.locator('[data-columns] thead th:visible').count()).toBe(await page.locator('[data-columns] thead th').count()) // none hidden
       expect(await page.locator('[data-columns]').evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(true)
     })
   })

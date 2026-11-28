@@ -3,7 +3,7 @@
 {{ define "main" }}
 {{ $senden := or (partial "flag.html" "eric") (partial "flag.html" "auftrag") }}
 {{ $start := partial "link.html" "#/registrieren" }}
-{{ $o := hugo.Data.offer }}
+{{ $o := cond site.Params.show_all_flags hugo.Data.offer_all hugo.Data.offer }}
 {{ $pro := index (where $o.plans "plan" "pro") 0 }}
 {{ $price := i18n "w.g.price" (dict "pro" (partial "euro.html" $pro.monthly) "n" $o.intro_discount_months "intro" (partial "euro.html" $pro.intro)) }}
 {{ $st := hugo.Data.capture.gruendung_class }}

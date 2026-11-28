@@ -2,7 +2,7 @@
      columns whose flags are on, the groups and their rows whose flags are on (`flags` all, `any_flags` one of them),
      each cell "yes", "no" or text in this language with `{n}` filled from its `value`. An unknown cell stops the build.
      Below 760 px the segmented control (assets/js/columns.js) picks the one column shown. */}}
-{{ $o := hugo.Data.offer }}
+{{ $o := cond site.Params.show_all_flags hugo.Data.offer_all hugo.Data.offer }}
 {{ $l := site.Language.Lang }}
 {{ $cols := slice }}
 {{ $i := 0 }}

@@ -6,7 +6,7 @@
 {{ $key := .Params.translationKey }}
 {{ $s := index hugo.Data.pages.seiten $key }}
 {{ $li := cond (eq site.Language.Lang "de") 0 1 }}
-{{ $o := hugo.Data.offer }}
+{{ $o := cond site.Params.show_all_flags hugo.Data.offer_all hugo.Data.offer }}
 {{ $pro := index (where $o.plans "plan" "pro") 0 }}
 {{/* the price placeholders of the prototype's fill() */}}
 {{ $fill := dict "{null}" (partial "euro.html" "0") "{belege}" (string $o.belege_per_month) "{mb}" (string $o.storage_mb) "{privat}" (partial "euro.html" $o.einkommensteuererklaerung) "{pro}" (partial "euro.html" $pro.monthly) "{intro}" (partial "euro.html" $pro.intro) "{n}" (string $o.intro_discount_months) "{projahr}" (partial "euro.html" $pro.yearly) }}

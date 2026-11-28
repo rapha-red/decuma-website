@@ -2,7 +2,7 @@
      names, highlight, buttons, targets and every amount come from data/offer.json; a column whose flag is off is left
      out. Both billing states are in the markup; assets/js/plans.js only switches which one is visible (yearly first, as
      the prototype opens). The KI-Guthaben amount is never shown. */}}
-{{ $o := hugo.Data.offer }}
+{{ $o := cond site.Params.show_all_flags hugo.Data.offer_all hugo.Data.offer }}
 {{ $l := site.Language.Lang }}
 {{ $cards := slice }}
 {{ range $o.offer.columns }}

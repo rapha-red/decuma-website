@@ -2,7 +2,7 @@
      plan cards, the lanes Privat and Selbst hosten, the comparison, questions) and "Wir machen das für dich"
      (/preise/service: Done-for-you, no list price). Every amount comes from data/offer.json. */}}
 {{ define "main" }}
-{{ $o := hugo.Data.offer }}
+{{ $o := cond site.Params.show_all_flags hugo.Data.offer_all hugo.Data.offer }}
 {{ $l := site.Language.Lang }}
 {{ $service := eq .Params.translationKey "preise/service" }}
 {{ $src := partial "flag.html" "source_link" }}
