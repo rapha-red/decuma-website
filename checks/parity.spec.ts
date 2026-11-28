@@ -42,7 +42,11 @@ const PAGES = {
   ...Object.fromEntries(
     ([['gmbh', 'gmbh'], ['ug', 'ug'], ['holding', 'holding'], ['freiberufler', 'freelancers'], ['selbststaendige', 'self-employed'], ['entwickler', 'developers']] as const).map(([de, en]) => ['fuer-' + de, { route: '#/web/fuer/' + de, de: '/fuer/' + de, en: '/en/solutions/' + en, css: '' }]),
   ),
-} as Record<string, { route: string; de: string; en: string; css: string }>
+  // the Knowledge Base (German only), built by parity.sh with the fixtures as the export in the all-flags state
+  'kb-index': { route: '#/kb', de: '/kb', en: '', css: '' },
+  'kb-area': { route: '#/kb/umsatzsteuer', de: '/kb/umsatzsteuer', en: '', css: '' },
+  ...Object.fromEntries(['umsatzsteuer/kleinunternehmer', 'umsatzsteuer/dauerfristverlaengerung', 'buchfuehrung/belege-und-aufbewahrung'].map((a) => ['kb-' + a.split('/')[1], { route: '#/kb/' + a, de: '/kb/' + a, en: '', css: '', wait: '.kb-body' }])),
+} as Record<string, { route: string; de: string; en: string; css: string; wait?: string }>
 // owner-approved differences of a case in this flag state, as CSS hiding the part on both sides (a part the site lacks
 // matches nothing there)
 // a case written as <case>@<lang> applies to that language only
@@ -54,6 +58,7 @@ async function proto(page: Page, lang: string, c: Case) {
   await page.goto(`${PROTO}?lang=${lang}&flags=${FLAGS}&sterne=${STARS}${pg.route}`)
   await page.addStyleTag({ content: PROTO_CSS + pg.css + ' ' + exceptions(c, lang) })
   await page.locator('.w-head').waitFor()
+  if (pg.wait) await page.locator(pg.wait).waitFor()
 }
 
 async function site(page: Page, lang: string, c: Case) {
@@ -110,6 +115,10 @@ const CASES: Case[] = [
   ...['buchhaltung', 'rechnungen', 'umsatzsteuer', 'jahresabschluss', 'gruendung', 'privat', 'entwickler', 'fuer-gmbh', 'fuer-ug', 'fuer-holding', 'fuer-freiberufler', 'fuer-selbststaendige', 'fuer-entwickler', 'bots', 'ki-buchhaltung'].flatMap((pg) =>
     [1280, 390].map((w) => ({ name: `p-${pg}-${w}`, page: pg, width: w, height: w === 1280 ? 900 : 844, full: true, states: ['bots', 'ki-buchhaltung'].includes(pg) ? ['all'] : undefined })),
   ),
+  // the Knowledge Base pages exist only with kb_live and the fixtures (the all-flags build of parity.sh)
+  ...['kb-index', 'kb-area', 'kb-kleinunternehmer', 'kb-dauerfristverlaengerung', 'kb-belege-und-aufbewahrung'].flatMap((pg) =>
+    [1280, 390].map((w) => ({ name: `${pg}-${w}`, page: pg, width: w, height: w === 1280 ? 900 : 844, full: true, states: ['all'] })),
+  ),
   {
     name: 'sheet-390',
     width: 390,
@@ -124,7 +133,7 @@ const CASES: Case[] = [
 ]
 
 for (const lang of (process.env.LANGS ?? 'de,en').split(',')) {
-  for (const c of CASES.filter((c) => (!c.states || c.states.includes(LABEL)) && (!process.env.ONLY || new RegExp(process.env.ONLY).test(c.name)))) {
+  for (const c of CASES.filter((c) => (!c.states || c.states.includes(LABEL)) && (!process.env.ONLY || new RegExp(process.env.ONLY).test(c.name)) && PAGES[c.page ?? 'shell'][lang as 'de' | 'en'] !== '')) {
     test(`${LABEL} ${lang} ${c.name}`, async ({ browser }, info) => {
       const opts = { viewport: { width: c.width, height: c.height }, reducedMotion: 'reduce' as const, deviceScaleFactor: 1 }
       const shot = { fullPage: c.full, mask: [] as ReturnType<Page['locator']>[], animations: 'disabled' as const }

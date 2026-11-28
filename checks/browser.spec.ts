@@ -97,8 +97,14 @@ test.describe('without JavaScript', () => {
     for (const home of ['/', '/en/']) {
       await page.goto(home)
       const reach = await page.locator('footer a[href^="/"], .w-menu a[href^="/"], [data-preise]').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
-      const mine = all.filter((p) => (home === '/en/') === p.startsWith('/en/') && p !== home)
+      // the Knowledge Base areas and articles are reached through /kb (checked below)
+      const mine = all.filter((p) => (home === '/en/') === p.startsWith('/en/') && p !== home && !p.startsWith('/kb/'))
       expect(mine.filter((p) => !reach.includes(p))).toEqual([])
+    }
+    if (all.includes('/kb')) {
+      await page.goto('/kb')
+      const kb = await page.locator('main a[href^="/kb/"]').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
+      expect(all.filter((p) => p.startsWith('/kb/') && !kb.includes(p))).toEqual([])
     }
   })
 })
@@ -529,4 +535,72 @@ test.describe('English pages', () => {
       expect(found.map((g) => `${g}  (from "${german.get(g)}")`)).toEqual([])
     })
   }
+})
+
+// The Knowledge Base, in a tree built with articles (checks/kb.sh: the fixtures as the export, kb_live on); skipped otherwise
+const KB = ['/kb', '/kb/umsatzsteuer', '/kb/umsatzsteuer/kleinunternehmer', '/kb/umsatzsteuer/dauerfristverlaengerung', '/kb/buchfuehrung/belege-und-aufbewahrung']
+const KB_BUILT = existsSync(join(TREE, 'kb/umsatzsteuer/kleinunternehmer.html'))
+// the production policy beyond 'self': Pagefind compiles its WebAssembly
+const CSP = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'"
+test.describe('Knowledge Base', () => {
+  test.skip(!KB_BUILT, 'no kb articles in this tree (run checks/kb.sh)')
+  test.use({ viewport: { width: 1280, height: 900 } })
+  for (const path of KB) {
+    test(`axe: no serious or critical finding on ${path}`, async ({ page, baseURL }) => {
+      await decided(page, baseURL)
+      await page.goto(path)
+      const r = await new AxeBuilder({ page }).analyze()
+      expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])
+    })
+  }
+
+  test('search under the production CSP: a term, the area and the audience filter; same-origin requests only, no CSP error', async ({ page, baseURL }) => {
+    await decided(page, baseURL)
+    const requests: string[] = []
+    const errors: string[] = []
+    page.on('request', (r) => requests.push(r.url()))
+    page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
+    page.on('pageerror', (e) => errors.push(e.message))
+    await page.route('**/*', async (r) => {
+      const res = await r.fetch()
+      await r.fulfill({ response: res, headers: { ...res.headers(), 'content-security-policy': CSP } })
+    })
+    await page.goto('/kb')
+    const titles = () => page.locator('.kb-treffer a').allTextContents()
+    await page.getByRole('searchbox').fill('Sondervorauszahlung')
+    await expect.poll(titles).toContain('Dauerfristverlängerung und Sondervorauszahlung')
+    await expect(page.locator('.kb-bereiche')).toBeHidden()
+    await page.getByRole('searchbox').fill('')
+    await page.getByLabel('Bereich').selectOption('Buchführung')
+    await expect.poll(titles).toEqual(['Belege: Belegfunktion, Sicherung und Aufbewahrungsfristen'])
+    await page.getByLabel('Bereich').selectOption('')
+    await page.getByLabel('Für wen').selectOption('Privat')
+    await expect(page.locator('.kb-zahl')).toHaveText('0 Artikel')
+    await page.getByLabel('Für wen').selectOption('Selbstständige')
+    await expect(page.locator('.kb-zahl')).toHaveText('3 Artikel')
+    await page.getByLabel('Für wen').selectOption('')
+    await expect(page.locator('.kb-bereiche')).toBeVisible()
+    // a result leads to its article
+    await page.getByLabel('Thema').selectOption('Belegsicherung')
+    await page.locator('.kb-treffer a').first().click()
+    await expect(page).toHaveURL(/\/kb\/buchfuehrung\/belege-und-aufbewahrung$/)
+    expect(requests.filter((u) => new URL(u).origin !== new URL(baseURL!).origin)).toEqual([])
+    expect(requests.some((u) => u.includes('/pagefind/'))).toBe(true)
+    expect(errors).toEqual([])
+  })
+
+  test('an article links its twin, which is served as the export wrote it; "Seite kopieren" copies it', async ({ page, baseURL, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+    await decided(page, baseURL)
+    const path = '/kb/umsatzsteuer/dauerfristverlaengerung'
+    await page.goto(path)
+    await expect(page.locator('head link[rel=alternate][type="text/markdown"]')).toHaveAttribute('href', path + '.md')
+    const twin = await (await page.request.get(path + '.md')).text()
+    expect(twin).toBe(readFileSync(join(TREE, path.slice(1) + '.md'), 'utf8'))
+    await page.getByRole('button', { name: 'Seite kopieren' }).click()
+    await expect(page.getByRole('button', { name: 'Kopiert' })).toBeVisible()
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(twin)
+    // the language switch of a kb page leads to the English start page
+    await expect(page.locator('.w-lang a[hreflang=en]')).toHaveAttribute('href', '/en/')
+  })
 })

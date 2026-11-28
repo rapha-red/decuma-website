@@ -16,7 +16,14 @@ in data/consent.yaml and injected by consent.js after consent, never written int
 not a first-party file of the tree; a placeholder of the legal frames (data/pages/recht.json) on a built page, unless
 SITE_DRAFT=1 (local review only); while source_link is off in data/offer.json, a page or line about the open source
 (the /open-source page, the repository address, "Open Source", "AGPL"); while kb_live is off in hugo.toml, a link to
-/kb (a page, sitemap.xml, llms.txt).
+/kb (a page, sitemap.xml, llms.txt). Knowledge Base articles (checked against the export sources in content/kb/): the
+twin missing or not equal to its derivation from the page source (`# <title>`, a blank line, `Stand: <DD.MM.YYYY> · Lizenz:
+CC BY-SA 4.0`, a blank line, the body with /kb/ links ending in .md), naming the article and the first differing line;
+the served twin not byte-equal to static/kb/; no rel=alternate text/markdown link to the twin; byline, publisher, Stand,
+licence or notice missing; JSON-LD without Article (headline, inLanguage de, datePublished, dateModified = stand,
+Organization author and publisher, license) or BreadcrumbList, or with a Person anywhere; a `related` address that is
+not built; and a hand-written /kb/ link in layouts/, i18n/, data/pages/ or content/ outside layouts/kb/ and the kblink
+partial.
 """
 import json
 import os
@@ -128,6 +135,95 @@ def prices(repo):
             forms += [f"{int(x):,} €".replace(",", "."), f"€{int(x):,}"]
         out |= set(forms)
     return out
+
+
+def front_matter(text):
+    """The export's front matter (key: value, "quoted", [a, b] lists) and the body after it."""
+    # ponytail: the flat subset the kb export writes, not YAML; a nested overlay key (faq) needs a real parser
+    _, fm, body = text.split("---\n", 2)
+    out = {}
+    for line in fm.splitlines():
+        k, _, v = line.partition(":")
+        v = v.strip()
+        if v.startswith("[") and v.endswith("]"):
+            out[k.strip()] = [x.strip().strip('"') for x in v[1:-1].split(",") if x.strip()]
+        else:
+            out[k.strip()] = v.strip('"')
+    return out, body
+
+
+def twin_of(fm, body):
+    y, m, d = fm["stand"].split("-")
+    body = re.sub(r"\]\((/kb/[^)\s#?]+?)(?<!\.md)\)", r"](\1.md)", body)
+    return f"# {fm['title']}\n\nStand: {d}.{m}.{y} · Lizenz: CC BY-SA 4.0\n\n{body}"
+
+
+KB_BYLINE = ("Decuma Redaktion", "Herausgeber: Zapiens GmbH", "Stand: ", "Lizenz: CC BY-SA 4.0", "Allgemeine Information, keine Steuer- oder Rechtsberatung im Einzelfall.")
+
+
+def kb_checks(tree, repo):
+    fails = []
+    for src in sorted((repo / "content/kb").rglob("*.md")):
+        if src.name == "_index.md":
+            continue
+        rel = src.relative_to(repo / "content").with_suffix("").as_posix()
+        page = "/" + rel
+        fm, body = front_matter(src.read_text())
+        f = resolve(tree, page)
+        if not f:
+            fails.append(f"{page}: article not built")
+            continue
+        twin = tree / (rel + ".md")
+        want = twin_of(fm, body)
+        if not twin.is_file():
+            fails.append(f"{page}: no twin {page}.md")
+        else:
+            got = twin.read_text()
+            if got != want:
+                a, b = got.splitlines(), want.splitlines()
+                n = next((i for i in range(max(len(a), len(b))) if i >= len(a) or i >= len(b) or a[i] != b[i]), len(a))
+                fails.append(f"{page}: twin differs from the page source at line {n + 1}: twin {a[n] if n < len(a) else '<end>'!r}, page {b[n] if n < len(b) else '<end>'!r}")
+            exp = repo / "static" / (rel + ".md")
+            if exp.is_file() and exp.read_bytes() != twin.read_bytes():
+                fails.append(f"{page}: served twin is not the export's file static/{rel}.md")
+        html = f.read_text(errors="replace")
+        if not re.search(r'<link rel="alternate" type="text/markdown" href="' + re.escape(page) + r'\.md">', html):
+            fails.append(f"{page}: no rel=alternate type=text/markdown link to its twin")
+        text = re.sub(r"<[^>]+>", "", html)
+        for w in KB_BYLINE:
+            if w not in text:
+                fails.append(f"{page}: byline part missing: {w!r}")
+        lds = [json.loads(m) for m in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)]
+        if "Person" in json.dumps(lds):
+            fails.append(f"{page}: JSON-LD names a Person")
+        nodes = [n for ld in lds for n in ld.get("@graph", [ld])]
+        art = next((n for n in nodes if n.get("@type") == "Article"), None)
+        if not art:
+            fails.append(f"{page}: no JSON-LD Article")
+        else:
+            org = lambda x: isinstance(x, dict) and x.get("@type") == "Organization" and x.get("name")
+            for k, ok in (("headline", art.get("headline") == fm["title"]), ("inLanguage", art.get("inLanguage") == "de"),
+                          ("datePublished", bool(art.get("datePublished"))), ("dateModified", art.get("dateModified") == fm["stand"]),
+                          ("author", org(art.get("author"))), ("publisher", org(art.get("publisher")) and art["publisher"]["name"] == "Zapiens GmbH"),
+                          ("license", bool(art.get("license")))):
+                if not ok:
+                    fails.append(f"{page}: JSON-LD Article {k} missing or wrong ({art.get(k)!r})")
+        if not any(n.get("@type") == "BreadcrumbList" for n in nodes):
+            fails.append(f"{page}: no JSON-LD BreadcrumbList")
+        for r in fm.get("related", []):
+            if not resolve(tree, r):
+                fails.append(f"{page}: related {r} is not built")
+    # links to articles from outside /kb only through the kblink partial
+    hand = re.compile(r"(?<![#\w.])/kb/[a-z]")
+    for d in ("layouts", "i18n", "data/pages", "content"):
+        for f in sorted((repo / d).rglob("*")):
+            r = f.relative_to(repo).as_posix()
+            if not f.is_file() or r.startswith(("layouts/kb/", "content/kb/")) or r == "layouts/partials/kblink.html":
+                continue
+            for n, line in enumerate(f.read_text(errors="replace").splitlines(), 1):
+                if hand.search(line):
+                    fails.append(f"{r}:{n}: a /kb/ link outside the kblink partial")
+    return fails
 
 
 def main():
@@ -286,6 +382,7 @@ def main():
             if f.is_file() and f.suffix in (".html", ".txt", ".xml") and not f.relative_to(tree).as_posix().startswith(("kb/", "pagefind/")):
                 for m in to_kb.finditer(f.read_text(errors="replace")):
                     fails.append(f"/{f.relative_to(tree).as_posix()}: kb_live is off but it links the Knowledge Base: {m.group(0)}")
+    fails += kb_checks(tree, repo)
     for x in fails:
         print("FAIL " + x)
     print(f"check_site: {len(pages)} pages, {len(fails)} findings")
