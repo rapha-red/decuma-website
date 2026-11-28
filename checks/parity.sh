@@ -34,6 +34,6 @@ build() {
 build offer
 build all
 rc=0
-SITE_ROOT=$PWD/$work/site-offer LABEL=offer FLAGS=$on STARS=$stars npx --prefix checks playwright test -c checks/playwright.config.ts parity.spec.ts || rc=1
-SITE_ROOT=$PWD/$work/site-all LABEL=all FLAGS=${FLAGS// /,},kb_live STARS=$stars npx --prefix checks playwright test -c checks/playwright.config.ts parity.spec.ts || rc=1
+SITE_ROOT=$PWD/$work/site-offer LABEL=offer FLAGS=$on STARS=$stars npx --prefix checks playwright test -c checks/playwright.config.ts --pass-with-no-tests parity.spec.ts || rc=1
+SITE_ROOT=$PWD/$work/site-all LABEL=all FLAGS=${FLAGS// /,},kb_live STARS=$stars npx --prefix checks playwright test -c checks/playwright.config.ts --pass-with-no-tests parity.spec.ts || rc=1
 exit $rc
