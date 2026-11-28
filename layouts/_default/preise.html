@@ -51,9 +51,10 @@
           <div class="knopf">{{ with partial "link.html" .href }}<a class="btn large" href="{{ . }}">{{ index $col.privat (print "cta_" $l) }}</a>{{ end }}</div>
         </div>
       {{ end }}
-      {{/* Selbst hosten as the price list resolves it: the repository with its mark, or (source_link off) the open-source
-           page without it; the booking call in both. An outside address opens in a new tab with ↗. */}}
-      {{ with $col.self_hosted }}
+      {{/* Selbst hosten as the price list resolves it (button, mark, call). Shown only while source_link is on, as on the
+           prototype: check_site.py allows no word about the open source while it is off, so the price list's "off"
+           variant (the open-source page, which is not built then) stays unrendered. An outside address gets ↗. */}}
+      {{ with $col.self_hosted }}{{ if $src }}
         {{ $gh := cond (eq .mark "github") hugo.Data.icons.github "" }}
         {{ $out := hasPrefix .href "https://" }}
         {{ $href := .href }}{{ if not $out }}{{ $href = partial "link.html" .href }}{{ end }}
@@ -65,7 +66,7 @@
             {{ with .call }}<a class="w-more" href="{{ .href }}" target="_blank" rel="noopener">{{ index . $l }} ↗</a>{{ end }}
           </div>
         </div>
-      {{ end }}
+      {{ end }}{{ end }}
     </div>
   </section>
 
