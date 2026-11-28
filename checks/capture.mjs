@@ -50,6 +50,7 @@ const page = await browser.newPage({ reducedMotion: 'reduce', viewport: { width:
 let css = ''
 let iconClass = ''
 let rechtClass = ''
+let kbClass = ''
 for (const l of ['de', 'en']) {
   for (const [name, [flags, menu, sel]] of Object.entries(STUECKE)) {
     await page.goto(`${base}?lang=${l}&flags=${flags}#/web`)
@@ -77,6 +78,9 @@ for (const l of ['de', 'en']) {
   // the scope class of the data promise and legal frames (Recht.svelte's rules in site.css)
   await page.goto(`${base}?lang=${l}#/web/datenversprechen`)
   rechtClass ||= (await page.locator('main .recht').getAttribute('class')).match(/svelte-\w+/)[0]
+  // the scope class of the Knowledge Base pages (Kb.svelte's rules in site.css)
+  await page.goto(`${base}?lang=${l}#/kb`)
+  kbClass ||= (await page.locator('main .kb').getAttribute('class')).match(/svelte-\w+/)[0]
   iconClass ||= await page.locator('.w-nav button svg').first().getAttribute('class')
   css ||= await page.evaluate(() =>
     [...document.querySelectorAll('style[data-vite-dev-id]')]
@@ -249,5 +253,5 @@ Object.assign(deps, pdeps)
 await browser.close()
 css = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n+/g, '\n')
 writeFileSync(join(site, 'assets/css/site.css'), `/* compiled component rules of the website at ${commit}, captured by checks/capture.mjs; do not edit */\n${css}`)
-writeFileSync(join(site, 'data/capture.json'), JSON.stringify({ commit, icon_class: iconClass, preise_class: preiseClass, recht_class: rechtClass, gruendung_class: gruendungClass, deps }) + '\n')
+writeFileSync(join(site, 'data/capture.json'), JSON.stringify({ commit, icon_class: iconClass, preise_class: preiseClass, recht_class: rechtClass, kb_class: kbClass, gruendung_class: gruendungClass, deps }) + '\n')
 console.log(`captured ${Object.keys(STUECKE).length * 2} menu fragments, start visuals (flags: ${JSON.stringify(deps)}) and ${css.length} bytes of component CSS at ${commit}`)

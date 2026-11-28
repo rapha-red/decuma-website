@@ -6,7 +6,7 @@
 //
 // Writes: assets/css/{fonts,tokens,app,display,website}.css (rules unchanged, comments dropped, a first line naming the
 // commit, font urls pointing at /fonts/), static/fonts/ (woff2 and licences), static/icon.svg, i18n/{de,en}.yaml,
-// data/pages/{seiten,recht,seite}.json, data/icons.json, data/meta.json (titles and descriptions from the copy deck's Meta
+// data/pages/{seiten,recht,seite}.json, data/icons.json, data/kb_topics.json (labels of the Knowledge Base topics), data/meta.json (titles and descriptions from the copy deck's Meta
 // table, keyed by the German address).
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, readdirSync, copyFileSync, rmSync } from 'node:fs'
@@ -22,7 +22,7 @@ const commit = readFileSync(join(site, 'PROTOTYPE_COMMIT'), 'utf8').trim()
 
 const tmp = mkdtempSync(join(tmpdir(), 'sync-'))
 const ui = 'prototype/ui/src'
-execFileSync('sh', ['-c', `git -C "$1" archive "$2" design-system docs/specs/website-copy.md ${ui}/lib/strings ${ui}/lib/Icon.svelte ${ui}/web/Gh.svelte ${ui}/app.css | tar -x -C "$3"`, 'x', repo, commit, tmp])
+execFileSync('sh', ['-c', `git -C "$1" archive "$2" design-system docs/specs/website-copy.md ${ui}/lib/strings ${ui}/lib/Icon.svelte ${ui}/web/Gh.svelte ${ui}/web/Kb.svelte ${ui}/app.css | tar -x -C "$3"`, 'x', repo, commit, tmp])
 const out = (p, s) => (mkdirSync(dirname(join(site, p)), { recursive: true }), writeFileSync(join(site, p), s))
 
 // ---- design layer: rules unchanged; comments dropped (the public site carries no internal references)
@@ -68,6 +68,10 @@ const icon = readFileSync(join(tmp, ui, 'lib/Icon.svelte'), 'utf8')
 const paths = Object.fromEntries([...icon.matchAll(/^\s+(\w+): '([^']+)',$/gm)].map((m) => [m[1], m[2]]))
 const gh = readFileSync(join(tmp, ui, 'web/Gh.svelte'), 'utf8').match(/<path d="([^"]+)"/)[1]
 out('data/icons.json', JSON.stringify({ paths, github: gh }, null, 1) + '\n')
+
+// ---- Knowledge Base topics: the display label of each topic slug (Kb.svelte TAG), for the article chips and the filter
+const tag = readFileSync(join(tmp, ui, 'web/Kb.svelte'), 'utf8').match(/export const TAG[^{]*\{([^}]*)\}/)[1]
+out('data/kb_topics.json', JSON.stringify(Object.fromEntries([...tag.matchAll(/'?([\w-]+)'?: '([^']+)'/g)].map((m) => [m[1], m[2]])), null, 1) + '\n')
 
 // ---- titles and descriptions: the Meta table of the copy deck. A title may carry " | Decuma" (or " | Decuma Knowledge
 // Base"), which splits its cell; such a brand cell is joined back to the title before it.
