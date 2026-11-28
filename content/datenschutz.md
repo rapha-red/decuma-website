@@ -70,7 +70,7 @@ Zahlungen wickelt ein Zahlungsdienstleister mit Sitz in Irland ab. Er übermitte
 
 - **Konto und Inhalte:** solange dein Konto besteht. Du kannst ein Unternehmen oder dein ganzes Konto jederzeit löschen; vorher bieten wir dir den Export an.
 - **Tarif Kostenlos:** Meldest du dich 6 Monate nicht an, löschen wir die Daten des Unternehmens. Wir kündigen das vorher zweimal per E-Mail an, rund 30 und 7 Tage vor der Löschung.
-- **Datensicherungen:** Gelöschte Daten bleiben noch in den Sicherungen, bis diese ablaufen, höchstens {Anzahl} Tage. Eine Wiederherstellung bringt gelöschte Daten nicht zurück.
+- **Datensicherungen:** Gelöschte Daten bleiben noch in den Sicherungen, bis diese ablaufen, höchstens 40 Tage. Eine Wiederherstellung bringt gelöschte Daten nicht zurück.
 - **Unsere Rechnungen und Buchhaltungsunterlagen:** so lange, wie das Gesetz es verlangt (§ 147 AO, § 257 HGB).
 - **Server-Protokolle der App:** 30 Tage.
 - **Zugriffsprotokolle der Website:** 14 Tage.

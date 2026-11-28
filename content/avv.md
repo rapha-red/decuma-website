@@ -60,7 +60,7 @@ Wendet sich eine betroffene Person an uns, leiten wir die Anfrage an dich weiter
 
 1. Du kannst deine Daten jederzeit exportieren, in offenen Formaten.
 2. Löschst du ein Unternehmen oder dein Konto, oder endet der Vertrag, löschen wir die Daten. Vorher bieten wir dir den Export an.
-3. Aus den Datensicherungen verschwinden gelöschte Daten, wenn diese ablaufen, spätestens nach {Anzahl} Tagen. Eine Wiederherstellung bringt gelöschte Daten nicht zurück.
+3. Aus den Datensicherungen verschwinden gelöschte Daten, wenn diese ablaufen, spätestens nach 40 Tagen. Eine Wiederherstellung bringt gelöschte Daten nicht zurück.
 4. Daten, die wir nach dem Recht der EU oder Deutschlands aufbewahren müssen, löschen wir erst nach Ablauf dieser Pflicht.
 
 ## Kontrollrechte
