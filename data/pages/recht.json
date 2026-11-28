@@ -1,0 +1,374 @@
+{
+ "DV": {
+  "titel": [
+   "Was mit deinen Daten passiert | Decuma",
+   "What happens to your data | Decuma"
+  ],
+  "h1": [
+   "Was mit deinen Daten passiert",
+   "What happens to your data"
+  ],
+  "lead": [
+   "Das gilt für Decuma, wie wir es betreiben. Jede Zeile ist ein Fakt.",
+   "This applies to Decuma as we run it. Every line is a fact."
+  ],
+  "ort": [
+   "Serverstandort",
+   "Server location"
+  ],
+  "ortT": [
+   "Die Server von Decuma stehen in Deutschland.",
+   "Decuma's servers are in Germany."
+  ],
+  "wer": [
+   "Wer in unserem Auftrag Daten verarbeitet",
+   "Who processes data on our behalf"
+  ],
+  "anfrage": [
+   "Die Liste der Unterauftragnehmer mit ihren Standorten bekommst du auf Anfrage.",
+   "You get the list of sub-processors and their locations on request."
+  ],
+  "kontakt": [
+   "Anfrage stellen",
+   "Request it"
+  ],
+  "tun": [
+   "Was wir tun und was nicht",
+   "What we do and what we don't"
+  ],
+  "fakten": [
+   [
+    [
+     "Keine Tracker",
+     "No trackers"
+    ],
+    [
+     "Decuma lädt keine Tracker und keine Analyse-Dienste von Dritten. Diese Website auch nicht.",
+     "Decuma loads no third-party trackers or analytics. Neither does this website."
+    ]
+   ],
+   [
+    [
+     "Kein Training",
+     "No training"
+    ],
+    [
+     "Mit deinen Daten wird kein Modell trainiert. Korrigierst du einen gelesenen Wert, zählen wir nur, in welchem Feld korrigiert wurde.",
+     "No model is trained on your data. When you correct a read value we only count in which field a correction was made."
+    ]
+   ],
+   [
+    [
+     "Online-Banking",
+     "Online banking"
+    ],
+    [
+     "Die Zugangsdaten zu deinem Online-Banking erreichen den Server von Decuma nie.",
+     "The credentials of your online banking never reach Decuma's server."
+    ]
+   ],
+   [
+    [
+     "Export",
+     "Export"
+    ],
+    [
+     "Du kannst jederzeit alles exportieren: Buchungen, Belege, Rechnungen, Meldungen und den Verlauf.",
+     "You can export everything at any time: bookings, Belege, invoices, filings and the history."
+    ]
+   ],
+   [
+    [
+     "Löschen auf Wunsch",
+     "Deletion on request"
+    ],
+    [
+     "Auf deinen Wunsch löschen wir ein Unternehmen oder dein ganzes Konto. Vorher bieten wir dir den Export an.",
+     "On your request we delete a business or your whole account. We offer you the export first."
+    ]
+   ],
+   [
+    [
+     "Löschen ohne Wunsch",
+     "Deletion without a request"
+    ],
+    [
+     "Nur im Tarif Kostenlos: nach {monate} Monaten ohne Anmeldung, vorher zweimal per E-Mail angekündigt.",
+     "Only in Free: after {monate} months without sign-in, announced twice by e-mail beforehand."
+    ]
+   ]
+  ],
+  "selbst": [
+   "Wenn du Decuma selbst betreibst",
+   "If you run Decuma yourself"
+  ],
+  "selbstLead": [
+   "Dann entscheidest du, wo die Daten liegen und wer sie verarbeitet. Die Software sendet von sich aus nur das:",
+   "Then you decide where the data are and who processes them. The software by itself sends only this:"
+  ],
+  "selbstFakten": [
+   [
+    [
+     "E-Mails",
+     "E-mails"
+    ],
+    [
+     "über das Mail-Konto, das du einträgst.",
+     "through the mail account you enter."
+    ]
+   ],
+   [
+    [
+     "Modell",
+     "Model"
+    ],
+    [
+     "nur wenn du einen eigenen Anbieter anschließt, und nur an ihn.",
+     "only if you connect a provider of your own, and only to it."
+    ]
+   ],
+   [
+    [
+     "Webhooks",
+     "Webhooks"
+    ],
+    [
+     "an die Adressen, die du einträgst.",
+     "to the addresses you enter."
+    ]
+   ],
+   [
+    [
+     "Finanzamt",
+     "Tax office"
+    ],
+    [
+     "eine Meldung mit deinem ELSTER-Zertifikat, erst nach deiner Freigabe.",
+     "a filing with your ELSTER certificate, only after your release."
+    ],
+    "eric"
+   ],
+   [
+    [
+     "Nichts an Decuma",
+     "Nothing to Decuma"
+    ],
+    [
+     "keine Nutzungsdaten, keine Belege, keine Buchungen.",
+     "no usage data, no Belege, no bookings."
+    ]
+   ]
+  ],
+  "stand": [
+   "Stand: {datum}",
+   "As of {datum}"
+  ]
+ },
+ "RECHT": {
+  "impressum": {
+   "h1": [
+    "Impressum",
+    "Legal notice"
+   ],
+   "teile": [
+    [
+     "Angaben gemäß {Norm}: {Zapiens GmbH, Anschrift}",
+     "Information under {norm}: {Zapiens GmbH, address}"
+    ],
+    [
+     "Vertreten durch: {Geschäftsführer}",
+     "Represented by: {managing director}"
+    ],
+    [
+     "Kontakt: {E-Mail}, {Telefon}",
+     "Contact: {e-mail}, {phone}"
+    ],
+    [
+     "Registereintrag: {Registergericht}, {HRB}",
+     "Register entry: {register court}, {HRB}"
+    ],
+    [
+     "Umsatzsteuer-Identifikationsnummer: {USt-IdNr.}",
+     "VAT ID: {VAT ID}"
+    ],
+    [
+     "Verantwortlich für den Inhalt: {Name, Anschrift}",
+     "Responsible for content: {name, address}"
+    ],
+    [
+     "Verbraucherstreitbeilegung: {Text}",
+     "Consumer dispute resolution: {text}"
+    ]
+   ]
+  },
+  "datenschutz": {
+   "h1": [
+    "Datenschutz",
+    "Privacy"
+   ],
+   "teile": [
+    [
+     "Verantwortlicher",
+     "Verantwortlicher"
+    ],
+    [
+     "Welche Daten wir verarbeiten",
+     "Welche Daten wir verarbeiten"
+    ],
+    [
+     "Zwecke und Rechtsgrundlagen",
+     "Zwecke und Rechtsgrundlagen"
+    ],
+    [
+     "Empfänger und Auftragsverarbeiter (Liste auf Anfrage)",
+     "Empfänger und Auftragsverarbeiter (Liste auf Anfrage)"
+    ],
+    [
+     "Übermittlung in Drittländer",
+     "Übermittlung in Drittländer"
+    ],
+    [
+     "Speicherdauer",
+     "Speicherdauer"
+    ],
+    [
+     "Deine Rechte",
+     "Deine Rechte"
+    ],
+    [
+     "Beschwerderecht",
+     "Beschwerderecht"
+    ],
+    [
+     "Diese Website (keine Tracker, Server-Logs)",
+     "Diese Website (keine Tracker, Server-Logs)"
+    ]
+   ]
+  },
+  "agb": {
+   "h1": [
+    "Allgemeine Geschäftsbedingungen",
+    "Terms and conditions"
+   ],
+   "teile": [
+    [
+     "Geltungsbereich",
+     "Geltungsbereich"
+    ],
+    [
+     "Vertragsschluss",
+     "Vertragsschluss"
+    ],
+    [
+     "Tarife und Preise",
+     "Tarife und Preise"
+    ],
+    [
+     "Einführungspreis",
+     "Einführungspreis"
+    ],
+    [
+     "Abrechnung und Zahlung",
+     "Abrechnung und Zahlung"
+    ],
+    [
+     "KI-Guthaben",
+     "KI-Guthaben"
+    ],
+    [
+     "Kündigung und Rückfall auf Kostenlos",
+     "Kündigung und Rückfall auf Kostenlos"
+    ],
+    [
+     "Löschung",
+     "Löschung"
+    ],
+    [
+     "Verfügbarkeit",
+     "Verfügbarkeit"
+    ],
+    [
+     "Pflichten des Kunden (Aufbewahrung, Freigabe)",
+     "Pflichten des Kunden (Aufbewahrung, Freigabe)"
+    ],
+    [
+     "Keine Steuerberatung",
+     "Keine Steuerberatung"
+    ],
+    [
+     "Haftung",
+     "Haftung"
+    ],
+    [
+     "Done-for-you",
+     "Done-for-you"
+    ],
+    [
+     "Schlussbestimmungen",
+     "Schlussbestimmungen"
+    ]
+   ]
+  },
+  "avv": {
+   "h1": [
+    "Vertrag zur Auftragsverarbeitung",
+    "Data processing agreement"
+   ],
+   "teile": [
+    [
+     "Gegenstand und Dauer",
+     "Gegenstand und Dauer"
+    ],
+    [
+     "Art und Zweck",
+     "Art und Zweck"
+    ],
+    [
+     "Art der Daten und Kreis der Betroffenen",
+     "Art der Daten und Kreis der Betroffenen"
+    ],
+    [
+     "Pflichten des Auftragsverarbeiters",
+     "Pflichten des Auftragsverarbeiters"
+    ],
+    [
+     "Unterauftragnehmer",
+     "Unterauftragnehmer"
+    ],
+    [
+     "Technische und organisatorische Maßnahmen",
+     "Technische und organisatorische Maßnahmen"
+    ],
+    [
+     "Rechte der Betroffenen",
+     "Rechte der Betroffenen"
+    ],
+    [
+     "Löschung und Rückgabe",
+     "Löschung und Rückgabe"
+    ],
+    [
+     "Kontrollrechte",
+     "Kontrollrechte"
+    ]
+   ]
+  },
+  "unterauftragnehmer": {
+   "h1": [
+    "Unterauftragnehmer",
+    "Sub-processors"
+   ],
+   "teile": [],
+   "lead": [
+    "Die Liste der Unterauftragnehmer mit ihren Standorten bekommst du auf Anfrage.",
+    "You get the list of sub-processors and their locations on request."
+   ],
+   "anfrage": true
+  }
+ },
+ "RECHT_TEXT": [
+  "{Text dieses Abschnitts}",
+  "{Text of this section}"
+ ],
+ "RECHT_EN_HINWEIS": "This page is available in German only. The German version is legally binding."
+}

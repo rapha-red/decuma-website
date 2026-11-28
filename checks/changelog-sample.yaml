@@ -1,0 +1,17 @@
+# The prototype's invented sample entries (Neu.svelte, strings w.n.e1 to w.n.e5), loaded as data/changelog.yaml by
+# checks/parity.sh; oldest first, as the release script appends.
+- date: 2026-10-30
+  de: "Belege: Doppelte Belege erkennt Decuma auch, wenn die Datei eine andere ist."
+  en: "Belege: Decuma spots duplicate Belege even when the file differs."
+- date: 2026-11-06
+  de: "Bank: Beim Import prüft Decuma, ob im Kontoauszug ein Tag fehlt."
+  en: "Bank: on import Decuma checks whether a day is missing from the statement."
+- date: 2026-11-13
+  de: "Rechnungen: Aus einem angenommenen Angebot wird mit einem Klick die E-Rechnung."
+  en: "Invoices: an accepted quote becomes the e-invoice in one click."
+- date: 2026-11-20
+  de: "Umsatzsteuer: Die Voranmeldung zeigt zu jeder Kennzahl die Buchungen dahinter."
+  en: "VAT: the return shows the bookings behind every Kennzahl."
+- date: 2026-11-27
+  de: "Knowledge Base: Jeden Artikel gibt es jetzt auch als reine Markdown-Datei."
+  en: "Knowledge Base: every article is now also available as a plain Markdown file."

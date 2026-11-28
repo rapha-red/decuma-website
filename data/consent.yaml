@@ -1,0 +1,26 @@
+# Consent registry: the one list of what the site stores and loads beyond its own pages. The banner, the gate in
+# assets/js/consent.js, the cookie table of the Datenschutzerklärung (partial consent-table.html) and the checks read it.
+# A non-essential script is never a <script src> in a template: it is listed here and consent.js injects it after its
+# category is granted. Its address is first-party (the CSP allows scripts from the site's own origin only).
+# Raise version whenever an entry is added or changed: every visitor is asked again.
+version: 1
+categories: [notwendig, statistik]
+# column heads of the cookie table (the category names are the banner's strings w.ck.<category>)
+table:
+  de: {name: Name, purpose: Zweck, duration: Dauer, category: Kategorie}
+  en: {name: Name, purpose: Purpose, duration: Duration, category: Category}
+cookies:
+  - name: decuma_consent
+    category: notwendig
+    purpose:
+      de: speichert deine Auswahl in diesem Banner
+      en: stores your choice in this banner
+    duration:
+      de: 6 Monate
+      en: 6 months
+# scripts:
+#   - src: /stats.js         first-party address under static/
+#     category: statistik
+#     purpose: {de: ..., en: ...}
+#     storage: {de: ..., en: ...}   what it stores (cookies it sets go under cookies above)
+scripts: []

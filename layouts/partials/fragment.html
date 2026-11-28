@@ -1,0 +1,7 @@
+{{- /* A captured page visual in this language and in the state of the flags it depends on (data/capture.json):
+       (partial "fragment.html" "start-row1"). A missing capture stops the build. */ -}}
+{{- $name := . -}}
+{{- range index hugo.Data.capture.deps . }}{{ if partial "flag.html" . }}{{ $name = print $name "--" . }}{{ end }}{{ end -}}
+{{- $p := print "fragments/" site.Language.Lang "/" $name ".html" -}}
+{{- if not (templates.Exists (print "partials/" $p)) }}{{ errorf "%s is not captured; run checks/capture.mjs" $p }}{{ end -}}
+{{- partial $p . -}}

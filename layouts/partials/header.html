@@ -1,0 +1,132 @@
+{{/* Header with the mega-menus Produkt, Gründung, Ressourcen, the link Preise, the GitHub widget, Anmelden and the start
+     button, the scrim and the mobile sheet: the markup of the prototype's shell. Behaviour in assets/js/menu.js. */}}
+{{ $src := partial "flag.html" "source_link" }}
+{{ $agent := partial "flag.html" "agent_tier" }}
+{{ $menus := slice
+  (dict "m" "produkt" "prefix" "w.m." "groups" (slice
+    (dict "key" "buch" "titel" "w.m.buch" "href" "#/web/buchhaltung" "items" (slice
+      (dict "key" "ki" "icon" "chat" "href" "#/web/ki-buchhaltung" "flag" "model_steps")
+      (dict "key" "bots" "icon" "chat" "href" "#/web/bots" "flag" "agent_tier")
+      (dict "key" "belege" "icon" "belege" "href" "#/web/buchhaltung" "flag" "model_steps" "fb" true)
+      (dict "key" "bank" "icon" "bank" "href" "#/web/buchhaltung")
+      (dict "key" "journal" "icon" "auswertungen" "href" "#/web/buchhaltung")
+      (dict "key" "kasse" "icon" "box" "href" "#/web/buchhaltung")
+      (dict "key" "lohn" "icon" "lohn" "href" "#/web/buchhaltung" "flag" "lohn")))
+    (dict "key" "rech" "titel" "w.m.rech" "href" "#/web/rechnungen" "items" (slice
+      (dict "key" "rechnungen" "icon" "einnahmen" "href" "#/web/rechnungen")
+      (dict "key" "erechnung" "icon" "mail" "href" "#/web/rechnungen")
+      (dict "key" "angebote" "icon" "todo" "href" "#/web/rechnungen")
+      (dict "key" "mahnungen" "icon" "bell" "href" "#/web/rechnungen")))
+    (dict "key" "steu" "titel" "w.m.steu" "items" (slice
+      (dict "key" "ustva" "icon" "steuern" "href" "#/web/umsatzsteuer")
+      (dict "key" "zm" "icon" "globe" "href" "#/web/umsatzsteuer")
+      (dict "key" "abschluss" "icon" "auswertungen" "href" "#/web/jahresabschluss")
+      (dict "key" "est" "icon" "est" "href" "#/web/privat")))))
+  (dict "m" "gruendung" "prefix" "w.g." "groups" (slice
+    (dict "key" "g" "titel" "w.nav.gruendung" "href" "#/web/gruendung" "items" (slice
+      (dict "key" "fragebogen" "icon" "est" "href" "#/web/gruendung")
+      (dict "key" "eb" "icon" "auswertungen" "href" "#/web/gruendung")
+      (dict "key" "gewerbe" "icon" "kanzlei" "href" "#/web/gruendung")))))
+  (dict "m" "ressourcen" "prefix" "w.r." "groups" (slice
+    (dict "key" "r" "titel" "w.nav.ressourcen" "items" (slice
+      (dict "key" "wissen" "icon" "belege" "href" "#/kb")
+      (dict "key" "neu" "icon" "bell" "href" "#/web/neu")
+      (dict "key" "dev" "icon" "api" "href" "#/web/entwickler")
+      (dict "key" "os" "icon" "plug" "href" "#/web/open-source" "flag" "source_link")
+      (dict "key" "vs" "icon" "shield" "href" "#/web/datenversprechen")))))
+}}
+{{/* the visible items of a group, each with its address and line; an item whose page is not built is left out */}}
+{{ define "partials/inline/menu-items.html" }}
+  {{ range .g.items }}
+    {{ $on := or (not .flag) (partial "flag.html" .flag) }}
+    {{ $href := partial "link.html" .href }}
+    {{ if and (or $on .fb) $href }}
+      <li><a class="w-item" href="{{ $href }}"{{ if and (hasPrefix $href "/kb") (ne site.Language.Lang "de") }} hreflang="de"{{ end }}>{{ partial "icon.html" (dict "name" .icon "size" 16) }}<b>{{ i18n (print $.prefix .key) }}</b><span>{{ i18n (print $.prefix .key (cond $on ".l" ".l.fb")) }}</span></a></li>
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $stars := hugo.Data.github.stars | default 0 }}
+{{ $sterne := "" }}
+{{ if ge $stars 100 }}
+  {{/* compact as Intl.NumberFormat: de 12.400, en 12.4K (ponytail: no millions until the count gets there) */}}
+  {{ if or (eq site.Language.Lang "de") (lt $stars 1000) }}{{ $sterne = lang.FormatNumber 0 $stars }}
+  {{ else }}{{ $sterne = print (strings.TrimSuffix ".0" (printf "%.1f" (div (float $stars) 1000))) "K" }}{{ end }}
+{{ end }}
+<header class="w-head">
+  <div class="w-wrap w-head-in">
+    <a class="w-brand" href="{{ partial "link.html" "#/web" }}" aria-label="Decuma"><img src="/icon.svg" alt="" width="22" height="22">Decuma</a>
+    <div class="w-navhuelle" role="presentation" data-menu>
+      <nav class="w-nav" aria-label="{{ i18n "w.nav" }}">
+        {{ range $menus }}
+          <button type="button" aria-expanded="false" aria-controls="menu-{{ .m }}" data-trigger="{{ .m }}">{{ i18n (print "w.nav." .m) }}{{ partial "icon.html" (dict "name" "down" "size" 14) }}</button>
+        {{ end }}
+        {{ $preise := partial "link.html" "#/web/preise" }}
+        <a href="{{ $preise }}" data-preise{{ if eq $.Params.translationKey "preise" }} aria-current="page"{{ end }}>{{ i18n "w.nav.preise" }}</a>
+      </nav>
+      {{ range $menus }}
+        {{ $menu := . }}{{ $m := .m }}
+        <div class="w-menu" id="menu-{{ $m }}" role="presentation" hidden>
+          <div class="w-wrap">
+            <div class="w-menu-panel{{ if ne $m "produkt" }} schmal{{ end }}">
+              {{ range .groups }}
+                <div class="w-menu-col">
+                  {{ $h := "" }}{{ with .href }}{{ $h = partial "link.html" . }}{{ end }}
+                  <h3>{{ if $h }}<a href="{{ $h }}">{{ i18n .titel }}</a>{{ else }}{{ i18n .titel }}{{ end }}</h3>
+                  <ul>{{ partial "inline/menu-items.html" (dict "g" . "prefix" $menu.prefix) }}</ul>
+                </div>
+              {{ end }}
+              <div class="w-menu-card">
+                {{ if eq $m "produkt" }}
+                  {{ partial (print "fragments/" site.Language.Lang (cond $agent "/menu-frist.html" "/menu-freigabe.html")) . }}
+                  <p><b>{{ i18n (cond $agent "w.m.card.agent.line" "w.m.card.line") }}</b></p>
+                  {{ with partial "link.html" (cond $agent "#/web/bots" "#/web/umsatzsteuer") }}<a class="w-more" href="{{ . }}">{{ i18n (cond $agent "w.m.card.agent.link" "w.m.card.link") }} →</a>{{ end }}
+                {{ else if eq $m "gruendung" }}
+                  {{ partial (print "fragments/" site.Language.Lang "/menu-gruendung.html") . }}
+                  <p><b>{{ i18n "w.g.card" }}</b></p>
+                  {{ with partial "link.html" "#/web/gruendung" }}<a class="w-more" href="{{ . }}">{{ i18n "w.g.card.link" }} →</a>{{ end }}
+                {{ else }}
+                  {{ partial (print "fragments/" site.Language.Lang "/menu-eigen.html") . }}
+                  <p><b>{{ i18n "w.r.os.karte" }}</b></p>
+                  {{ if $src }}{{ with partial "link.html" "#/web/open-source" }}<a class="w-more" href="{{ . }}">{{ i18n "w.s.os.cta" }} →</a>{{ end }}{{ end }}
+                {{ end }}
+              </div>
+              {{ if and (eq $m "produkt") site.Params.menu_fuer }}
+                {{ $fuer := slice }}
+                {{ range $f := site.Params.fuer }}{{ with partial "link.html" (print "#/web/fuer/" (index $f 0)) }}{{ $fuer = $fuer | append (dict "href" . "k" (index $f 1)) }}{{ end }}{{ end }}
+                {{ with $fuer }}
+                <div class="w-menu-foot">
+                  <span class="w-small">{{ i18n "w.m.fuer" }}</span>
+                  {{ range . }}<a href="{{ .href }}">{{ i18n (print "w.m.fuer." .k) }}</a>{{ end }}
+                </div>
+                {{ end }}
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+    <div class="w-right">
+      {{ if $src }}
+        <a class="w-gh" href="{{ site.Params.repo }}" target="_blank" rel="noopener" aria-label="{{ i18n "w.gh" }}{{ with $sterne }}, {{ i18n "w.gh.sterne" (dict "n" .) }}{{ end }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="{{ hugo.Data.icons.github }}"></path></svg>{{ with $sterne }}<span>{{ . }}</span>{{ end }}</a>
+      {{ end }}
+      <a class="w-anmelden{{ if not $src }} ohne{{ end }}" href="{{ partial "link.html" "#/anmelden" }}">{{ i18n "w.anmelden" }}<span aria-hidden="true">↗</span></a>
+      <a class="btn primary w-cta" href="{{ partial "link.html" "#/registrieren" }}">{{ i18n "w.start" }}</a>
+      <button type="button" class="w-burger" aria-expanded="false" aria-controls="w-sheet" data-burger data-label-zu="{{ i18n "w.menu.zu" }}" data-d="{{ index hugo.Data.icons.paths "mehr" }}|{{ index hugo.Data.icons.paths "x" }}">
+        {{ partial "icon.html" (dict "name" "mehr" "size" 18) }}{{ i18n "w.menu" }}
+      </button>
+    </div>
+  </div>
+</header>
+<div class="w-scrim" role="presentation" data-scrim hidden></div>
+<div class="w-sheet" id="w-sheet" hidden>
+  {{ range $menus }}
+    {{ $menu := . }}{{ $m := .m }}
+    <button type="button" aria-expanded="false" aria-controls="sheet-{{ $m }}" data-accordion data-d="{{ index hugo.Data.icons.paths "down" }}|{{ index hugo.Data.icons.paths "up" }}">{{ i18n (print "w.nav." $m) }}{{ partial "icon.html" (dict "name" "down" "size" 16) }}</button>
+    <ul class="unter" id="sheet-{{ $m }}" hidden>{{ range .groups }}{{ partial "inline/menu-items.html" (dict "g" . "prefix" $menu.prefix) }}{{ end }}</ul>
+  {{ end }}
+  <a class="zeile" href="{{ partial "link.html" "#/web/preise" }}">{{ i18n "w.nav.preise" }}</a>
+  <div class="unten">
+    <a class="btn primary large" href="{{ partial "link.html" "#/registrieren" }}">{{ i18n "w.start" }}</a>
+    <a class="btn large" href="{{ partial "link.html" "#/anmelden" }}">{{ i18n "w.anmelden" }} ↗</a>
+  </div>
+</div>

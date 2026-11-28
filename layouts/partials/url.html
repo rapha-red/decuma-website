@@ -1,0 +1,4 @@
+{{/* A site address without ".html", "index.html" and a trailing slash (only "/" and "/en/" keep theirs). */}}
+{{ $u := strings.TrimSuffix ".html" (strings.TrimSuffix "index.html" .) }}
+{{ if not (in (slice "/" "/en/") $u) }}{{ $u = strings.TrimSuffix "/" $u }}{{ end }}
+{{ return $u }}

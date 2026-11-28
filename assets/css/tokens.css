@@ -1,0 +1,46 @@
+/* tokens.css of the design source at f0d6cbf678c9, synced by tools/sync.mjs; do not edit */
+
+:root {
+  --bg: #ffffff; 
+  --chrome: #f5f6f7; 
+  --ink: #14171a; 
+  --ink-2: #5c6670; 
+  --line: #e3e6e9; 
+  --dot: #aab1b8; 
+  --accent: #0a5c5a; 
+  --accent-hover: #084a49; 
+  --accent-ink: #ffffff; 
+  --accent-soft: #e6f0ef; 
+  --attn: #b25e00; 
+  --attn-soft: #fff4e0; 
+  --font-ui: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
+  --font-mono: 'Atkinson Hyperlegible Mono', 'Atkinson Hyperlegible Mono Variable', ui-monospace, monospace;
+  --fs-xs: 0.8125rem; 
+  --fs-sm: 0.875rem; 
+  --fs-md: 0.9375rem; 
+  --fs-lg: 1.0625rem; 
+  --fs-xl: 1.25rem; 
+  --fs-title: 1.6875rem; 
+  --fs-hero: 2.25rem; 
+  --lh: 1.5; 
+  --lh-tight: 1.2; 
+  --fw-regular: 400; 
+  --fw-medium: 500; 
+  --fw-semibold: 600; 
+  --fw-bold: 700; 
+  --s1: 4px; 
+  --s2: 8px; 
+  --s3: 12px; 
+  --s4: 16px; 
+  --s5: 24px; 
+  --s6: 32px; 
+  --s7: 48px; 
+  --s8: 72px; 
+  --r: 6px; 
+  --hairline: 1px solid var(--line); 
+  --focus-ring: 2px solid var(--accent); 
+  --focus-offset: 2px; 
+  --t-fast: 150ms; 
+  --t-med: 200ms; 
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1); 
+}

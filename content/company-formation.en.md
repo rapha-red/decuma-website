@@ -1,0 +1,4 @@
+---
+translationKey: gruendung
+layout: gruendung
+---

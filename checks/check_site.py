@@ -1,0 +1,405 @@
+#!/usr/bin/env python3
+"""Static checks of a built site tree (Python standard library only).
+
+usage: check_site.py <tree> [<repository>]
+
+Fails, naming the page and the URL, on: a request to another origin (src, srcset, stylesheet/preload/icon href,
+@import and url() in CSS the page loads or carries, iframe, script, form action); an inline script other than
+JSON-LD; an internal link or asset that does not resolve in the tree; a page outside /kb without canonical or
+without its hreflang partner, hreflang that is not reciprocal (self, partner built and pointing back, x-default the German
+page; sitemap.xml alternates equal to the page's), a link on an English page that leaves /en/ (except the Knowledge Base
+and the language switch, both hreflang="de"), a /kb page with a partner or an /en/ copy; a missing llms.txt, robots.txt (or one with
+Disallow) or sitemap.xml; a price of data/offer.json typed into layouts/, i18n/ or data/pages/; an internal decision
+id or private path in the tree; a looping motion (an `infinite` CSS animation, `setInterval` or
+`requestAnimationFrame` in a script); a `<script src>` outside the first-party set (a non-essential script is listed
+in data/consent.yaml and injected by consent.js after consent, never written into a page); a registered script that is
+not a first-party file of the tree; a placeholder of the legal frames (data/pages/recht.json) on a built page, unless
+SITE_DRAFT=1 (local review only); while source_link is off in data/offer.json, a page or line about the open source
+(the /open-source page, the repository address, "Open Source", "AGPL"); while kb_live is off in hugo.toml, a link to
+/kb (a page, sitemap.xml, llms.txt). Knowledge Base articles (checked against the export sources in content/kb/): the
+twin missing or not equal to its derivation from the page source (`# <title>`, a blank line, `Stand: <DD.MM.YYYY> · Lizenz:
+CC BY-SA 4.0`, a blank line, the body with /kb/ links ending in .md), naming the article and the first differing line;
+the served twin not byte-equal to static/kb/; no rel=alternate text/markdown link to the twin; byline, publisher, Stand,
+licence or notice missing; JSON-LD without Article (headline, inLanguage de, datePublished, dateModified = stand,
+Organization author and publisher, license) or BreadcrumbList, or with a Person anywhere; a `related` address that is
+not built; and a hand-written /kb/ link in layouts/, i18n/, data/pages/ or content/ outside layouts/kb/ and the kblink
+partial.
+"""
+import json
+import os
+import re
+import tomllib
+import sys
+from html.parser import HTMLParser
+from pathlib import Path
+from urllib.parse import urlsplit, unquote
+
+SITE_HOSTS = {"decuma.de"}
+CSS_URL = re.compile(r"""@import\s+(?:url\()?\s*['"]?([^'")\s;]+)|url\(\s*['"]?([^'")]+)['"]?\s*\)""", re.I)
+FIRST_PARTY_JS = re.compile(r"^/js/(?:anim|hero|menu|consent|search|plans|columns|folge)(?:\.min)?(?:\.[0-9a-f]{64})?\.js$|^/pagefind/")
+INTERNAL = re.compile(r"\bD-\d{3}\b|prototype/ui|docs/(?:specs|adr|requirements)|decuma-personal|/home/\w+")
+
+
+def external(url):
+    u = urlsplit(url.strip())
+    if u.scheme in ("data", "blob", "mailto", "tel"):
+        return False
+    if url.strip().startswith("//"):
+        return u.hostname not in SITE_HOSTS
+    return bool(u.scheme) and u.hostname not in SITE_HOSTS
+
+
+class Page(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.loads, self.links, self.css, self.alternates, self.anchors = [], [], [], {}, []
+        self.canonical, self.inline_scripts, self.styles, self.scripts, self.registry = None, 0, [], [], None
+        self._style = False
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        rel = (a.get("rel") or "").lower().split()
+        if a.get("style"):
+            self.styles.append(a["style"])
+        if tag == "style":
+            self._style = True
+        for k in ("src", "poster", "data"):
+            if a.get(k):
+                self.loads.append(a[k])
+        if a.get("srcset"):
+            self.loads += [s.strip().split()[0] for s in a["srcset"].split(",") if s.strip()]
+        if tag == "form" and a.get("action"):
+            self.loads.append(a["action"])
+        if tag == "script" and a.get("src"):
+            self.scripts.append(a["src"])
+        if "data-consent" in a:
+            self.registry = json.loads(a.get("data-scripts") or "[]")
+        if tag == "script" and not a.get("src") and a.get("type") != "application/ld+json":
+            self.inline_scripts += 1
+        if tag == "link" and a.get("href"):
+            if "canonical" in rel:
+                self.canonical = a["href"]
+            elif "alternate" in rel and a.get("hreflang"):
+                self.alternates[a["hreflang"]] = a["href"]
+            elif rel and not {"alternate"} & set(rel):
+                self.loads.append(a["href"])
+                if "stylesheet" in rel:
+                    self.css.append(a["href"])
+        if tag == "a" and a.get("href"):
+            self.links.append(a["href"])
+            self.anchors.append((a["href"], a.get("hreflang")))
+
+    def handle_endtag(self, tag):
+        if tag == "style":
+            self._style = False
+
+    def handle_data(self, data):
+        if self._style:
+            self.styles.append(data)
+
+
+def resolve(tree, path):
+    """The file the server answers for an address (as checks/Caddyfile: path.html, path/index.html, path)."""
+    p = unquote(urlsplit(path).path).lstrip("/")
+    for c in (p + ".html", p.rstrip("/") + "/index.html", p):
+        f = tree / c
+        if c and f.is_file():
+            return f
+    return tree / "index.html" if p == "" else None
+
+
+def address(tree, f):
+    rel = "/" + f.relative_to(tree).as_posix()
+    rel = rel[: -len("index.html")] if rel.endswith("/index.html") else rel[: -len(".html")]
+    return rel if rel in ("/", "/en/") else rel.rstrip("/")
+
+
+def prices(repo):
+    o = json.loads((repo / "data/offer.json").read_text())
+    vals = set()
+    for p in o.get("plans", []):
+        vals |= {p.get(k) for k in ("monthly", "yearly_per_month", "yearly", "intro")}
+    vals |= {o.get("einkommensteuererklaerung")}
+    out = set()
+    for v in vals:
+        try:
+            x = float(v)
+        except (TypeError, ValueError):
+            continue
+        if x <= 0:
+            continue
+        de = f"{x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        en = f"{x:,.2f}"
+        forms = [f"{de} €", f"€{en}"]
+        if x == int(x):
+            forms += [f"{int(x):,} €".replace(",", "."), f"€{int(x):,}"]
+        out |= set(forms)
+    return out
+
+
+def front_matter(text):
+    """The export's front matter (key: value, "quoted", [a, b] lists) and the body after it."""
+    # ponytail: the flat subset the kb export writes, not YAML; a nested overlay key (faq) needs a real parser
+    _, fm, body = text.split("---\n", 2)
+    out = {}
+    for line in fm.splitlines():
+        k, _, v = line.partition(":")
+        v = v.strip()
+        if v.startswith("[") and v.endswith("]"):
+            out[k.strip()] = [x.strip().strip('"') for x in v[1:-1].split(",") if x.strip()]
+        else:
+            out[k.strip()] = v.strip('"')
+    return out, body
+
+
+def twin_of(fm, body):
+    y, m, d = fm["stand"].split("-")
+    body = re.sub(r"\]\((/kb/[^)\s#?]+?)(?<!\.md)\)", r"](\1.md)", body)
+    return f"# {fm['title']}\n\nStand: {d}.{m}.{y} · Lizenz: CC BY-SA 4.0\n\n{body}"
+
+
+KB_BYLINE = ("Decuma Redaktion", "Herausgeber: Zapiens GmbH", "Stand: ", "Lizenz: CC BY-SA 4.0", "Allgemeine Information, keine Steuer- oder Rechtsberatung im Einzelfall.")
+
+
+def walk(x):
+    """Every JSON object inside x, depth first."""
+    if isinstance(x, dict):
+        yield x
+        x = list(x.values())
+    for v in x if isinstance(x, list) else []:
+        yield from walk(v)
+
+
+def kb_checks(tree, repo):
+    fails = []
+    for src in sorted((repo / "content/kb").rglob("*.md")):
+        if src.name == "_index.md":
+            continue
+        rel = src.relative_to(repo / "content").with_suffix("").as_posix()
+        page = "/" + rel
+        fm, body = front_matter(src.read_text())
+        f = resolve(tree, page)
+        if not f:
+            fails.append(f"{page}: article not built")
+            continue
+        twin = tree / (rel + ".md")
+        want = twin_of(fm, body)
+        if not twin.is_file():
+            fails.append(f"{page}: no twin {page}.md")
+        else:
+            got = twin.read_text()
+            if got != want:
+                a, b = got.splitlines(), want.splitlines()
+                n = next((i for i in range(max(len(a), len(b))) if i >= len(a) or i >= len(b) or a[i] != b[i]), len(a))
+                fails.append(f"{page}: twin differs from the page source at line {n + 1}: twin {a[n] if n < len(a) else '<end>'!r}, page {b[n] if n < len(b) else '<end>'!r}")
+            exp = repo / "static" / (rel + ".md")
+            if exp.is_file() and exp.read_bytes() != twin.read_bytes():
+                fails.append(f"{page}: served twin is not the export's file static/{rel}.md")
+        html = f.read_text(errors="replace")
+        if not re.search(r'<link rel="alternate" type="text/markdown" href="' + re.escape(page) + r'\.md">', html):
+            fails.append(f"{page}: no rel=alternate type=text/markdown link to its twin")
+        text = re.sub(r"<[^>]+>", "", html)
+        for w in KB_BYLINE:
+            if w not in text:
+                fails.append(f"{page}: byline part missing: {w!r}")
+        lds = [json.loads(m) for m in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)]
+        if any(n.get("@type") == "Person" for n in walk(lds)):
+            fails.append(f"{page}: JSON-LD names a Person")
+        nodes = [n for ld in lds for n in ld.get("@graph", [ld])]
+        art = next((n for n in nodes if n.get("@type") == "Article"), None)
+        if not art:
+            fails.append(f"{page}: no JSON-LD Article")
+        else:
+            org = lambda x: isinstance(x, dict) and x.get("@type") == "Organization" and x.get("name")
+            for k, ok in (("headline", art.get("headline") == fm["title"]), ("inLanguage", art.get("inLanguage") == "de"),
+                          ("datePublished", bool(art.get("datePublished"))), ("dateModified", art.get("dateModified") == fm["stand"]),
+                          ("author", org(art.get("author"))), ("publisher", org(art.get("publisher")) and art["publisher"]["name"] == "Zapiens GmbH"),
+                          ("license", bool(art.get("license")))):
+                if not ok:
+                    fails.append(f"{page}: JSON-LD Article {k} missing or wrong ({art.get(k)!r})")
+        if not any(n.get("@type") == "BreadcrumbList" for n in nodes):
+            fails.append(f"{page}: no JSON-LD BreadcrumbList")
+        for r in fm.get("related", []):
+            if not resolve(tree, r):
+                fails.append(f"{page}: related {r} is not built")
+    # links to articles from outside /kb only through the kblink partial
+    hand = re.compile(r"(?<![#\w.])/kb/[a-z]")
+    for d in ("layouts", "i18n", "data/pages", "content"):
+        for f in sorted((repo / d).rglob("*")):
+            r = f.relative_to(repo).as_posix()
+            if not f.is_file() or r.startswith(("layouts/kb/", "content/kb/")) or r == "layouts/partials/kblink.html":
+                continue
+            for n, line in enumerate(f.read_text(errors="replace").splitlines(), 1):
+                if hand.search(line):
+                    fails.append(f"{r}:{n}: a /kb/ link outside the kblink partial")
+    return fails
+
+
+def main():
+    tree = Path(sys.argv[1]).resolve()
+    repo = Path(sys.argv[2] if len(sys.argv) > 2 else Path(__file__).resolve().parent.parent)
+    fails = []
+    pages = sorted(f for f in tree.rglob("*.html") if f.name != "404.html" and not f.relative_to(tree).as_posix().startswith("pagefind/"))
+    css_cache = {}
+    alts = {}  # address -> its hreflang alternates, as addresses
+    filled = {}  # address -> whether its <main> has content (a partner pair is filled on both sides or neither)
+
+    def css_external(css_file):
+        if css_file not in css_cache:
+            css_cache[css_file] = [m.group(1) or m.group(2) for m in CSS_URL.finditer(css_file.read_text(errors="replace"))]
+        return [u for u in css_cache[css_file] if external(u)]
+
+    for f in pages + sorted(tree.rglob("404.html")):
+        page = address(tree, f)
+        p = Page()
+        p.feed(f.read_text(errors="replace"))
+        for u in p.loads:
+            if external(u):
+                fails.append(f"{page}: request to another origin: {u}")
+        for s in p.styles:
+            for m in CSS_URL.finditer(s):
+                u = m.group(1) or m.group(2)
+                if external(u):
+                    fails.append(f"{page}: request to another origin in an inline style: {u}")
+        for href in p.css:
+            if not external(href):
+                c = resolve(tree, href)
+                for u in css_external(c) if c else []:
+                    fails.append(f"{page}: request to another origin from {href}: {u}")
+        for u in p.scripts:
+            if not FIRST_PARTY_JS.match(u):
+                fails.append(f"{page}: script outside the first-party set: {u} (register it in data/consent.yaml)")
+        for s in p.registry or []:
+            if not s["src"].startswith("/") or s["src"].startswith("//") or not resolve(tree, s["src"]):
+                fails.append(f"{page}: registered script {s['src']} is not a first-party file of the site (CSP: own origin only)")
+        if p.inline_scripts:
+            fails.append(f"{page}: {p.inline_scripts} inline script(s)")
+        for u in p.links + p.loads:
+            if external(u) or u.startswith(("#", "mailto:", "tel:", "data:", "http")) or not urlsplit(u).path:
+                continue
+            if not resolve(tree, u if u.startswith("/") else "/" + u):
+                fails.append(f"{page}: broken link {u}")
+        if f.name == "404.html":
+            continue
+        kb = page == "/kb" or page.startswith("/kb/")
+        if kb:
+            if set(p.alternates) - {"x-default"}:
+                fails.append(f"{page}: a Knowledge Base page has a language partner")
+        else:
+            if not p.canonical:
+                fails.append(f"{page}: no canonical")
+            other = "en" if not page.startswith("/en/") else "de"
+            if other not in p.alternates or "x-default" not in p.alternates:
+                fails.append(f"{page}: no hreflang partner ({other}, x-default)")
+            alts[page] = {k: urlsplit(v).path or "/" for k, v in p.alternates.items()}
+            m = re.search(r"<main>(.*?)</main>", f.read_text(errors="replace"), re.S)
+            filled[page] = bool(m and m.group(1).strip())
+            if page.startswith("/en/"):
+                # an English page links inside /en/, except the German-only Knowledge Base (hreflang="de"), the language
+                # switch (hreflang="de"), llms.txt and the assets
+                for h, hl in p.anchors:
+                    u = urlsplit(h)
+                    if external(h) or u.scheme or not u.path.startswith("/") or u.path.startswith("/en/") or u.path == "/llms.txt":
+                        continue
+                    if hl != "de":
+                        fails.append(f"{page}: link {h} leaves /en/ without hreflang=\"de\"")
+    # hreflang: each page lists itself, its partner (built) and x-default (the German page), and the partner lists the same
+    for page, a in sorted(alts.items()):
+        lang = "en" if page.startswith("/en/") else "de"
+        if a.get(lang) != page:
+            fails.append(f"{page}: hreflang {lang} is {a.get(lang)}, not the page itself")
+        if a.get("x-default") != a.get("de"):
+            fails.append(f"{page}: hreflang x-default {a.get('x-default')} is not the German page {a.get('de')}")
+        for l in ("de", "en"):
+            if a.get(l) and a[l] != page and alts.get(a[l]) != a:
+                fails.append(f"{page}: hreflang {l} {a[l]} is not built or does not point back ({alts.get(a[l])})")
+            elif a.get(l) and filled[page] and not filled.get(a[l], True):
+                fails.append(f"{page}: its partner {a[l]} has an empty <main> (layout missing in its content file?)")
+    sm = tree / "sitemap.xml"
+    if sm.is_file():
+        for loc, body in re.findall(r"<url><loc>([^<]+)</loc>(.*?)</url>", re.sub(r">\s+<", "><", sm.read_text())):
+            page = urlsplit(loc).path or "/"
+            got = {m[0]: urlsplit(m[1]).path or "/" for m in re.findall(r'hreflang="([^"]+)" href="([^"]+)"', body)}
+            if page in alts and got != alts[page]:
+                fails.append(f"/sitemap.xml: alternates of {page} {got} differ from the page's {alts[page]}")
+    if (tree / "en/kb").exists():
+        fails.append("/en/kb: the Knowledge Base has no English pages")
+    for name in ("llms.txt", "robots.txt", "sitemap.xml"):
+        if not (tree / name).is_file():
+            fails.append(f"/{name}: missing")
+    # The server answers 404 for dotfiles and the ship refuses a tree with one or with a symlink: fail here first.
+    for f in sorted(tree.rglob("*")):
+        rel = f.relative_to(tree)
+        parts = rel.parts[1:] if rel.parts[0] == ".well-known" else rel.parts
+        if f.is_symlink() or any(x.startswith(".") for x in parts):
+            fails.append(f"/{rel.as_posix()}: {'symlink' if f.is_symlink() else 'dotfile'} in the tree")
+    if (tree / "robots.txt").is_file() and re.search(r"(?im)^\s*Disallow\s*:\s*\S", (tree / "robots.txt").read_text()):
+        fails.append("/robots.txt: Disallow")
+    for f in sorted(tree.rglob("*")):
+        if f.is_file() and f.suffix in (".html", ".css", ".js", ".txt", ".xml", ".json", ".md"):
+            for m in INTERNAL.finditer(f.read_text(errors="replace")):
+                fails.append(f"/{f.relative_to(tree).as_posix()}: internal reference {m.group(0)}")
+    for f in sorted(tree.rglob("*")):
+        if f.is_file() and f.suffix in (".css", ".js", ".html") and not f.relative_to(tree).as_posix().startswith("pagefind/"):
+            for m in re.finditer(r"\binfinite\b|\bsetInterval\b|\brequestAnimationFrame\b", f.read_text(errors="replace")):
+                fails.append(f"/{f.relative_to(tree).as_posix()}: looping motion ({m.group(0)})")
+    lit = prices(repo)
+    # lines that carry the same number without being a price, each with its reason (checks/price-literal-allow.txt)
+    allow = [l.split("\t")[0] for l in (repo / "checks/price-literal-allow.txt").read_text().splitlines() if l.strip() and not l.startswith("#")]
+    for d in ("layouts", "i18n", "data/pages"):
+        for f in sorted((repo / d).rglob("*")):
+            if f.is_file() and "fragments" not in f.parts:
+                for n, line in enumerate(f.read_text(errors="replace").replace("\u00a0", " ").splitlines(), 1):
+                    for x in sorted(lit):
+                        if re.search(r"(?<![\d.,€])" + re.escape(x) + r"(?![\d]|[.,]\d)", line) and not any(a in line for a in allow):
+                            fails.append(f"{f.relative_to(repo)}:{n}: price literal {x} (amounts come from data/offer.json)")
+    # the go-live guard: no legal frame placeholder ({Text dieses Abschnitts}, {datum}, ...) on a built page
+    recht = (repo / "data/pages/recht.json").read_text()
+    holders = set(re.findall(r"\{[^{}\"]+\}", recht))
+    # and the open placeholders of the legal texts themselves ({Anzahl}, ...)
+    legal = set()  # the built legal texts (German body, also shown on the English page)
+    for f in (repo / "content").glob("*.md"):
+        if re.search(r"^layout: recht$", f.read_text(), re.M) and f.read_text().split("---", 2)[-1].strip():
+            holders |= set(re.findall(r"\{[^{}\"\n]+\}", f.read_text().split("---", 2)[-1]))
+            legal.add(re.search(r"^translationKey: (\S+)", f.read_text(), re.M).group(1))
+    legal_pages = {f"{f.name.removesuffix('.en.md')}.html" if not f.name.endswith(".en.md") else f"en/{f.name.removesuffix('.en.md')}.html"
+                   for f in (repo / "content").glob("*.md") if (m := re.search(r"^translationKey: (\S+)", f.read_text(), re.M)) and m.group(1) in legal}
+    legal_pages = {x.replace(".md.html", ".html") for x in legal_pages}
+    draft = os.environ.get("SITE_DRAFT") == "1"
+    held = 0
+    for f in pages:
+        text = f.read_text(errors="replace")
+        for h in sorted(x for x in holders if x in text):
+            held += 1
+            if not draft:
+                fails.append(f"placeholder on {address(tree, f)}: {h}")
+    if draft and held:
+        print(f"check_site: SITE_DRAFT=1, {held} legal placeholders allowed (never ship this tree)")
+    # nothing about the open source while its flag is off
+    if not json.loads((repo / "data/offer.json").read_text())["flags"]["source_link"]:
+        repo_url = tomllib.loads((repo / "hugo.toml").read_text())["params"]["repo"]
+        about = re.compile(r"open[ -]?source|\bAGPL|" + re.escape(repo_url.split("://", 1)[1]), re.I)
+        for f in sorted(tree.rglob("*")):
+            # the legal texts describe the final offer, the open source licence included (owner)
+            if f.is_file() and f.suffix in (".html", ".txt", ".xml", ".md") and not f.relative_to(tree).as_posix().startswith("pagefind/") and f.relative_to(tree).as_posix() not in legal_pages:
+                for m in about.finditer(f.read_text(errors="replace")):
+                    fails.append(f"/{f.relative_to(tree).as_posix()}: source_link is off but the page says {m.group(0)!r}")
+    # the Knowledge Base is not linked while kb_live is off in hugo.toml: no <a href> to /kb, no /kb in sitemap.xml or llms.txt
+    if not tomllib.loads((repo / "hugo.toml").read_text())["params"].get("kb_live"):
+        to_kb = re.compile(r"""href=["'](?:https://decuma\.de)?/kb(?:[/"'?#.])|<loc>https://decuma\.de/kb\b|\]\(https://decuma\.de/kb\b""")
+        for f in sorted(tree.rglob("*")):
+            if f.is_file() and f.suffix in (".html", ".txt", ".xml") and not f.relative_to(tree).as_posix().startswith(("kb/", "pagefind/")):
+                for m in to_kb.finditer(f.read_text(errors="replace")):
+                    fails.append(f"/{f.relative_to(tree).as_posix()}: kb_live is off but it links the Knowledge Base: {m.group(0)}")
+        # and no /kb page is built at all (an empty index would still answer on the server)
+        if (tree / "kb").exists():
+            fails.append("/kb: kb_live is off but the tree holds a Knowledge Base page")
+    fails += kb_checks(tree, repo)
+    for x in fails:
+        print("FAIL " + x)
+    print(f"check_site: {len(pages)} pages, {len(fails)} findings")
+    return 1 if fails else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

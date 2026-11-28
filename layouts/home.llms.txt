@@ -1,0 +1,11 @@
+# Decuma
+
+> {{ i18n "w.s.sub" }}
+{{ if site.Params.kb_live }}{{ with (index hugo.Sites 0).GetPage "/kb" }}{{ with .RegularPagesRecursive.ByDate }}
+## Knowledge Base
+{{ range . }}
+- [{{ .Title }}]({{ partial "abs.html" .RelPermalink }}.md){{ end }}
+{{ end }}{{ end }}{{ end }}
+## Seiten
+{{ range (index hugo.Sites 0).Pages }}{{ if and .RelPermalink (ne .Section "kb") }}
+- [{{ partial "title.html" . }}]({{ partial "abs.html" .RelPermalink }}){{ end }}{{ end }}

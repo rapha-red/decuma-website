@@ -1,0 +1,5 @@
+{{- /* A line icon of the prototype set: (dict "name" "down" "size" 14) */ -}}
+{{- $d := index hugo.Data.icons.paths .name -}}
+{{- if not $d }}{{ errorf "icon %q unknown" .name }}{{ end -}}
+<svg class="{{ hugo.Data.capture.icon_class }}" width="{{ .size }}" height="{{ .size }}" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true"><path d="{{ $d }}"></path></svg>
+{{- /**/ -}}

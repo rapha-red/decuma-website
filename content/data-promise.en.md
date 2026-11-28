@@ -1,0 +1,4 @@
+---
+translationKey: datenversprechen
+layout: recht
+---

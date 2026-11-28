@@ -1,0 +1,4 @@
+---
+translationKey: impressum
+layout: recht
+---

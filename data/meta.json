@@ -1,0 +1,292 @@
+{
+ "/": {
+  "title": [
+   "Decuma: Buchhaltung von selbst",
+   "Decuma: bookkeeping that does itself"
+  ],
+  "description": [
+   "Belege, Bank, Rechnungen, Voranmeldung und Jahresabschluss für Selbstständige und Unternehmen in Deutschland. Decuma bereitet vor, du gibst frei.",
+   "Belege, bank, invoices, VAT returns and annual accounts for the self-employed and companies in Germany. Decuma prepares everything, you release it."
+  ]
+ },
+ "/ki-buchhaltung": {
+  "title": [
+   "KI-Buchhaltung: sag, was zu tun ist | Decuma",
+   "AI bookkeeping: say what needs doing | Decuma"
+  ],
+  "description": [
+   "Schreib in deinen Worten, was zu tun ist. Decuma bucht, zeigt zu jedem Schritt Grund und Regel und legt dir alles fürs Finanzamt zur Freigabe vor.",
+   "Write in your own words what needs doing. Decuma books, shows the reason and the rule for every step and puts anything for the tax office to you first."
+  ]
+ },
+ "/buchhaltung": {
+  "title": [
+   "Buchhaltung für GmbH, UG und Selbstständige | Decuma",
+   "Bookkeeping for GmbH, UG and the self-employed | Decuma"
+  ],
+  "description": [
+   "Belege fotografieren oder weiterleiten, Zahlungen zuordnen, Journal und Auswertungen, Kassenbuch. Unveränderbar gebucht und jederzeit exportierbar.",
+   "Snap or forward Belege, match payments, journal and reports, cash book. Booked so nothing can be changed later, and exportable at any time you like."
+  ]
+ },
+ "/rechnungen": {
+  "title": [
+   "Rechnungen und E-Rechnungen schreiben | Decuma",
+   "Write invoices and e-invoices | Decuma"
+  ],
+  "description": [
+   "Rechnungen mit lückenloser Nummer, als XRechnung oder ZUGFeRD, Angebote, Mahnungen und offene Posten im Blick. Rechnungen schreiben ist kostenlos.",
+   "Invoices with gapless numbers, as XRechnung or ZUGFeRD, quotes, payment reminders and open items in view. Writing invoices with Decuma is free."
+  ]
+ },
+ "/umsatzsteuer": {
+  "title": [
+   "Umsatzsteuer-Voranmeldung und ZM | Decuma",
+   "VAT return and EC Sales List | Decuma"
+  ],
+  "description": [
+   "Voranmeldung mit jeder Kennzahl aus deinen Buchungen, Dauerfristverlängerung, Zusammenfassende Meldung und Fristen. Abgegeben wird nach deiner Freigabe.",
+   "VAT return with every Kennzahl from your bookings, permanent extension, EC Sales List and deadlines. Nothing is filed before you have released it."
+  ]
+ },
+ "/jahresabschluss": {
+  "title": [
+   "Jahresabschluss, E-Bilanz, KSt und GewSt | Decuma",
+   "Annual accounts, E-Bilanz, KSt and GewSt | Decuma"
+  ],
+  "description": [
+   "Abschlussbuchungen, Bilanz und GuV nach HGB, E-Bilanz, Körperschaft- und Gewerbesteuer für GmbH und UG, dazu die fertige Datei für die Offenlegung.",
+   "Closing entries, Bilanz and GuV under HGB, E-Bilanz, corporate and trade tax for GmbH and UG, plus the file for publishing your annual accounts."
+  ]
+ },
+ "/gruendung": {
+  "title": [
+   "Steuerliche Erfassung und Eröffnungsbilanz | Decuma",
+   "Tax registration and opening balance sheet | Decuma"
+  ],
+  "description": [
+   "Fragebogen zur steuerlichen Erfassung für GmbH, UG und Einzelunternehmen, die Eröffnungsbilanz und deine ersten Fristen. Schritt für Schritt, in Pro.",
+   "Tax registration questionnaire for GmbH, UG and sole proprietors, the opening balance sheet and your first deadlines. Step by step, included in Pro."
+  ]
+ },
+ "/privat": {
+  "title": [
+   "Einkommensteuererklärung ohne Abo | Decuma",
+   "Income tax return, no subscription | Decuma"
+  ],
+  "description": [
+   "Deine Einkommensteuererklärung in klaren Fragen, mit Hinweisen samt Wirkung in Euro und Quelle. Ohne Abo, bezahlt wird erst, wenn du sie abgibst.",
+   "Your income tax return in plain questions, with hints showing their effect in euros and their source. No subscription; you pay only when you file it."
+  ]
+ },
+ "/bots": {
+  "title": [
+   "Decuma Bots: Bots für deine Buchhaltung | Decuma",
+   "Decuma Bots: bots for your bookkeeping | Decuma"
+  ],
+  "description": [
+   "Bots sammeln Belege ein, ordnen Zahlungen zu und erinnern an Fristen. Du beschreibst eigene Bots in deinen Worten; was zählt, gibst du selbst frei.",
+   "Bots collect Belege, match payments and remind you of deadlines. You describe your own bots in your own words; whatever matters, you release yourself."
+  ]
+ },
+ "/entwickler": {
+  "title": [
+   "Decuma für Entwickler: API, CLI, MCP, SDKs",
+   "Decuma for developers: API, CLI, MCP, SDKs"
+  ],
+  "description": [
+   "Jede Funktion ist ein Command: REST mit OpenAPI, CLI, MCP und SDKs, mit Trockenlauf und Freigaberegeln. In jedem Tarif, auch in Kostenlos, ohne Aufpreis.",
+   "Every feature is a command: REST with OpenAPI, CLI, MCP and SDKs, with dry runs and approval rules. In every plan, Kostenlos included, at no extra cost."
+  ]
+ },
+ "/fuer/gmbh": {
+  "title": [
+   "Buchhaltung und Steuern für deine GmbH | Decuma",
+   "Bookkeeping and taxes for your GmbH | Decuma"
+  ],
+  "description": [
+   "Buchhaltung, Voranmeldung, Jahresabschluss und Steuererklärungen deiner GmbH an einem Ort, dazu jede Frist und die Gewinnausschüttung. Du gibst frei.",
+   "Your GmbH's bookkeeping, VAT returns, annual accounts and tax returns in one place, with every deadline and the profit distribution. You release it all."
+  ]
+ },
+ "/fuer/ug": {
+  "title": [
+   "Buchhaltung und Steuern für deine UG | Decuma",
+   "Bookkeeping and taxes for your UG | Decuma"
+  ],
+  "description": [
+   "Doppelte Buchführung, Voranmeldung und Jahresabschluss für deine UG, mit der gesetzlichen Rücklage richtig gerechnet und gebucht. Kostenlos starten.",
+   "Double-entry bookkeeping, VAT returns and annual accounts for your UG, with the statutory reserve worked out and booked correctly. Start for free."
+  ]
+ },
+ "/fuer/holding": {
+  "title": [
+   "Abschluss und Steuern für deine Holding | Decuma",
+   "Accounts and taxes for your holding | Decuma"
+  ],
+  "description": [
+   "Dividenden deiner Töchter mit § 8b KStG, angerechnete Kapitalertragsteuer, Jahresabschluss und Steuererklärungen einer Holding ohne eigenes Geschäft.",
+   "Your subsidiaries' dividends under § 8b KStG, credited withholding tax, annual accounts and tax returns of a holding without operations of its own."
+  ]
+ },
+ "/fuer/freiberufler": {
+  "title": [
+   "Buchhaltung, EÜR und Steuern für Freiberufler | Decuma",
+   "Bookkeeping, EÜR and taxes for freelancers | Decuma"
+  ],
+  "description": [
+   "Rechnungen, Belege, Voranmeldung, EÜR und deine Einkommensteuer an einem Ort. Und Decuma rechnet laufend mit, wie viel Steuer auf dich zukommt.",
+   "Invoices, Belege, VAT return, the cash-basis profit statement and your income tax in one place. Decuma keeps working out the tax that is coming."
+  ]
+ },
+ "/fuer/selbststaendige": {
+  "title": [
+   "Buchhaltung und Steuern für Selbstständige | Decuma",
+   "Bookkeeping and taxes for the self-employed | Decuma"
+  ],
+  "description": [
+   "Decuma bucht, macht die Voranmeldung und schätzt laufend deine Einkommen- und Gewerbesteuer. Du weißt jeden Monat, wie viel du zurücklegen solltest.",
+   "Decuma books, files your VAT return and keeps estimating your income and trade tax. Every month you know how much you should set aside for it."
+  ]
+ },
+ "/fuer/entwickler": {
+  "title": [
+   "Buchhaltung für Entwickler mit KI-Assistent | Decuma",
+   "Bookkeeping for developers with your AI assistant | Decuma"
+  ],
+  "description": [
+   "Cloud-Rechnungen aus dem Ausland, Kunden in der EU, die Voranmeldung: erledigt aus Claude, ChatGPT oder deinem eigenen Agenten, freigegeben von dir.",
+   "Cloud invoices from abroad, clients in the EU, the VAT return: done from Claude, ChatGPT or your own agent, and released by you before anything is filed."
+  ]
+ },
+ "/preise": {
+  "title": [
+   "Preise: Kostenlos, Pro und Max | Decuma",
+   "Pricing: Free, Pro and Max | Decuma"
+  ],
+  "description": [
+   "Buchhaltung, Rechnungen und Voranmeldung sind kostenlos. Pro für den Jahresabschluss, Max mit Agent und Bots. Ein Preis je Unternehmen, jede Rechtsform.",
+   "Bookkeeping, invoices and the VAT return are free. Pro for your annual accounts, Max with the agent and bots. One price per business, any legal form."
+  ]
+ },
+ "/preise/service": {
+  "title": [
+   "Done-for-you: Wir machen deine Buchhaltung | Decuma",
+   "Done-for-you: we do your bookkeeping | Decuma"
+  ],
+  "description": [
+   "Unser Team bucht deine laufenden Geschäftsvorfälle, auch liegengebliebene Monate, in deinem Decuma. Festes Angebot nach einem kurzen Gespräch.",
+   "Our team books your current transactions, months left undone included, in your own Decuma. You get a fixed offer after a short call with us."
+  ]
+ },
+ "/open-source": {
+  "title": [
+   "Decuma selbst hosten: Open Source unter AGPL-3.0",
+   "Self-host Decuma: open source under AGPL-3.0"
+  ],
+  "description": [
+   "Betreib Decuma auf deinem eigenen Server: keine Daten bei Dritten, lesbare Regeln mit Quellen, ohne künstliche Grenzen. Oder wir setzen es für dich auf.",
+   "Run Decuma on your own server: no data with third parties, readable rules with sources, no artificial limits. Or we set it up and run it for you instead."
+  ]
+ },
+ "/datenversprechen": {
+  "title": [
+   "Was mit deinen Daten passiert | Decuma",
+   "What happens to your data | Decuma"
+  ],
+  "description": [
+   "Server in Deutschland, keine Tracker, kein Training mit deinen Daten, Export und Löschung jederzeit. Wer in unserem Auftrag verarbeitet, sagen wir dir.",
+   "Servers in Germany, no trackers, no training on your data, export and deletion at any time. Who processes data on our behalf, we tell you on request."
+  ]
+ },
+ "/neu-in-decuma": {
+  "title": [
+   "Neu in Decuma: was sich geändert hat",
+   "What's new in Decuma"
+  ],
+  "description": [
+   "Was in Decuma neu ist, eine kurze Zeile je Version, neueste zuerst. So siehst du auf einen Blick, welche Funktionen dazugekommen sind und was sich ändert.",
+   "What is new in Decuma, one short line per release, newest first. See at a glance which features have been added and what has changed recently."
+  ]
+ },
+ "/kb": {
+  "title": [
+   "Knowledge Base: Steuern und Buchhaltung mit Quellen",
+   "Knowledge Base: tax and bookkeeping with sources"
+  ],
+  "description": [
+   "Umsatzsteuer, Buchführung und Fristen in klaren Sätzen, jede Regel mit Norm und Quelle samt Abrufdatum. Frei lesbar, durchsuchbar, mit Markdown-Fassung.",
+   "VAT, bookkeeping and deadlines in plain sentences, every rule with its norm and a dated source. Free to read, searchable, with a Markdown version."
+  ]
+ },
+ "/kb/umsatzsteuer": {
+  "title": [
+   "Umsatzsteuer: Regeln mit Quellen | Decuma Knowledge Base",
+   "Umsatzsteuer: rules with sources | Decuma Knowledge Base"
+  ],
+  "description": [
+   "Kleinunternehmer, Dauerfristverlängerung, Voranmeldung: die Regeln der Umsatzsteuer in klaren Sätzen, jede mit Norm und Quelle samt Abrufdatum.",
+   "Small business exemption, permanent extension, VAT return: the rules of German VAT in plain sentences, each with its norm and a dated source."
+  ]
+ },
+ "/kb/buchfuehrung": {
+  "title": [
+   "Buchführung: Regeln mit Quellen | Decuma Knowledge Base",
+   "Bookkeeping: rules with sources | Decuma Knowledge Base"
+  ],
+  "description": [
+   "Belege, Belegfunktion und Aufbewahrungsfristen: die Regeln der Buchführung in klaren Sätzen, jede mit Norm und Quelle samt Abrufdatum. Frei lesbar.",
+   "Belege, their function and how long to keep them: the rules of bookkeeping in plain sentences, each with its norm and a dated source. Free to read."
+  ]
+ },
+ "/impressum": {
+  "title": [
+   "Impressum | Decuma",
+   "Legal notice | Decuma"
+  ],
+  "description": [
+   "Impressum von Decuma: Anbieter der Website und der Software, Anschrift, Vertretung, Registereintrag und Kontakt, so wie es das Gesetz für Websites verlangt.",
+   "Legal notice of Decuma: provider of the website and the software, address, representation, register entry and contact, as the law requires of websites."
+  ]
+ },
+ "/datenschutz": {
+  "title": [
+   "Datenschutzerklärung | Decuma",
+   "Privacy policy | Decuma"
+  ],
+  "description": [
+   "Welche Daten Decuma verarbeitet, wozu, auf welcher Rechtsgrundlage und wie lange, und welche Rechte du hast. Die Datenschutzerklärung nach Art. 13 DSGVO.",
+   "Which data Decuma processes, for what, on which legal basis and for how long, and which rights you have. The privacy notice under Art. 13 GDPR."
+  ]
+ },
+ "/agb": {
+  "title": [
+   "Allgemeine Geschäftsbedingungen | Decuma",
+   "Terms and conditions | Decuma"
+  ],
+  "description": [
+   "Die Allgemeinen Geschäftsbedingungen für die Nutzung von Decuma: Tarife, Laufzeit und Kündigung, Zahlung, Verfügbarkeit, Haftung und deine Daten.",
+   "The terms and conditions for using Decuma: plans, term and cancellation, payment, availability, liability and what happens to all of your data."
+  ]
+ },
+ "/avv": {
+  "title": [
+   "Auftragsverarbeitungsvertrag (AVV) | Decuma",
+   "Data processing agreement (DPA) | Decuma"
+  ],
+  "description": [
+   "Der Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO: wie Decuma personenbezogene Daten in deinem Auftrag verarbeitet, schützt und wieder löscht.",
+   "The data processing agreement under Art. 28 GDPR: how Decuma processes personal data on your behalf, how it protects them and how it deletes them."
+  ]
+ },
+ "/unterauftragnehmer": {
+  "title": [
+   "Unterauftragnehmer | Decuma",
+   "Sub-processors | Decuma"
+  ],
+  "description": [
+   "Welche Unterauftragnehmer in unserem Auftrag Daten verarbeiten und wo: Die Liste bekommst du auf Anfrage. Hier steht, wie du sie anforderst und was sie enthält.",
+   "Which sub-processors process data on our behalf, and where: you get the list on request. This page says how to ask for it and what the list contains."
+  ]
+ }
+}

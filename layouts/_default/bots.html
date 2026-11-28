@@ -1,0 +1,78 @@
+{{/* The Decuma Bots page (the prototype's BotsSeite.svelte), only with agent_tier (_content.gotmpl): the team board, four
+     example bots with their drawings, the composer, the approval rules, the morning report, questions; no price line.
+     The visuals are captured (p-bots-<slot>). */}}
+{{ define "main" }}
+{{ $start := partial "link.html" "#/registrieren" }}
+<section class="w-hero">
+  <div class="w-wrap">
+    <div class="w-hero-text">
+      <h1 class="w-h1">{{ i18n "w.bp.h1" }}</h1>
+      <p class="w-lead">{{ i18n "w.bp.sub" }}</p>
+      <div class="w-ctas"><a class="btn primary large" href="{{ $start }}">{{ i18n "w.start" }}</a></div>
+    </div>
+    <div class="w-hero-visual">{{ partial "fragment.html" "p-bots-hero" }}</div>
+  </div>
+</section>
+
+<section class="w-sec" aria-labelledby="bp-bsp">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="bp-bsp" class="w-h2">{{ i18n "w.bp.bsp.h" }}</h2><p class="w-lead">{{ i18n "w.bp.bsp.l" }}</p></div>
+    <div class="w-botgrid">
+      {{ range $i, $k := slice "sammler" "kontierer" "rechnung" "frist" }}
+        <article class="w-botkarte" aria-labelledby="bp-{{ $k }}">
+          {{ partial "fragment.html" (print "p-bots-k" $i) }}
+          <h3 id="bp-{{ $k }}" class="w-h3">{{ i18n (print "w.b." $k) }}</h3>
+          <p>{{ i18n (print "w.bp." $k) }}</p>
+          <dl>
+            <div><dt>{{ partial "icon.html" (dict "name" "verlauf" "size" 14) }}{{ i18n "w.b.takt" }}</dt><dd>{{ i18n (print "w.b." $k ".takt") }}</dd></div>
+            <div><dt>{{ partial "icon.html" (dict "name" "shield" "size" 14) }}{{ i18n "w.b.regel" }}</dt><dd>{{ i18n (print "w.b." $k ".regel") }}</dd></div>
+          </dl>
+        </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="w-sec" aria-labelledby="bp-eigen">
+  <div class="w-wrap"><div class="w-row">
+    <div class="text">
+      <h2 id="bp-eigen" class="w-h2">{{ i18n "w.bp.eigen.h" }}</h2>
+      <p class="w-lead">{{ i18n "w.bp.eigen.t" }}</p>
+      <p>{{ i18n "w.bp.eigen.t2" }}</p>
+    </div>
+    {{ partial "fragment.html" "p-bots-eigen" }}
+  </div></div>
+</section>
+
+<section class="w-sec" aria-labelledby="bp-ja">
+  <div class="w-wrap"><div class="w-row">
+    <div class="text">
+      <h2 id="bp-ja" class="w-h2">{{ i18n "w.bp.ja.h" }}</h2>
+      <p class="w-lead">{{ i18n "w.bp.ja.t" }}</p>
+      <p>{{ i18n "w.bp.ja.t2" }}</p>
+    </div>
+    {{ partial "fragment.html" "p-bots-ja" }}
+  </div></div>
+</section>
+
+<section class="w-sec" aria-labelledby="bp-bericht">
+  <div class="w-wrap"><div class="w-row">
+    <div class="text">
+      <h2 id="bp-bericht" class="w-h2">{{ i18n "w.bp.bericht.h" }}</h2>
+      <p>{{ i18n "w.bp.bericht.t" }}</p>
+    </div>
+    <div>{{ partial "fragment.html" "p-bots-bericht" }}</div>
+  </div></div>
+</section>
+
+{{ $fragen := slice }}
+{{ range seq 6 }}{{ $fragen = $fragen | append (dict "q" (i18n (print "w.bp.q" .)) "a" (i18n (print "w.bp.a" .))) }}{{ end }}
+{{ partial "faq.html" (dict "id" "bp-faq" "fragen" $fragen) }}
+
+<section class="w-band" aria-labelledby="bp-end">
+  <div class="w-wrap">
+    <h2 id="bp-end" class="w-h2">{{ i18n "w.bp.end.h" }}</h2>
+    <div class="w-ctas"><a class="btn primary large" href="{{ $start }}">{{ i18n "w.start" }}</a></div>
+  </div>
+</section>
+{{ end }}

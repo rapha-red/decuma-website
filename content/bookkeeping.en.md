@@ -1,0 +1,4 @@
+---
+translationKey: buchhaltung
+layout: product
+---

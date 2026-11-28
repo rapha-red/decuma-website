@@ -1,0 +1,97 @@
+{{/* The Gründung page (the prototype's Gruendung.svelte): "übermittelt für dich" only while eric or auftrag is on, else the
+     fallback (D-300). The hero's work sequence and the questionnaire card are captured (p-gruendung-hero, -fb). */}}
+{{ define "main" }}
+{{ $senden := or (partial "flag.html" "eric") (partial "flag.html" "auftrag") }}
+{{ $start := partial "link.html" "#/registrieren" }}
+{{ $o := hugo.Data.offer }}
+{{ $pro := index (where $o.plans "plan" "pro") 0 }}
+{{ $price := i18n "w.g.price" (dict "pro" (partial "euro.html" $pro.monthly) "n" $o.intro_discount_months "intro" (partial "euro.html" $pro.intro)) }}
+{{ $st := hugo.Data.capture.gruendung_class }}
+<section class="w-hero">
+  <div class="w-wrap">
+    <div class="w-hero-text">
+      <h1 class="w-h1">{{ i18n "w.g.h1" }}</h1>
+      <p class="w-lead">{{ i18n (cond $senden "w.g.sub" "w.g.sub.fb") }}</p>
+      <div class="w-ctas"><a class="btn primary large" href="{{ $start }}">{{ i18n "w.start" }}</a></div>
+    </div>
+    <div class="w-hero-visual">{{ partial "fragment.html" "p-gruendung-hero" }}</div>
+  </div>
+</section>
+
+<section class="w-sec" aria-labelledby="g-why">
+  <div class="w-wrap">
+    <div class="w-sec-head">{{ partial "fragment.html" "z-gruendung" }}<h2 id="g-why" class="w-h2">{{ i18n "w.g.why" }}</h2></div>
+    <ul class="w-list">{{ range seq 4 }}<li><b>{{ i18n (print "w.g.why" .) }}</b><span>{{ i18n (print "w.g.why" . ".t") }}</span></li>{{ end }}</ul>
+  </div>
+</section>
+
+<section class="w-sec" aria-labelledby="g-how">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="g-how" class="w-h2">{{ i18n "w.g.how" }}</h2></div>
+    <ol class="w-steps n-4">
+      {{ range $i, $icon := slice "konto" "todo" "eye" "upload" }}{{ $n := add $i 1 }}<li><span class="kopf"><span class="w-glyphe" aria-hidden="true">{{ partial "icon.html" (dict "name" $icon "size" 22) }}</span><span class="nr">{{ $n }}</span></span><span>{{ i18n (cond (and (eq $n 4) (not $senden)) "w.g.s4.fb" (print "w.g.s" $n)) }}</span></li>{{ end }}
+    </ol>
+    <p class="w-stufe mt-5">{{ $price }}</p>
+  </div>
+</section>
+
+<section class="w-sec" id="fragebogen" aria-labelledby="g-fb">
+  <div class="w-wrap">
+    <div class="w-sec-head"><span class="w-konto">§ 138 AO</span><h2 id="g-fb" class="w-h2">{{ i18n "w.g.fb.h" }}</h2></div>
+    <div class="w-row">
+      <div class="text"><p class="w-lead">{{ i18n "w.g.fb.t" }}</p></div>
+      <div>{{ partial "fragment.html" "p-gruendung-fb" }}</div>
+    </div>
+  </div>
+</section>
+
+<section class="w-sec" id="eroeffnungsbilanz" aria-labelledby="g-eb">
+  <div class="w-wrap w-split">
+    <div><span class="w-konto">2900 Gezeichnetes Kapital</span><h2 id="g-eb" class="w-h2">{{ i18n "w.g.eb.h" }}</h2></div>
+    <div class="stapel {{ $st }}"><p class="w-lead">{{ i18n "w.g.eb.t" }}</p><p>{{ i18n (cond $senden "w.g.eb.line" "w.g.eb.line.fb") }}</p></div>
+  </div>
+</section>
+
+<section class="w-sec" id="gewerbe" aria-labelledby="g-gw">
+  <div class="w-wrap w-split">
+    <div><span class="w-konto">§ 14 GewO</span><h2 id="g-gw" class="w-h2">{{ i18n "w.g.gw.h" }}</h2></div>
+    <div class="stapel {{ $st }}"><p class="w-lead">{{ i18n "w.g.gw.t" }}</p><p>{{ i18n "w.g.gw.line" }}</p></div>
+  </div>
+</section>
+
+<section class="w-sec" aria-labelledby="g-vgl">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="g-vgl" class="w-h2">{{ i18n "w.g.vgl.h" }}</h2></div>
+    <div class="w-table-scroll">
+      <table class="w-table zwei">
+        <thead><tr><th scope="col"></th><th scope="col">{{ i18n "w.g.vgl.a" }}</th><th scope="col" class="betont">{{ i18n "w.g.vgl.b" }}</th></tr></thead>
+        <tbody>{{ range seq 5 }}<tr><th scope="row">{{ i18n (print "w.g.vgl.r" .) }}</th><td>{{ i18n (print "w.g.vgl.r" . "a") }}</td><td>{{ i18n (print "w.g.vgl.r" . "b" (cond (and (eq . 3) $senden) ".senden" "")) }}</td></tr>{{ end }}</tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="w-sec" aria-labelledby="g-nach">
+  <div class="w-wrap">
+    <div class="w-sec-head">{{ partial "fragment.html" "z-voranmeldung" }}<h2 id="g-nach" class="w-h2">{{ i18n "w.g.nach" }}</h2></div>
+    <ol class="w-steps">
+      {{ range $i, $icon := slice "mail" "heute" "todo" }}<li><span class="kopf"><span class="w-glyphe" aria-hidden="true">{{ partial "icon.html" (dict "name" $icon "size" 22) }}</span><span class="nr">{{ add $i 1 }}</span></span><span>{{ i18n (print "w.g.nach" (add $i 1)) }}</span></li>{{ end }}
+    </ol>
+  </div>
+</section>
+
+{{ $fragen := slice }}
+{{ range seq 9 }}{{ $fragen = $fragen | append (dict "q" (i18n (print "w.g.q" .)) "a" (i18n (print "w.g.a" .))) }}{{ end }}
+{{ $fragen = $fragen | append (dict "q" (i18n "w.g.q10") "a" $price) }}
+{{ partial "faq.html" (dict "id" "g-faq" "fragen" $fragen) }}
+
+<section class="w-band" aria-labelledby="g-end">
+  <div class="w-wrap">
+    <h2 id="g-end" class="w-h2">{{ i18n "w.g.end.h" }}</h2>
+    <div class="w-ctas">
+      <a class="btn primary large" href="{{ $start }}">{{ i18n "w.start" }}</a>
+      <a class="w-more" href="{{ site.Params.booking }}" target="_blank" rel="noopener">{{ i18n "w.call" }} ↗</a>
+    </div>
+  </div>
+</section>
+{{ end }}

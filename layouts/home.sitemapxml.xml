@@ -1,0 +1,14 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+{{- range hugo.Sites }}{{ range .Pages }}{{ if and (ne .Kind "404") .RelPermalink (or site.Params.kb_live (not (hasPrefix .RelPermalink "/kb"))) }}
+  <url>
+    <loc>{{ partial "abs.html" .RelPermalink }}</loc>
+    {{- if and .IsTranslated (ne .Section "kb") }}{{ range .AllTranslations }}
+    <xhtml:link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ partial "abs.html" .RelPermalink }}"/>
+    {{- if eq .Language.Lang "de" }}
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ partial "abs.html" .RelPermalink }}"/>
+    {{- end }}
+    {{- end }}{{ end }}
+  </url>
+{{- end }}{{ end }}{{ end }}
+</urlset>

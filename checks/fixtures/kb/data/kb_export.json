@@ -1,0 +1,25 @@
+{
+ "export_commit": "fixture",
+ "exported_at": "2026-11-28T00:00:00Z",
+ "published": [
+  {
+   "kb_path": "buchfuehrung/belegfunktion-und-aufbewahrung.md",
+   "address": "/kb/buchfuehrung/belege-und-aufbewahrung",
+   "title": "Belege: Belegfunktion, Sicherung und Aufbewahrungsfristen",
+   "stand": "2026-11-26"
+  },
+  {
+   "kb_path": "umsatzsteuer/dauerfristverlaengerung.md",
+   "address": "/kb/umsatzsteuer/dauerfristverlaengerung",
+   "title": "Dauerfristverlängerung und Sondervorauszahlung",
+   "stand": "2026-11-24"
+  },
+  {
+   "kb_path": "umsatzsteuer/kleinunternehmer-19-ustg.md",
+   "address": "/kb/umsatzsteuer/kleinunternehmer",
+   "title": "Kleinunternehmer nach § 19 UStG: Grenzen, Rechnung, Verzicht",
+   "stand": "2026-11-24"
+  }
+ ],
+ "withdrawn": []
+}

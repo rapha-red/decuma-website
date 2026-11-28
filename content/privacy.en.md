@@ -1,0 +1,4 @@
+---
+translationKey: datenschutz
+layout: recht
+---

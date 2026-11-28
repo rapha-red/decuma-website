@@ -1,0 +1,70 @@
+{{/* The plan cards with the billing toggle (the prototype's Tarife.svelte), on the start and the price page. Columns,
+     names, highlight, buttons, targets and every amount come from data/offer.json; a column whose flag is off is left
+     out. Both billing states are in the markup; assets/js/plans.js only switches which one is visible (yearly first, as
+     the prototype opens). The KI-Guthaben amount is never shown. */}}
+{{ $o := hugo.Data.offer }}
+{{ $l := site.Language.Lang }}
+{{ $cards := slice }}
+{{ range $o.offer.columns }}
+  {{ $on := .plan }}
+  {{ range .flags }}{{ if not (partial "flag.html" .) }}{{ $on = false }}{{ end }}{{ end }}
+  {{ if $on }}
+    {{ $p := index (where $o.plans "plan" .key) 0 }}
+    {{ if not $p }}{{ errorf "offer column %q has no plan in data/offer.json" .key }}{{ end }}
+    {{ $cards = $cards | append (dict "c" . "p" $p) }}
+  {{ end }}
+{{ end }}
+{{/* the feature lines of each plan: string key and the flag it needs (or "") */}}
+{{ $lines := dict
+  "free" (dict "prefix" "w.p.frei" "f" (slice
+    (slice "w.p.frei.f1" "") (slice "w.p.frei.f2" "") (slice "w.p.frei.f3" "model_steps") (slice "w.p.frei.f5" "") (slice "w.p.frei.f4" "")))
+  "pro" (dict "prefix" "w.p.pro" "f" (slice
+    (slice "w.p.pro.f1" "") (slice (cond (partial "flag.html" "lohn") "w.p.pro.f2.lohn" "w.p.pro.f2") "") (slice "w.p.pro.f3" "auftrag") (slice "w.p.pro.f4" "model_steps") (slice "w.p.pro.f5" "")))
+  "agent" (dict "prefix" "w.p.agent" "f" (slice
+    (slice "w.p.agent.f1" "") (slice "w.p.agent.f2" "") (slice "w.p.agent.f3" "") (slice "w.p.agent.f4" "bank") (slice "w.p.agent.f5" "")))
+}}
+{{/* yearly billing: months free on the first paid plan (12 x the discount) */}}
+{{ $gratis := 0 }}
+{{ range $cards }}{{ if and (not $gratis) (gt (float .p.monthly) 0) }}{{ $gratis = math.Round (sub 12 (div (float .p.yearly) (float .p.monthly))) }}{{ end }}{{ end }}
+<div class="w-tarife" data-plans>
+  <div class="w-seg klein" role="group" aria-label="{{ i18n "pr.billing" }}">
+    <button type="button" aria-pressed="false" data-billing="monthly">{{ i18n "pr.monthly" }}</button>
+    <button type="button" aria-pressed="true" data-billing="yearly">{{ i18n "pr.yearly" }} <span class="badge">{{ i18n "pr.yearBadge" (dict "n" $gratis) }}</span></button>
+  </div>
+  <div class="w-tiers">
+    {{ range $cards }}
+      {{ $c := .c }}
+      {{ $k := $c.key }}
+      {{ $p := .p }}
+      {{ $vars := dict "belege" $o.belege_per_month "mb" $o.storage_mb "n" $p.persons }}
+      {{ $def := index $lines $k }}
+      {{ if not $def }}{{ errorf "plan %q has no feature lines in plan-cards.html" $k }}{{ end }}
+      {{ $list := partial "euro.html" $p.monthly }}
+      <section class="w-tier{{ if .c.highlight }} betont{{ end }}"{{ if eq $k "agent" }} id="agent"{{ end }} aria-labelledby="k-{{ $k }}">
+        <div>
+          <h3 class="w-h3" id="k-{{ $k }}">{{ index .c $l }}</h3>
+          <p class="w-small">{{ i18n (print $def.prefix ".line") }}</p>
+        </div>
+        {{ if eq (float $p.monthly) 0 }}
+          <p class="preis"><span class="w-big">{{ partial "euro.html" $p.monthly }}</span></p>
+          <p class="w-small notiz">{{ i18n "w.s.under" }}</p>
+        {{ else }}
+          <p class="preis" data-billing-show="monthly" hidden><span class="w-big">{{ partial "euro.html" $p.intro }}</span><s><span class="sr">{{ i18n "pr.instead" }} </span>{{ $list }}</s></p>
+          <p class="w-small notiz" data-billing-show="monthly" hidden>{{ i18n "pr.introUnit" (dict "n" $o.intro_discount_months "price" $list) }}</p>
+          <p class="preis" data-billing-show="yearly"><span class="w-big">{{ partial "euro.html" $p.yearly_per_month }}</span><s><span class="sr">{{ i18n "pr.instead" }} </span>{{ $list }}</s></p>
+          <p class="w-small notiz" data-billing-show="yearly">{{ i18n "pr.yearLine" (dict "price" (partial "euro.html" $p.yearly)) }}</p>
+        {{ end }}
+        {{ with partial "link.html" .c.href }}<a class="btn large{{ if $c.highlight }} primary{{ end }}" href="{{ . }}">{{ index $c (print "cta_" $l) }}</a>{{ end }}
+        <ul>
+          {{ range $def.f }}
+            {{ if or (eq (index . 1) "") (partial "flag.html" (index . 1)) }}
+              <li>{{ partial "icon.html" (dict "name" "check" "size" 16) }}{{ i18n (index . 0) $vars }}</li>
+            {{ end }}
+          {{ end }}
+          {{ if eq $k "pro" }}<li class="w-small block"><button type="button" class="term" title="{{ i18n "pr.rule.tip" }}">{{ i18n "pr.rule" }}</button></li>{{ end }}
+        </ul>
+      </section>
+    {{ end }}
+  </div>
+  <p class="w-small">{{ i18n "w.p.under" }}</p>
+</div>

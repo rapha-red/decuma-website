@@ -1,0 +1,37 @@
+{{/* The Knowledge Base index (/kb) and its area pages (the prototype's Kb.svelte), from the kb export in content/kb/:
+     the index lists the areas that hold a published article, an area page its articles; both carry the search
+     (assets/js/search.js over Pagefind), on an area page preset to that area. */}}
+{{ define "main" }}
+{{ $c := hugo.Data.capture.kb_class }}
+{{ $index := eq .RelPermalink (site.GetPage "/kb").RelPermalink }}
+{{ $areas := slice }}
+{{ range (site.GetPage "/kb").Sections.ByWeight }}{{ if .RegularPagesRecursive }}{{ $areas = $areas | append . }}{{ end }}{{ end }}
+<div class="w-wrap kb {{ $c }}">
+{{ if $index }}
+  <h1 class="w-h1 kb-h1 {{ $c }}">{{ i18n "w.kb.h1" }}</h1>
+  <p class="w-lead {{ $c }}">{{ i18n "w.kb.lead" }}</p>
+  {{ partial "kb-search.html" (dict "c" $c "areas" $areas "area" "") }}
+  <div class="kb-bereiche {{ $c }}">
+    {{ range $areas }}
+      {{ $slug := path.Base (partial "url.html" .RelPermalink) }}
+      <section class="{{ $c }}" aria-labelledby="kb-{{ $slug }}">
+        <h2 id="kb-{{ $slug }}" class="w-h3 {{ $c }}"><a class="{{ $c }}" href="{{ partial "url.html" .RelPermalink }}">{{ .Title }}</a></h2>
+        <p class="w-small {{ $c }}">{{ .Description }}</p>
+        <ul class="kb-liste {{ $c }}">{{ range .RegularPagesRecursive.ByDate }}<li class="{{ $c }}"><a class="{{ $c }}" href="{{ partial "url.html" .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul>
+      </section>
+    {{ end }}
+  </div>
+{{ else }}
+  <nav class="w-small kb-krumen {{ $c }}" aria-label="{{ i18n "w.kb.krumen" }}"><a href="{{ partial "url.html" (site.GetPage "/kb").RelPermalink }}" class="{{ $c }}">{{ i18n "w.kb.h1" }}</a> › {{ .Title }}</nav>
+  <h1 class="w-h1 kb-h1 {{ $c }}">{{ .Title }}</h1>
+  <p class="w-lead {{ $c }}">{{ .Description }}</p>
+  {{ partial "kb-search.html" (dict "c" $c "areas" $areas "area" .Title) }}
+  {{ $n := len .RegularPagesRecursive }}
+  <p class="w-small kb-zahl {{ $c }}" aria-live="polite" data-kb-out>{{ if eq $n 1 }}{{ i18n "w.kb.s.eins" }}{{ else }}{{ i18n "w.kb.s.n" (dict "n" $n) }}{{ end }}</p>
+  <ul class="kb-treffer {{ $c }}" data-kb-out>
+    {{ range .RegularPagesRecursive.ByDate }}<li class="{{ $c }}"><a class="{{ $c }}" href="{{ partial "url.html" .RelPermalink }}">{{ .Title }}</a><span class="w-small kb-bereich {{ $c }}">{{ .CurrentSection.Title }}</span><span class="kb-zeile {{ $c }}">{{ .Description }}</span></li>{{ end }}
+  </ul>
+{{ end }}
+  <p class="w-small kb-fuss {{ $c }}">{{ i18n "w.kb.fuss" }}</p>
+</div>
+{{ end }}

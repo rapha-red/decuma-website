@@ -1,0 +1,8 @@
+{{- /* The only way a page outside /kb links a Knowledge Base article: (dict "address" "/kb/<area>/<slug>" "text" "...").
+       A link while kb_live is on and the address is published in data/kb_export.json, else the plain text
+       (check_site.py fails on a hand-written /kb/ link elsewhere). */ -}}
+{{- $pub := false -}}
+{{- with hugo.Data.kb_export }}{{ range .published }}{{ if eq .address $.address }}{{ $pub = true }}{{ end }}{{ end }}{{ end -}}
+{{- if and site.Params.kb_live $pub -}}
+<a href="{{ .address }}"{{ if ne site.Language.Lang "de" }} hreflang="de"{{ end }}>{{ .text }}</a>
+{{- else }}{{ .text }}{{ end -}}

@@ -1,0 +1,51 @@
+baseURL = "https://decuma.de/"
+title = "Decuma"
+defaultContentLanguage = "de"
+defaultContentLanguageInSubdir = false
+uglyURLs = true
+disableAliases = true
+disableDefaultLanguageRedirect = true
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term", "rss", "sitemap"]
+
+[params]
+app = "https://app.decuma.de"
+booking = "https://cal.com/decuma-raphael/30min"
+repo = "https://github.com/rapha-red/open-decuma"
+# the Knowledge Base: while false, no link to /kb anywhere (menu, footer, pages, sitemap, llms.txt) and no wording about it
+# (check_site fails on one); on once the kb export ships released articles
+kb_live = false
+# the "Für:" row of the Produkt menu and the footer column "Lösungen für" (each shows only while one of its pages is built)
+menu_fuer = true
+# the "Lösungen für" pages: address slug and label key (w.m.fuer.<key>), in the menu row and the footer column
+fuer = [["gmbh", "gmbh"], ["ug", "ug"], ["holding", "holding"], ["freiberufler", "frei"], ["selbststaendige", "selbst"], ["entwickler", "dev"]]
+
+[languages.de]
+weight = 1
+locale = "de-DE"
+[languages.en]
+weight = 2
+locale = "en-GB"
+
+[outputFormats.llms]
+mediaType = "text/plain"
+baseName = "llms"
+isPlainText = true
+notAlternative = true
+[outputFormats.sitemapxml]
+mediaType = "application/xml"
+baseName = "sitemap"
+isPlainText = true
+notAlternative = true
+
+[minify.tdewolff.html]
+keepDocumentTags = true
+keepEndTags = true
+keepQuotes = true
+
+# plain Markdown links (the built-in link hook escapes tel: in the Impressum)
+[markup.goldmark.renderHooks.link]
+useEmbedded = "never"
+# the Knowledge Base bodies keep "..." as written (the twin carries the same text)
+[markup.goldmark.extensions.typographer]
+ellipsis = "..."

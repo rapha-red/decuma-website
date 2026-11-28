@@ -1,0 +1,19 @@
+# Owner-approved differences between the prototype and the site. One per line, tab-separated:
+# case (or *; <case>@<lang> for one language)<TAB>CSS that hides the part (on both sides; a part the site lacks matches nothing there)<TAB>flag state it applies to (offer, all; empty: both)<TAB>reason and approval
+start-390	#agent { display: none !important }	all	the same at 390 px
+neu-1280	.proto-hinweis { display: none !important }		the prototype's note on its invented sample entries is prototype-only (the site shows real entries)
+neu-390	.proto-hinweis { display: none !important }		the same at 390 px
+dv-1280	.recht > p.w-small:nth-last-child(2) { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand
+dv-390	.recht > p.w-small:nth-last-child(2) { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand
+impressum-1280	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+impressum-390	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+datenschutz-1280	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+datenschutz-390	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+agb-1280	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+agb-390	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+avv-1280	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+avv-390	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+unterauftragnehmer-1280	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+unterauftragnehmer-390	.recht > p.w-small:last-child { visibility: hidden !important }		the Stand date: the prototype shows its fixed clock (4 January 2027), the site the page's own Stand or its placeholder
+datenschutz-1280	.w-cookie-table { display: none !important }		the cookie table from data/consent.yaml under "Diese Website" (orchestrator, consent registry #100); the prototype frame has none
+datenschutz-390	.w-cookie-table { display: none !important }		the same at 390 px

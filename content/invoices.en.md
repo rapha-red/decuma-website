@@ -1,0 +1,4 @@
+---
+translationKey: rechnungen
+layout: product
+---

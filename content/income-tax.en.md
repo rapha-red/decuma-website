@@ -1,0 +1,4 @@
+---
+translationKey: privat
+layout: product
+---

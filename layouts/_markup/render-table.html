@@ -1,0 +1,6 @@
+{{- /* Tables of Markdown bodies as the prototype renders them: in a scroll box, the website's table class, no column alignment (which would need inline styles). */ -}}
+<div class="w-table-scroll"><table class="w-table">
+{{- with .THead }}<thead>{{ range . }}<tr>{{ range . }}<th>{{ .Text }}</th>{{ end }}</tr>{{ end }}</thead>{{ end }}
+{{- with .TBody }}<tbody>{{ range . }}<tr>{{ range . }}<td>{{ .Text }}</td>{{ end }}</tr>{{ end }}</tbody>{{ end -}}
+</table></div>
+{{- /**/ -}}

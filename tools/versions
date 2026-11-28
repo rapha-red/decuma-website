@@ -1,0 +1,5 @@
+# name version url sha256   (tools/fetch.sh downloads each into tools/bin/ and stops on a wrong checksum)
+hugo 0.170.1 https://github.com/gohugoio/hugo/releases/download/v0.170.1/hugo_0.170.1_linux-amd64.tar.gz 841a5462853aefc9942e4de1e8a5d75584b6a5181941e6ad3f1d745190e03cd8
+pagefind 1.6.0 https://github.com/CloudCannon/pagefind/releases/download/v1.6.0/pagefind-v1.6.0-x86_64-unknown-linux-musl.tar.gz 004d40c9a644c995dadc42b8031196c6f17e7a6dacf9a6c15c63286dd6ead5f2
+# local serving for the browser checks only, never part of the site
+caddy 2.11.9 https://github.com/caddyserver/caddy/releases/download/v2.11.9/caddy_2.11.9_linux_amd64.tar.gz 5b8cb7faf8726a2028ad96a66e54e6e81e8f361bc6175e5d22bbd997cc5177fb
