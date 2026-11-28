@@ -1,0 +1,86 @@
+{
+ "so": [
+  "So geht’s",
+  "How it works"
+ ],
+ "icons": {
+  "buchhaltung": [
+   "upload",
+   "eye",
+   "bank",
+   "check"
+  ],
+  "rechnungen": [
+   "einnahmen",
+   "clip",
+   "mail",
+   "check"
+  ],
+  "umsatzsteuer": [
+   "belege",
+   "auswertungen",
+   "eye",
+   "upload"
+  ],
+  "jahresabschluss": [
+   "todo",
+   "rule",
+   "auswertungen",
+   "shield"
+  ],
+  "privat": [
+   "todo",
+   "upload",
+   "eye",
+   "check"
+  ],
+  "entwickler": [
+   "plug",
+   "eye",
+   "shield",
+   "check"
+  ],
+  "ki-buchhaltung": [
+   "chat",
+   "eye",
+   "rule",
+   "check"
+  ],
+  "fuer-gmbh": [
+   "bank",
+   "belege",
+   "steuern",
+   "auswertungen"
+  ],
+  "fuer-ug": [
+   "bank",
+   "belege",
+   "steuern",
+   "auswertungen"
+  ],
+  "fuer-holding": [
+   "bank",
+   "belege",
+   "auswertungen",
+   "steuern"
+  ],
+  "fuer-freiberufler": [
+   "einnahmen",
+   "belege",
+   "steuern",
+   "est"
+  ],
+  "fuer-selbststaendige": [
+   "einnahmen",
+   "belege",
+   "steuern",
+   "est"
+  ],
+  "fuer-entwickler": [
+   "plug",
+   "belege",
+   "steuern",
+   "check"
+  ]
+ }
+}

@@ -72,11 +72,15 @@ test.describe('menus at 1280 px', () => {
   })
 })
 
+// the product pages (#106): drafts until the owner has seen them
+const DRAFTS = ['/buchhaltung', '/rechnungen', '/umsatzsteuer', '/jahresabschluss', '/gruendung', '/privat', '/entwickler', '/fuer/gmbh', '/fuer/ug', '/fuer/holding', '/fuer/freiberufler', '/fuer/selbststaendige', '/fuer/entwickler', '/en/bookkeeping', '/en/company-formation', '/en/solutions/gmbh', '/en/solutions/developers']
 test.describe('axe', () => {
-  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/en/pricing/service', '/en/data-promise', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
+  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/en/pricing/service', '/en/data-promise', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint', ...DRAFTS]) {
     test(`no serious or critical finding on ${path}, banner and Produkt menu open`, async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 900 })
-      await page.goto(path)
+      const res = await page.goto(path)
+      // a product page is built only once it is published, or in a local review tree (SITE_DRAFT=1)
+      test.skip(DRAFTS.includes(path) && res?.status() === 404 && process.env.SITE_DRAFT !== '1', 'draft, not built')
       await page.locator('button[aria-controls=menu-produkt]').hover()
       const r = await new AxeBuilder({ page }).analyze()
       expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])

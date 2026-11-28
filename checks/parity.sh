@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Visual parity with the prototype: checks/parity.sh <clone of the design repository> [proto port]
 # Builds the site twice (data/offer.json, and checks/offer-all-flags.json: the price list with every flag on), serves the prototype at
-# PROTOTYPE_COMMIT and compares the shell and the pages. Acceptance evidence, not part of every build. Shots in checks/.parity/.
+# PROTOTYPE_COMMIT and compares the shell and the pages (draft pages included). ONLY=<regex> limits the cases by name. Acceptance evidence, not part of every build. Shots in checks/.parity/.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 repo=$(realpath "$1")
@@ -27,7 +27,7 @@ build() {
 	cp checks/changelog-sample.yaml "$dir/data/changelog.yaml"
 	for f in "$dir"/content/{impressum,datenschutz,agb,avv,unterauftragnehmer}.md; do python3 -c 'import sys; p=sys.argv[1]; s=open(p).read(); open(p,"w").write(s[:s.index("---", 3) + 4])' "$f"; done
 	[ "$1" = all ] && cp checks/offer-all-flags.json "$dir/data/offer.json"
-	(cd "$dir" && tools/bin/hugo --minify --logLevel error -d "$OLDPWD/$work/site-$1")
+	(cd "$dir" && tools/bin/hugo --minify --buildDrafts --logLevel error -d "$OLDPWD/$work/site-$1")
 	rm -rf "$dir"
 }
 build offer

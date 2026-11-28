@@ -135,8 +135,116 @@ for (const l of ['de', 'en']) {
   }
   await motion.close()
 }
+// ---- product pages (Seite.svelte, Gruendung.svelte, BotsSeite.svelte): each visual slot of a page as
+// p-<page>-<slot>[--<flag>...].html, per state of the flags it depends on (deps, against the page's own flag on). Slots:
+// hero, a<index of the section in data/pages/seiten.json>, and the named parts of Gründung and Bots. A work sequence (the
+// hero's Ablauf, the KI chat) is kept as its markup before it plays plus one <template data-nach="<ms>"> per step, captured
+// on the page's own clock (Playwright clock); assets/js/folge.js plays them. The last step must equal the reduced-motion end.
+const seitenP = JSON.parse(readFileSync(join(site, 'data/pages/seiten.json'), 'utf8'))
+const PROD = {}
+for (const [k, s] of Object.entries(seitenP)) {
+  if (k === 'open-source') continue
+  PROD[k] = { route: k.startsWith('fuer-') ? '#/web/fuer/' + k.slice(5) : '#/web/' + k, flag: s.flag, slots: (on) => {
+    const an = (f) => !f || (Array.isArray(f) ? f.some((x) => on.includes(x)) : on.includes(f))
+    const out = {}
+    if ((s.ablauf && an(s.ablauf.flag)) || s.visual) out.hero = '.w-hero-visual > *'
+    s.abschnitte.filter((a) => an(a.flag)).forEach((a, i) => { if (a.visual) out['a' + s.abschnitte.indexOf(a)] = `[aria-labelledby=ab-${k}${i}] .w-row > div:last-child > *` })
+    return out
+  } }
+}
+PROD.gruendung = { route: '#/web/gruendung', slots: () => ({ hero: '.w-hero-visual > *', fb: '#fragebogen .w-row > div:last-child > *' }) }
+PROD.bots = { route: '#/web/bots', flag: 'agent_tier', slots: () => ({ hero: '.w-hero-visual > *', k0: '.w-botkarte:nth-child(1) > svg', k1: '.w-botkarte:nth-child(2) > svg', k2: '.w-botkarte:nth-child(3) > svg', k3: '.w-botkarte:nth-child(4) > svg', eigen: '.w-komponist', ja: '.w-regeln', bericht: '[aria-labelledby=bp-bericht] .w-row > div:last-child > *' }) }
+const SEQ = '.w-ablauf, .w-kichat'
+const pstate = new Map()
+let gruendungClass = ''
+const styles = new Map()
+async function prod(l, k, on) {
+  const key = `${l}:${k}:${on.join(',')}`
+  if (!pstate.has(key)) {
+    const got = {}
+    await page.goto(`${base}?lang=${l}&flags=${on.join(',') || 'aus'}${PROD[k].route}`)
+    await page.locator('main > *').first().waitFor()
+    const slots = PROD[k].flag && !on.includes(PROD[k].flag) ? {} : PROD[k].slots(on)
+    for (const [slot, sel] of Object.entries(slots)) {
+      const el = page.locator('main ' + sel)
+      if ((await el.count()) !== 1) throw new Error(`${k} ${slot}: ${sel} matches ${await el.count()} elements`)
+      got[slot] = sauber(await el.evaluate((e) => e.outerHTML))
+    }
+    for (const [id, text] of await page.evaluate(() => [...document.querySelectorAll('style[data-vite-dev-id]')].map((s) => [s.dataset.viteDevId, s.textContent]))) styles.set(id, text)
+    if (k === 'gruendung') gruendungClass ||= (await page.locator('main .stapel').first().getAttribute('class')).match(/svelte-\w+/)[0]
+    pstate.set(key, got)
+  }
+  return pstate.get(key)
+}
+// a sequence's steps: [markup before it plays, ...[ms since the step before, markup]]
+async function folge(l, k, on, sel) {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
+  const p = await ctx.newPage()
+  await p.clock.install({ time: new Date('2027-01-04T09:00:00') })
+  await p.goto(`${base}?lang=${l}&flags=${on.join(',') || 'aus'}${PROD[k].route}`)
+  const el = p.locator('main ' + sel)
+  await el.waitFor()
+  const html = () => el.evaluate((e) => e.outerHTML).then(sauber)
+  const steps = [await html()]
+  let last = steps[0], ms = 0, still = 0
+  while (still < 5000) {
+    await p.clock.runFor(100)
+    ms += 100
+    const h = await html()
+    if (h !== last) { steps.push([ms, h]); last = h; ms = 0; still = 0 } else still += 100
+  }
+  await ctx.close()
+  return steps
+}
+const pdeps = {}
+const FL = ALL.split(',')
+for (const l of ['de', 'en']) {
+  const dir = join(site, 'layouts/partials/fragments', l)
+  for (const k of Object.keys(PROD)) {
+    const own = PROD[k].flag ? [PROD[k].flag] : []
+    const basis = await prod(l, k, own)
+    const d = {}
+    for (const f of FL) {
+      if (own.includes(f)) continue
+      const g = await prod(l, k, [...own, f])
+      for (const slot of new Set([...Object.keys(basis), ...Object.keys(g)])) if (g[slot] !== basis[slot]) (d[slot] ??= []).push(f)
+    }
+    // ponytail: a slot that shows only with two flags on together is missed; none does at this pin
+    const slotsAll = new Set(Object.keys(basis))
+    for (const f of FL) if (!own.includes(f)) Object.keys(await prod(l, k, [...own, f])).forEach((s) => slotsAll.add(s))
+    for (const slot of slotsAll) {
+      const name = `p-${k}-${slot}`
+      const dd = [...own, ...(d[slot] ?? [])].sort((a, b) => FL.indexOf(a) - FL.indexOf(b))
+      if (pdeps[name] && pdeps[name].join() !== dd.join()) throw new Error(`${name}: flags differ between languages`)
+      pdeps[name] = dd
+      for (const extra of subsets(d[slot] ?? [])) {
+        const on = [...own, ...extra].sort((a, b) => FL.indexOf(a) - FL.indexOf(b))
+        const html = (await prod(l, k, on))[slot]
+        if (html == null) continue
+        let out = html
+        if (/^<[^>]*class="[^"]*\b(w-ablauf|w-kichat)\b/.test(html)) {
+          const steps = await folge(l, k, on, PROD[k].slots(on)[slot])
+          if (steps.at(-1)[1] !== html) throw new Error(`${name} ${on}: the last step is not the reduced-motion end state`)
+          out = steps[0].replace(/^<(\w+)/, '<$1 data-folge') + steps.slice(1).map(([ms, h]) => `<template data-nach="${ms}">${h}</template>`).join('')
+        }
+        writeFileSync(join(dir, [name, ...extra].join('--') + '.html'), out + '\n')
+      }
+    }
+  }
+}
+// drawings of the product pages that the open-source page does not show (Gründung: gruendung, voranmeldung)
+for (const l of ['de', 'en']) {
+  await page.goto(`${base}?lang=${l}&flags=${ALL}#/web/gruendung`)
+  for (const [art, sel] of [['gruendung', '[aria-labelledby=g-why] .w-sec-head > svg'], ['voranmeldung', '[aria-labelledby=g-nach] .w-sec-head > svg']]) {
+    const f = join(site, 'layouts/partials/fragments', l, `z-${art}.html`)
+    writeFileSync(f, sauber(await page.locator('main ' + sel).evaluate((e) => e.outerHTML)) + '\n')
+  }
+}
+// component rules are injected when a component first mounts: collect them after every page has been shown
+for (const [id, text] of styles) if (/\/src\/web\/\w+\.svelte|\/src\/lib\/Icon\.svelte/.test(id) && !css.includes(text)) css += '\n' + text
+Object.assign(deps, pdeps)
 await browser.close()
 css = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n+/g, '\n')
 writeFileSync(join(site, 'assets/css/site.css'), `/* compiled component rules of the website at ${commit}, captured by checks/capture.mjs; do not edit */\n${css}`)
-writeFileSync(join(site, 'data/capture.json'), JSON.stringify({ commit, icon_class: iconClass, preise_class: preiseClass, recht_class: rechtClass, deps }) + '\n')
+writeFileSync(join(site, 'data/capture.json'), JSON.stringify({ commit, icon_class: iconClass, preise_class: preiseClass, recht_class: rechtClass, gruendung_class: gruendungClass, deps }) + '\n')
 console.log(`captured ${Object.keys(STUECKE).length * 2} menu fragments, start visuals (flags: ${JSON.stringify(deps)}) and ${css.length} bytes of component CSS at ${commit}`)
