@@ -6,5 +6,6 @@
 {{ with index $subs $k }}{{ $d = i18n . }}{{ end }}
 {{ if not $d }}{{ with index hugo.Data.pages.seiten $k }}{{ $d = partial "txt.html" .sub }}{{ end }}{{ end }}
 {{ if not $d }}{{ $d = i18n "w.s.sub" }}{{ end }}
+{{ if eq .Section "kb" }}{{ with .Description }}{{ $d = . }}{{ end }}{{ end }}
 {{ with partial "meta.html" . }}{{ $d = index .description $i }}{{ end }}
 {{ return $d }}

@@ -1,0 +1,13 @@
+{{- /* Head of a Knowledge Base article: its Markdown twin as alternate, and JSON-LD Article (author and publisher as
+       organisations, never a person) and BreadcrumbList. */ -}}
+{{- $abs := partial "abs.html" .RelPermalink }}
+<link rel="alternate" type="text/markdown" href="{{ partial "url.html" .RelPermalink }}.md">
+{{- $crumbs := slice (dict "@type" "ListItem" "position" 1 "name" (i18n "w.kb.h1") "item" (partial "abs.html" (site.GetPage "/kb").RelPermalink)) }}
+{{- range .Ancestors.Reverse }}{{ if and (ne .Kind "home") (ne .RelPermalink (site.GetPage "/kb").RelPermalink) }}{{ $crumbs = $crumbs | append (dict "@type" "ListItem" "position" (add (len $crumbs) 1) "name" .Title "item" (partial "abs.html" .RelPermalink)) }}{{ end }}{{ end }}
+{{- $crumbs = $crumbs | append (dict "@type" "ListItem" "position" (add (len $crumbs) 1) "name" .Title "item" $abs) }}
+{{- $ld := dict "@context" "https://schema.org" "@graph" (slice
+  (dict "@type" "Article" "headline" .Title "description" .Description "inLanguage" "de" "datePublished" (.Date.Format "2006-01-02") "dateModified" ((time.AsTime .Params.stand).Format "2006-01-02")
+    "author" (dict "@type" "Organization" "name" "Decuma Redaktion") "publisher" (dict "@type" "Organization" "name" "Zapiens GmbH" "url" "https://decuma.de")
+    "license" "https://creativecommons.org/licenses/by-sa/4.0/" "mainEntityOfPage" $abs)
+  (dict "@type" "BreadcrumbList" "itemListElement" $crumbs)) }}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>

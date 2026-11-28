@@ -1,0 +1,42 @@
+{{/* A Knowledge Base article (the prototype's Kb.svelte) from its export source: one centred reading column with the
+     breadcrumb, the title with the Markdown control, the byline (Decuma Redaktion, publisher, Stand, licence), the topic
+     chips, the notice, "Kurz gesagt", the body, the sources, the article footer, the citation, related articles and the
+     product line. The body is the source's own Markdown (the twin carries the same body); a source without title,
+     stand, "## Kurz gesagt" or "## Quellen" stops the build. */}}
+{{ define "head" }}
+{{ partial "kb-head.html" . }}
+{{ end }}
+{{ define "main" }}
+{{ $c := hugo.Data.capture.kb_class }}
+{{ $p := partial "kb-parts.html" . }}
+{{ $stand := time.AsTime .Params.stand }}
+{{ $twin := print (partial "url.html" .RelPermalink) ".md" }}
+{{ $kb := site.GetPage "/kb" }}
+{{ $months := slice "Jan." "Feb." "März" "Apr." "Mai" "Juni" "Juli" "Aug." "Sept." "Okt." "Nov." "Dez." }}
+<div class="w-wrap kb {{ $c }}">
+<div class="kb-spalte {{ $c }}">
+  <nav class="w-small kb-krumen {{ $c }}" aria-label="{{ i18n "w.kb.krumen" }}"><a href="{{ partial "url.html" $kb.RelPermalink }}" class="{{ $c }}">{{ i18n "w.kb.h1" }}</a>{{ range .Ancestors.Reverse }}{{ if and (ne .Kind "home") (ne . $kb) }} › <a class="{{ $c }}" href="{{ partial "url.html" .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }} › {{ .Title }}</nav>
+  <article class="kb-artikel {{ $c }}" lang="de" data-pagefind-body data-pagefind-meta="description:{{ .Description }}">
+    <span hidden class="{{ $c }}" data-pagefind-filter="area:{{ .CurrentSection.Title }}"></span>
+    {{ range .Params.audience }}<span hidden class="{{ $c }}" data-pagefind-filter="fuer:{{ partial "kb-audience.html" . }}"></span>{{ end }}
+    <div class="kb-kopf {{ $c }}">
+      <h1 class="w-h1 kb-h1 {{ $c }}">{{ .Title }}</h1>
+      <span class="kb-md-knopf {{ $c }}" role="group" aria-label="Markdown"><button type="button" class="{{ $c }}" data-kb-kopieren="{{ $twin }}" data-kopiert="{{ i18n "w.kb.kopiert" }}">{{ partial "icon.html" (dict "name" "copy" "size" 14) }}<span>{{ i18n "w.kb.kopieren" }}</span></button> <a target="_blank" rel="alternate noopener" type="text/markdown" class="{{ $c }}" href="{{ $twin }}">{{ i18n "w.kb.md" }} ↗</a></span>
+    </div>
+    <p class="w-small {{ $c }}">{{ i18n "w.kb.meta" (dict "datum" (time.Format ":date_long" $stand)) }}</p>
+    <ul class="kb-tags {{ $c }}" aria-label="{{ i18n "w.kb.s.thema" }}">{{ range .Params.topics }}<li data-pagefind-filter="tag" class="{{ $c }}">{{ partial "kb-topic.html" . }}</li>{{ end }}</ul>
+    <p class="kb-hinweis {{ $c }}">{{ i18n "w.kb.hinweis" }}</p>
+    <section class="kb-kurz {{ $c }}" aria-labelledby="kb-kurz"><h2 id="kb-kurz" class="w-h3 {{ $c }}">{{ i18n "w.kb.kurz" }}</h2>{{ $.RenderString (dict "display" "block") $p.kurz }}</section>
+    <div class="kb-body {{ $c }}">{{ $.RenderString (dict "display" "block") $p.rest }}</div>
+    <section class="kb-quellen {{ $c }}" aria-labelledby="kb-q"><h2 id="kb-q" class="w-h3 {{ $c }}">{{ i18n "w.kb.quellen" }}</h2>{{ $.RenderString (dict "display" "block") $p.quellen }}</section>
+    <footer class="kb-artfuss {{ $c }}"><b class="{{ $c }}">{{ i18n "w.kb.redaktion" }}</b><span class="w-small {{ $c }}">{{ i18n "w.kb.artfuss" (dict "datum" (time.Format ":date_long" $stand)) }}</span></footer>
+  </article>
+  <p class="kb-links w-small {{ $c }}">{{ i18n "w.kb.zitieren" }}: „{{ .Title }}, Zapiens GmbH, decuma.de{{ partial "url.html" .RelPermalink }}, Stand {{ $stand.Day }}. {{ index $months (sub (int $stand.Month) 1) }} {{ $stand.Year }}, CC BY-SA 4.0“</p>
+  {{ with .Params.related }}
+  <section class="kb-verwandt {{ $c }}"><h2 class="w-h3 {{ $c }}">{{ i18n "w.kb.verwandt" }}</h2><ul class="{{ $c }}">{{ range . }}<li class="{{ $c }}">{{ with site.GetPage . }}<a class="{{ $c }}" href="{{ partial "url.html" .RelPermalink }}">{{ .Title }}</a>{{ else }}{{ . }}{{ end }}</li>{{ end }}</ul></section>
+  {{ end }}
+  <p class="kb-produkt {{ $c }}">{{ i18n "w.kb.produkt" }} <a class="w-more {{ $c }}" href="{{ partial "link.html" "#/registrieren" }}">{{ i18n "w.start" }} →</a></p>
+  <p class="w-small kb-fuss {{ $c }}">{{ i18n "w.kb.fuss" }}</p>
+</div>
+</div>
+{{ end }}

@@ -46,3 +46,6 @@ keepQuotes = true
 # plain Markdown links (the built-in link hook escapes tel: in the Impressum)
 [markup.goldmark.renderHooks.link]
 useEmbedded = "never"
+# the Knowledge Base bodies keep "..." as written (the twin carries the same text)
+[markup.goldmark.extensions.typographer]
+ellipsis = "..."

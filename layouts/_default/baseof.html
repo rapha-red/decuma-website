@@ -7,7 +7,7 @@
 <title>{{ partial "title.html" . }}</title>
 <meta name="description" content="{{ partial "description.html" . }}">
 <link rel="canonical" href="{{ partial "abs.html" .RelPermalink }}">
-{{- if ne .Params.translationKey "kb" }}{{/* the Knowledge Base is German only and has no partner */}}
+{{- if ne .Section "kb" }}{{/* the Knowledge Base is German only and has no partner */}}
 {{- range .AllTranslations }}
 <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ partial "abs.html" .RelPermalink }}">
 {{- if eq .Language.Lang "de" }}
@@ -26,6 +26,8 @@
 {{- if in (slice "product" "gruendung") .Layout }}{{ $js = $js | append "folge" }}{{ end }}
 {{- if eq .Layout "product" }}{{ $js = $js | append "plans" }}{{ end }}
 {{- if eq .Layout "preise" }}{{ $js = $js | append "plans" "columns" }}{{ end }}
+{{- if eq .Section "kb" }}{{ $js = $js | append "search" }}{{ end }}
+{{- block "head" . }}{{ end }}
 {{- range $js }}
 {{- with resources.Get (print "js/" . ".js") | minify | fingerprint }}
 <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>

@@ -1,0 +1,10 @@
+{{- /* The three parts of an article body (the export's public body): "## Kurz gesagt" up to the next "## " heading,
+       the rest up to "## Quellen", and the sources; stops the build when a part or a required key is missing. */ -}}
+{{- if not .Title }}{{ errorf "kb %s: no title" .File.Path }}{{ end -}}
+{{- if not .Params.stand }}{{ errorf "kb %s: no stand" .File.Path }}{{ end -}}
+{{- $q := split .RawContent "\n## Quellen\n" -}}
+{{- if ne (len $q) 2 }}{{ errorf "kb %s: the body needs one \"## Quellen\" section at its end" .File.Path }}{{ end -}}
+{{- $m := findRESubmatch `(?s)^## Kurz gesagt\n(.*?)(\n## .*)?$` (index $q 0) 1 -}}
+{{- if not $m }}{{ errorf "kb %s: the body must start with \"## Kurz gesagt\"" .File.Path }}{{ end -}}
+{{- $m = index $m 0 -}}
+{{- return dict "kurz" (index $m 1) "rest" (index $m 2) "quellen" (index $q 1) -}}

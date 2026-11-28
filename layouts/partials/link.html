@@ -11,7 +11,7 @@
   {{ $key := "" }}
   {{ if eq $t "#/web" }}{{ $key = "start" }}
   {{ else if hasPrefix $t "#/web/" }}{{ $key = replace (strings.TrimPrefix "#/web/" $t) "fuer/" "fuer-" }}
-  {{ else if hasPrefix $t "#/kb" }}{{ if site.Params.kb_live }}{{ $key = strings.TrimPrefix "#/" $t }}{{ else }}{{ $key = "-" }}{{ end }}
+  {{ else if hasPrefix $t "#/kb" }}{{ $key = "-" }}{{ if site.Params.kb_live }}{{ with (index hugo.Sites 0).GetPage (strings.TrimPrefix "#" $t) }}{{ $out = partial "url.html" .RelPermalink }}{{ end }}{{ end }}
   {{ else }}{{ errorf "link: unknown target %q" $t }}{{ end }}
   {{ $p := index (where site.Pages "Params.translationkey" $key) 0 }}
   {{ if not $p }}{{ $p = index (where (index hugo.Sites 0).Pages "Params.translationkey" $key) 0 }}{{ end }}

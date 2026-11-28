@@ -1,0 +1,4 @@
+{{- /* The label of a Knowledge Base audience of the export (self_employed, company, household); another value stops the build. */ -}}
+{{- $k := index (dict "self_employed" "selbststaendige" "company" "gmbh" "household" "privat") . -}}
+{{- if not $k }}{{ errorf "kb: unknown audience %q (self_employed, company, household)" . }}{{ end -}}
+{{- return i18n (print "w.kb.f." $k) -}}

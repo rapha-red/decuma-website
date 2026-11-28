@@ -6,5 +6,6 @@
 {{ with index hugo.Data.pages.seiten $k }}{{ $t = index .titel $i }}{{ end }}
 {{ if eq $k "datenversprechen" }}{{ $t = index hugo.Data.pages.recht.DV.titel $i }}{{ end }}
 {{ with index hugo.Data.pages.recht.RECHT $k }}{{ $t = print (index .h1 $i) " | Decuma" }}{{ end }}
+{{ if eq .Section "kb" }}{{ $t = print .Title (cond .IsPage " | Decuma" " | Decuma Knowledge Base") }}{{ end }}
 {{ with partial "meta.html" . }}{{ $t = index .title $i }}{{ end }}
 {{ return $t }}

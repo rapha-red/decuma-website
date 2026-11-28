@@ -1,0 +1,14 @@
+{{/* The Knowledge Base search (the prototype's Kb.svelte): field and three native selects (area, topic, for whom),
+     each starting at "Alle" (a search landmark, no form: nothing is submitted); values are the Pagefind filter values the articles carry. assets/js/search.js loads
+     Pagefind on first focus and renders the results. (dict "c" scope class "areas" area pages "area" preset area title) */}}
+{{ $c := .c }}
+{{ $tags := slice }}
+{{ range (site.GetPage "/kb").RegularPagesRecursive }}{{ range .Params.topics }}{{ $tags = $tags | append (partial "kb-topic.html" .) }}{{ end }}{{ end }}
+<div class="kb-suche {{ $c }}" role="search" aria-label="{{ i18n "w.kb.s.label" }}" data-kb-suche data-eins="{{ i18n "w.kb.s.eins" }}" data-n="{{ i18n "w.kb.s.n" (dict "n" "{n}") }}" data-leer="{{ i18n "w.kb.s.leer" }}">
+  <label class="kb-feld {{ $c }}"><span class="w-small {{ $c }}">{{ i18n "w.kb.s.label" }}</span><input class="input {{ $c }}" type="search" autocomplete="off" placeholder="{{ i18n "w.kb.s.platz" }}"></label>
+  <div class="kb-filter {{ $c }}">
+    <label class="{{ $c }}"><span class="w-small {{ $c }}">{{ i18n "w.kb.s.bereich" }}</span><select class="input {{ $c }}" data-filter="area"><option class="{{ $c }}" value="">{{ i18n "w.kb.s.alle" }}</option>{{ range .areas }}<option class="{{ $c }}" value="{{ .Title }}"{{ if eq .Title $.area }} selected{{ end }}>{{ .Title }}</option>{{ end }}</select></label>
+    <label class="{{ $c }}"><span class="w-small {{ $c }}">{{ i18n "w.kb.s.thema" }}</span><select class="input {{ $c }}" data-filter="tag"><option class="{{ $c }}" value="">{{ i18n "w.kb.s.alle" }}</option>{{ range sort (uniq $tags) }}<option class="{{ $c }}" value="{{ . }}">{{ . }}</option>{{ end }}</select></label>
+    <label class="{{ $c }}"><span class="w-small {{ $c }}">{{ i18n "w.kb.s.fuer" }}</span><select class="input {{ $c }}" data-filter="fuer"><option class="{{ $c }}" value="">{{ i18n "w.kb.s.alle" }}</option>{{ range slice "self_employed" "company" "household" }}{{ $l := partial "kb-audience.html" . }}<option class="{{ $c }}" value="{{ $l }}">{{ $l }}</option>{{ end }}</select></label>
+  </div>
+</div>

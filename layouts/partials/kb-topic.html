@@ -1,0 +1,4 @@
+{{- /* The label of a Knowledge Base topic (data/kb_topics.json, synced from the prototype); an unknown topic stops the build. */ -}}
+{{- $l := index hugo.Data.kb_topics . -}}
+{{- if not $l }}{{ errorf "kb: unknown topic %q (data/kb_topics.json)" . }}{{ end -}}
+{{- return $l -}}
