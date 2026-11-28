@@ -221,6 +221,12 @@ def main():
     for name in ("llms.txt", "robots.txt", "sitemap.xml"):
         if not (tree / name).is_file():
             fails.append(f"/{name}: missing")
+    # The server answers 404 for dotfiles and the ship refuses a tree with one or with a symlink: fail here first.
+    for f in sorted(tree.rglob("*")):
+        rel = f.relative_to(tree)
+        parts = rel.parts[1:] if rel.parts[0] == ".well-known" else rel.parts
+        if f.is_symlink() or any(x.startswith(".") for x in parts):
+            fails.append(f"/{rel.as_posix()}: {'symlink' if f.is_symlink() else 'dotfile'} in the tree")
     if (tree / "robots.txt").is_file() and re.search(r"(?im)^\s*Disallow\s*:\s*\S", (tree / "robots.txt").read_text()):
         fails.append("/robots.txt: Disallow")
     for f in sorted(tree.rglob("*")):
