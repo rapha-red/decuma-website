@@ -98,6 +98,22 @@
         "cta_de": "Gespräch buchen",
         "cta_en": "Book a call",
         "href": "#/web/preise/service"
+      },
+      {
+        "key": "self_hosted",
+        "plan": false,
+        "highlight": false,
+        "flags": [],
+        "de": "Selbst hosten",
+        "en": "Self-host",
+        "cta_de": "Mehr zu Open Source",
+        "cta_en": "More on open source",
+        "href": "#/web/open-source",
+        "call": {
+          "de": "Installation buchen",
+          "en": "Book an installation",
+          "href": "https://cal.com/decuma-raphael/30min"
+        }
       }
     ],
     "groups": [
@@ -121,7 +137,7 @@
           {
             "key": "e_invoices",
             "de": "E-Rechnung senden und empfangen (XRechnung, ZUGFeRD)",
-            "en": "Send and receive e-invoices",
+            "en": "Send and receive e-invoices (XRechnung, ZUGFeRD)",
             "capability": "offen.rechnungen",
             "flags": [],
             "any_flags": [],
@@ -229,7 +245,7 @@
           {
             "key": "statement_import",
             "de": "Kontoauszüge importieren (CAMT, MT940, CSV)",
-            "en": "Import statements",
+            "en": "Import statements (CAMT, MT940, CSV)",
             "capability": "offen.bank",
             "flags": [],
             "any_flags": [],
@@ -405,7 +421,7 @@
           {
             "key": "annual_returns",
             "de": "Jahresabschluss, E-Bilanz, Körperschaft- und Gewerbesteuer, Umsatzsteuererklärung, EÜR",
-            "en": "Year-end and annual returns",
+            "en": "Year-end, E-Bilanz, Körperschaft- and Gewerbesteuer, annual VAT return, EÜR",
             "capability": "vorbehalten.pro.jahreserklaerungen",
             "flags": [],
             "any_flags": [],
@@ -440,7 +456,7 @@
           {
             "key": "verwaltung",
             "de": "Verwaltung: Bescheide, Steuerzahlungen, Anträge, Ausschüttung, Offenlegung",
-            "en": "Administration",
+            "en": "Administration: notices, tax payments, applications, distributions, disclosure",
             "capability": "vorbehalten.pro.verwaltung",
             "flags": [],
             "any_flags": [],
