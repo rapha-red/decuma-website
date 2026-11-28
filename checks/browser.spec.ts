@@ -353,7 +353,7 @@ test.describe('open source, Neu in Decuma, legal pages', () => {
       await page.setViewportSize({ width: 390, height: 844 })
       await page.goto(path)
       await expect(page.locator('[data-consent]')).toBeVisible()
-      for (const el of await page.locator('main .recht > *').all()) {
+      for (const el of await page.locator('main .recht > :not([lang]), main .recht > [lang] > *').all()) {
         await el.evaluate((e) => e.scrollIntoView({ block: 'center' }))
         const box = (await el.boundingBox())!
         const hit = await page.evaluate(([x, y]) => !!document.elementFromPoint(x, y)?.closest('main'), [box.x + 4, box.y + Math.min(box.height / 2, 400)])

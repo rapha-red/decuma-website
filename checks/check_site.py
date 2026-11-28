@@ -251,6 +251,15 @@ def main():
     # the go-live guard: no legal frame placeholder ({Text dieses Abschnitts}, {datum}, ...) on a built page
     recht = (repo / "data/pages/recht.json").read_text()
     holders = set(re.findall(r"\{[^{}\"]+\}", recht))
+    # and the open placeholders of the legal texts themselves ({Anzahl}, ...)
+    legal = set()  # the built legal texts (German body, also shown on the English page)
+    for f in (repo / "content").glob("*.md"):
+        if re.search(r"^layout: recht$", f.read_text(), re.M) and f.read_text().split("---", 2)[-1].strip():
+            holders |= set(re.findall(r"\{[^{}\"\n]+\}", f.read_text().split("---", 2)[-1]))
+            legal.add(re.search(r"^translationKey: (\S+)", f.read_text(), re.M).group(1))
+    legal_pages = {f"{f.name.removesuffix('.en.md')}.html" if not f.name.endswith(".en.md") else f"en/{f.name.removesuffix('.en.md')}.html"
+                   for f in (repo / "content").glob("*.md") if (m := re.search(r"^translationKey: (\S+)", f.read_text(), re.M)) and m.group(1) in legal}
+    legal_pages = {x.replace(".md.html", ".html") for x in legal_pages}
     draft = os.environ.get("SITE_DRAFT") == "1"
     held = 0
     for f in pages:
@@ -266,7 +275,8 @@ def main():
         repo_url = tomllib.loads((repo / "hugo.toml").read_text())["params"]["repo"]
         about = re.compile(r"open[ -]?source|\bAGPL|" + re.escape(repo_url.split("://", 1)[1]), re.I)
         for f in sorted(tree.rglob("*")):
-            if f.is_file() and f.suffix in (".html", ".txt", ".xml", ".md") and not f.relative_to(tree).as_posix().startswith("pagefind/"):
+            # the legal texts describe the final offer, the open source licence included (owner)
+            if f.is_file() and f.suffix in (".html", ".txt", ".xml", ".md") and not f.relative_to(tree).as_posix().startswith("pagefind/") and f.relative_to(tree).as_posix() not in legal_pages:
                 for m in about.finditer(f.read_text(errors="replace")):
                     fails.append(f"/{f.relative_to(tree).as_posix()}: source_link is off but the page says {m.group(0)!r}")
     # the Knowledge Base is not linked while kb_live is off in hugo.toml: no <a href> to /kb, no /kb in sitemap.xml or llms.txt

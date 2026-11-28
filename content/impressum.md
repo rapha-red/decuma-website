@@ -1,25 +1,32 @@
 ---
 translationKey: impressum
 layout: recht
-# stand: the date of this text (YYYY-MM-DD); while it is missing the page keeps its Stand placeholder and the build refuses it
+stand: 2026-11-28
 ---
-Angaben gemäß § 5 DDG
+## Angaben gemäß § 5 DDG
 
-Anbieter
-: Zapiens GmbH\
-  Hostertstraße 16\
-  53332 Bornheim
+Zapiens GmbH\
+Hostertstraße 16\
+53332 Bornheim
 
-Vertreten durch
-: Raphael Redmer, Geschäftsführer
+## Vertreten durch
 
-Kontakt
-: E-Mail: [kontakt@decuma.de](mailto:kontakt@decuma.de)\
-  Telefon: [+49 155 11500305](tel:+4915511500305)
+Raphael Redmer, Geschäftsführer
 
-Registereintrag
-: Handelsregister des Amtsgerichts Bonn, HRB 29963\
-  Sitz der Gesellschaft: Bonn
+## Kontakt
 
-Umsatzsteuer-Identifikationsnummer
-: DE460352896
+E-Mail: kontakt@decuma.de\
+Telefon: +49 155 11500305
+
+## Registereintrag
+
+Sitz der Gesellschaft: Bornheim\
+Handelsregister des Amtsgerichts Bonn, HRB 29963
+
+## Verantwortlich für den Inhalt
+
+Raphael Redmer, Anschrift wie oben
+
+## Verbraucherstreitbeilegung
+
+Wir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
