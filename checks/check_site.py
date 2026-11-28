@@ -15,7 +15,8 @@ id or private path in the tree; a looping motion (an `infinite` CSS animation, `
 in data/consent.yaml and injected by consent.js after consent, never written into a page); a registered script that is
 not a first-party file of the tree; a placeholder of the legal frames (data/pages/recht.json) on a built page, unless
 SITE_DRAFT=1 (local review only); while source_link is off in data/offer.json, a page or line about the open source
-(the /open-source page, the repository address, "Open Source", "AGPL").
+(the /open-source page, the repository address, "Open Source", "AGPL"); while kb_live is off in hugo.toml, a link to
+/kb (a page, sitemap.xml, llms.txt).
 """
 import json
 import os
@@ -28,7 +29,7 @@ from urllib.parse import urlsplit, unquote
 
 SITE_HOSTS = {"decuma.de"}
 CSS_URL = re.compile(r"""@import\s+(?:url\()?\s*['"]?([^'")\s;]+)|url\(\s*['"]?([^'")]+)['"]?\s*\)""", re.I)
-FIRST_PARTY_JS = re.compile(r"^/js/(?:anim|hero|menu|consent|search|plans|columns)(?:\.min)?(?:\.[0-9a-f]{64})?\.js$|^/pagefind/")
+FIRST_PARTY_JS = re.compile(r"^/js/(?:anim|hero|menu|consent|search|plans|columns|folge)(?:\.min)?(?:\.[0-9a-f]{64})?\.js$|^/pagefind/")
 INTERNAL = re.compile(r"\bD-\d{3}\b|prototype/ui|docs/(?:specs|adr|requirements)|decuma-personal|/home/\w+")
 
 
@@ -268,6 +269,13 @@ def main():
             if f.is_file() and f.suffix in (".html", ".txt", ".xml", ".md") and not f.relative_to(tree).as_posix().startswith("pagefind/"):
                 for m in about.finditer(f.read_text(errors="replace")):
                     fails.append(f"/{f.relative_to(tree).as_posix()}: source_link is off but the page says {m.group(0)!r}")
+    # the Knowledge Base is not linked while kb_live is off in hugo.toml: no <a href> to /kb, no /kb in sitemap.xml or llms.txt
+    if not tomllib.loads((repo / "hugo.toml").read_text())["params"].get("kb_live"):
+        to_kb = re.compile(r"""href=["'](?:https://decuma\.de)?/kb(?:[/"'?#.])|<loc>https://decuma\.de/kb\b|\]\(https://decuma\.de/kb\b""")
+        for f in sorted(tree.rglob("*")):
+            if f.is_file() and f.suffix in (".html", ".txt", ".xml") and not f.relative_to(tree).as_posix().startswith(("kb/", "pagefind/")):
+                for m in to_kb.finditer(f.read_text(errors="replace")):
+                    fails.append(f"/{f.relative_to(tree).as_posix()}: kb_live is off but it links the Knowledge Base: {m.group(0)}")
     for x in fails:
         print("FAIL " + x)
     print(f"check_site: {len(pages)} pages, {len(fails)} findings")

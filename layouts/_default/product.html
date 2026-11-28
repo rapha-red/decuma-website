@@ -1,11 +1,11 @@
-{{/* A product page from its structure in data/pages/seiten.json (the prototype's Seite.svelte): hero with one button,
-     sections with their drawings, FAQ, closing band. Texts through txt.html (flags, fallbacks, variants), amounts from
-     data/offer.json. Parts the pages built so far do not use (hero visual or work sequence, steps, plan cards,
-     Done-for-you band, a section visual) stop the build until they are added here. */}}
+{{/* A product page from its structure in data/pages/seiten.json (the prototype's Seite.svelte): hero with one button and
+     its visual (a work sequence, or a product card), "So geht's" with the step icons, sections with their visuals, the
+     tier line, plan cards and Done-for-you ("Lösungen für"), FAQ, closing band. Texts through txt.html (flags, fallbacks,
+     variants), amounts from data/offer.json, visuals captured per page slot (fragment.html, p-<page>-<slot>). */}}
 {{ define "main" }}
 {{ $key := .Params.translationKey }}
 {{ $s := index hugo.Data.pages.seiten $key }}
-{{ range slice "ablauf" "visual" "schritte" "preis" "stufe" "tarife" "dfy" "cta2" }}{{ if isset $s . }}{{ errorf "product.html: %q of page %q is not built yet" . $key }}{{ end }}{{ end }}
+{{ $li := cond (eq site.Language.Lang "de") 0 1 }}
 {{ $o := hugo.Data.offer }}
 {{ $pro := index (where $o.plans "plan" "pro") 0 }}
 {{/* the price placeholders of the prototype's fill() */}}
@@ -21,23 +21,59 @@
       <p class="w-lead">{{ partial "inline/p-code.html" (partial "inline/p-txt.html" (merge $ctx (dict "x" $s.sub))) }}</p>
       <div class="w-ctas">{{ partial "inline/p-cta.html" (merge $ctx (dict "c" $cta)) }}</div>
     </div>
+    {{ if or (and $s.ablauf (or (not $s.ablauf.flag) (partial "flag.html" $s.ablauf.flag))) $s.visual }}<div class="w-hero-visual">{{ partial "fragment.html" (print "p-" $key "-hero") }}</div>{{ end }}
   </div>
 </section>
 
+{{ with $s.schritte }}
+<section class="w-sec" aria-labelledby="so-{{ $key }}">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="so-{{ $key }}" class="w-h2">{{ index hugo.Data.pages.seite.so $li }}</h2></div>
+    {{ $icons := index hugo.Data.pages.seite.icons $key }}
+    {{ $n := 0 }}
+    <ol class="w-steps n-4">{{ range . }}{{ with partial "inline/p-txt.html" (merge $ctx (dict "x" .)) }}<li>{{ with $icons }}<span class="kopf"><span class="w-glyphe" aria-hidden="true">{{ partial "icon.html" (dict "name" (index . $n) "size" 22) }}</span><span class="nr">{{ add $n 1 }}</span></span>{{ else }}<span class="nr">{{ add $n 1 }}</span>{{ end }}<span>{{ partial "inline/p-code.html" . }}</span></li>{{ $n = add $n 1 }}{{ end }}{{ end }}</ol>
+    {{ with $s.preis }}<p class="w-stufe mt-5">{{ partial "inline/p-txt.html" (merge $ctx (dict "x" .)) }}</p>{{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ $n := 0 }}
 {{ range $i, $a := $s.abschnitte }}
   {{ if or (not $a.flag) (partial "flag.html" $a.flag) }}
-    {{ if $a.visual }}{{ errorf "product.html: the section visual %q of page %q is not built yet" $a.visual $key }}{{ end }}
-    {{ $id := print "ab-" $key $i }}
+    {{ $id := print "ab-" $key $n }}{{ $n = add $n 1 }}
     <section class="w-sec"{{ with $a.id }} id="{{ . }}"{{ end }} aria-labelledby="{{ $id }}">
       <div class="w-wrap">
         <div class="w-sec-head">{{ with $a.z }}{{ partial "fragment.html" (print "z-" .) }}{{ end }}{{ with $a.konto }}<span class="w-konto">{{ . }}</span>{{ end }}<h2 id="{{ $id }}" class="w-h2">{{ partial "inline/p-txt.html" (merge $ctx (dict "x" $a.h)) }}</h2></div>
+        {{ if $a.visual }}
+        <div class="w-row">
+          <div class="text">{{ range $a.bloecke }}{{ partial "inline/p-block.html" (merge $ctx (dict "b" .)) }}{{ end }}</div>
+          <div>{{ partial "fragment.html" (print "p-" $key "-a" $i) }}</div>
+        </div>
+        {{ else }}
         <div class="w-fliess">
           {{ range $a.bloecke }}{{ partial "inline/p-block.html" (merge $ctx (dict "b" .)) }}{{ end }}
         </div>
+        {{ end }}
       </div>
     </section>
   {{ end }}
 {{ end }}
+
+{{ with partial "inline/p-txt.html" (merge $ctx (dict "x" $s.stufe)) }}
+<section class="w-sec"><div class="w-wrap"><p class="w-stufe gross">{{ partial "inline/p-code.html" . }}</p></div></section>
+{{ end }}
+
+{{ with $s.tarife }}
+<section class="w-sec" aria-labelledby="pr-{{ $key }}">
+  <div class="w-wrap">
+    <div class="w-sec-head"><h2 id="pr-{{ $key }}" class="w-h2">{{ partial "inline/p-txt.html" (merge $ctx (dict "x" .h)) }}</h2><p class="w-lead">{{ partial "inline/p-txt.html" (merge $ctx (dict "x" .lead)) }}</p></div>
+    {{ partial "plan-cards.html" $ }}
+    {{ with partial "link.html" "#/web/preise" }}<p class="w-mehr"><a class="w-more" href="{{ . }}">{{ i18n "w.s.pr.cta" }} →</a></p>{{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ if $s.dfy }}{{ partial "dfy.html" (print "dfy-" $key) }}{{ end }}
 
 {{ $fragen := slice }}
 {{ range $s.faq }}
@@ -89,7 +125,7 @@
   {{ else if isset $b "liste" }}
     <ul class="w-punkte">{{ range $b.liste }}{{ with partial "inline/p-txt.html" (merge $c (dict "x" .)) }}<li>{{ partial "icon.html" (dict "name" "check" "size" 16) }}<span>{{ partial "inline/p-code.html" . }}</span></li>{{ end }}{{ end }}</ul>
   {{ else if isset $b "fakten" }}
-    <aside class="w-fakten"><h3 class="w-small">{{ partial "inline/p-txt.html" (merge $c (dict "x" $b.titel)) }}</h3><ul>{{ range $b.fakten }}{{ with partial "inline/p-txt.html" (merge $c (dict "x" .)) }}<li>{{ partial "inline/p-code.html" . }}</li>{{ end }}{{ end }}</ul></aside>
+    {{/* a div, not the prototype's aside: two "Gut zu wissen" asides on one page are landmarks with the same name */}}<div class="w-fakten"><h3 class="w-small">{{ partial "inline/p-txt.html" (merge $c (dict "x" $b.titel)) }}</h3><ul>{{ range $b.fakten }}{{ with partial "inline/p-txt.html" (merge $c (dict "x" .)) }}<li>{{ partial "inline/p-code.html" . }}</li>{{ end }}{{ end }}</ul></div>
   {{ else if isset $b "zeilen" }}
     <div class="w-zeilen">
       {{ range $z := $b.zeilen }}

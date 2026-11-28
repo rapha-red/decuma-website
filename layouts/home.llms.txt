@@ -3,5 +3,5 @@
 > {{ i18n "w.s.sub" }}
 
 ## Seiten
-{{ range (index hugo.Sites 0).Pages }}{{ if .RelPermalink }}
+{{ range (index hugo.Sites 0).Pages }}{{ if and .RelPermalink (or site.Params.kb_live (not (hasPrefix .RelPermalink "/kb"))) }}
 - [{{ partial "title.html" . }}]({{ partial "abs.html" .RelPermalink }}){{ end }}{{ end }}

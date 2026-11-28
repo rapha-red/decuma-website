@@ -72,11 +72,15 @@ test.describe('menus at 1280 px', () => {
   })
 })
 
+// the product pages (#106): drafts until the owner has seen them
+const DRAFTS = ['/buchhaltung', '/rechnungen', '/umsatzsteuer', '/jahresabschluss', '/gruendung', '/privat', '/entwickler', '/fuer/gmbh', '/fuer/ug', '/fuer/holding', '/fuer/freiberufler', '/fuer/selbststaendige', '/fuer/entwickler', '/en/bookkeeping', '/en/company-formation', '/en/solutions/gmbh', '/en/solutions/developers']
 test.describe('axe', () => {
-  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/en/pricing/service', '/en/data-promise', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint']) {
+  for (const path of ['/', '/en/', '/preise', '/preise/service', '/en/pricing', '/en/pricing/service', '/en/data-promise', '/datenversprechen', '/neu-in-decuma', '/impressum', '/datenschutz', '/agb', '/avv', '/unterauftragnehmer', '/en/imprint', ...DRAFTS]) {
     test(`no serious or critical finding on ${path}, banner and Produkt menu open`, async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 900 })
-      await page.goto(path)
+      const res = await page.goto(path)
+      // a product page is built only once it is published, or in a local review tree (SITE_DRAFT=1)
+      test.skip(DRAFTS.includes(path) && res?.status() === 404 && process.env.SITE_DRAFT !== '1', 'draft, not built')
       await page.locator('button[aria-controls=menu-produkt]').hover()
       const r = await new AxeBuilder({ page }).analyze()
       expect(r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id + ': ' + v.nodes[0]?.target)).toEqual([])
@@ -86,13 +90,13 @@ test.describe('axe', () => {
 
 test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false })
-  test('footer and Preise reach every built page', async ({ page, request }) => {
+  test('footer, menus and Preise reach every built page', async ({ page, request }) => {
     const sitemap = await (await request.get('/sitemap.xml')).text()
     const all = [...sitemap.matchAll(/<loc>https:\/\/decuma\.de([^<]*)<\/loc>/g)].map((m) => m[1])
     expect(all.length).toBeGreaterThan(0)
     for (const home of ['/', '/en/']) {
       await page.goto(home)
-      const reach = await page.locator('footer a[href^="/"], [data-preise]').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
+      const reach = await page.locator('footer a[href^="/"], .w-menu a[href^="/"], [data-preise]').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
       const mine = all.filter((p) => (home === '/en/') === p.startsWith('/en/') && p !== home)
       expect(mine.filter((p) => !reach.includes(p))).toEqual([])
     }
@@ -113,7 +117,7 @@ function buildWith(change: (o: any) => void, files: Record<string, string> = {})
   change(o)
   writeFileSync(join(dir, 'data/offer.json'), JSON.stringify(o))
   for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, f), text)
-  execFileSync(join(REPO, 'tools/bin/hugo'), ['--minify', '--logLevel', 'error', '-s', dir, '-d', join(dir, 'public')])
+  execFileSync(join(REPO, 'tools/bin/hugo'), ['--minify', '--buildDrafts', '--logLevel', 'error', '-s', dir, '-d', join(dir, 'public')])
   return join(dir, 'public')
 }
 const SITE = 'http://site.test'
@@ -126,6 +130,36 @@ async function serve(page: Page, root: string) {
 }
 // every flag on: the price list's own --all-flags answer (check-site.sh holds it to DECUMA_BIN)
 const ALL_ON = (o: any) => Object.assign(o, JSON.parse(readFileSync(join(REPO, 'checks/offer-all-flags.json'), 'utf8')))
+
+test.describe('product pages', () => {
+  test.use({ viewport: { width: 1280, height: 900 } })
+  test('motion: the hero work sequence plays its steps once at the captured pace and stops; reduced motion shows the last step', async ({ browser }) => {
+    const root = buildWith(ALL_ON)
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
+    const page = await ctx.newPage()
+    await serve(page, root)
+    await page.goto(SITE + '/buchhaltung')
+    const seq = page.locator('.w-hero-visual [data-folge]')
+    const steps = await page.locator('.w-hero-visual template[data-nach]').evaluateAll((t) => t.map((e) => [Number((e as HTMLElement).dataset.nach), (e as HTMLTemplateElement).content.firstElementChild!.innerHTML] as [number, string]))
+    expect(steps.length).toBeGreaterThan(2)
+    const t0 = Date.now()
+    await expect.poll(() => seq.evaluate((e) => e.innerHTML), { timeout: 15000 }).toBe(steps.at(-1)![1])
+    const took = Date.now() - t0
+    const total = steps.reduce((a, [ms]) => a + ms, 0)
+    expect(took).toBeGreaterThan(total - 1000)
+    const html = await seq.evaluate((e) => e.innerHTML)
+    await page.waitForTimeout(2500)
+    expect(await seq.evaluate((e) => e.innerHTML)).toBe(html) // stopped
+    await ctx.close()
+    const calm = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } })
+    const p2 = await calm.newPage()
+    await serve(p2, root)
+    await p2.goto(SITE + '/buchhaltung')
+    expect(await p2.locator('.w-hero-visual [data-folge]').evaluate((e) => e.innerHTML)).toBe(steps.at(-1)![1])
+    expect(await p2.locator('.w-anim:not([data-an]), .w-z:not([data-an])').count()).toBe(0)
+    await calm.close()
+  })
+})
 
 test.describe('start page', () => {
   test.use({ viewport: { width: 1280, height: 900 } })
@@ -331,7 +365,7 @@ test.describe('open source, Neu in Decuma, legal pages', () => {
 
 // Consent (D-313 in the specs): nothing non-essential before a choice, on every built page; the gate for registered
 // scripts; the bar by keyboard. FIRST_PARTY is the set of check_site.py.
-const FIRST_PARTY = /^\/js\/(?:anim|hero|menu|consent|search|plans|columns)(?:\.min)?(?:\.[0-9a-f]{64})?\.js$|^\/pagefind\//
+const FIRST_PARTY = /^\/js\/(?:anim|hero|menu|consent|search|plans|columns|folge)(?:\.min)?(?:\.[0-9a-f]{64})?\.js$|^\/pagefind\//
 const TREE = process.env.SITE_ROOT ?? join(REPO, 'public')
 const ALL_PAGES = [...readFileSync(join(TREE, 'sitemap.xml'), 'utf8').matchAll(/<loc>https:\/\/decuma\.de([^<]*)<\/loc>/g)].map((m) => m[1]).concat('/404', '/en/404')
 const stored = (page: Page) =>

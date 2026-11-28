@@ -6,7 +6,7 @@
 //
 // Writes: assets/css/{fonts,tokens,app,display,website}.css (rules unchanged, comments dropped, a first line naming the
 // commit, font urls pointing at /fonts/), static/fonts/ (woff2 and licences), static/icon.svg, i18n/{de,en}.yaml,
-// data/pages/{seiten,recht}.json, data/icons.json, data/meta.json (titles and descriptions from the copy deck's Meta
+// data/pages/{seiten,recht,seite}.json, data/icons.json, data/meta.json (titles and descriptions from the copy deck's Meta
 // table, keyed by the German address).
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, readdirSync, copyFileSync, rmSync } from 'node:fs'
@@ -56,6 +56,11 @@ for (const [i, l] of ['de', 'en'].entries()) {
 const seiten = await import(pathToFileURL(join(dir, 'seiten.ts')).href)
 const recht = await import(pathToFileURL(join(dir, 'recht.ts')).href)
 out('data/pages/seiten.json', JSON.stringify(seiten.SEITEN, null, 1) + '\n')
+// the page frame's own words and the step icons, written into Seite.svelte rather than seiten.ts
+const seite = execFileSync('git', ['-C', repo, 'show', `${commit}:${ui}/web/Seite.svelte`]).toString()
+const icons = Object.fromEntries([...seite.match(/SCHRITT_ICONS[^{]*\{([^}]*)\}/)[1].matchAll(/'?([\w-]+)'?: \[([^\]]*)\]/g)].map((m) => [m[1], m[2].match(/'(\w+)'/g).map((x) => x.slice(1, -1))]))
+const so = seite.match(/const SO = \['([^']*)', '([^']*)'\]/).slice(1)
+out('data/pages/seite.json', JSON.stringify({ so, icons }, null, 1) + '\n')
 out('data/pages/recht.json', JSON.stringify({ DV: recht.DV, RECHT: recht.RECHT, RECHT_TEXT: recht.RECHT_TEXT, RECHT_EN_HINWEIS: recht.RECHT_EN_HINWEIS }, null, 1) + '\n')
 
 // ---- icons: the 20 px line set and the GitHub mark, as path data

@@ -23,6 +23,8 @@
 {{- end }}
 {{- $js := slice "anim" "menu" "consent" }}
 {{- if .IsHome }}{{ $js = $js | append "hero" "plans" }}{{ end }}
+{{- if in (slice "product" "gruendung") .Layout }}{{ $js = $js | append "folge" }}{{ end }}
+{{- if eq .Layout "product" }}{{ $js = $js | append "plans" }}{{ end }}
 {{- if eq .Layout "preise" }}{{ $js = $js | append "plans" "columns" }}{{ end }}
 {{- range $js }}
 {{- with resources.Get (print "js/" . ".js") | minify | fingerprint }}

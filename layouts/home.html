@@ -110,24 +110,7 @@
   </div>
 </section>
 
-<section class="w-sec" aria-labelledby="s-dfy">
-  <div class="w-wrap">
-    <div class="w-dfy">
-      <div class="text">
-        <p class="w-eyebrow">Done-for-you</p>
-        <h2 id="s-dfy" class="w-h2">{{ i18n "w.s.dfy.h" }}</h2>
-        <p>{{ i18n "w.s.dfy.t" }}</p>
-        <ul class="w-punkte">{{ range seq 3 }}<li>{{ partial "icon.html" (dict "name" "check" "size" 16) }}<span>{{ i18n (print "w.s.dfy.l" . (cond (and (eq . 1) (partial "flag.html" "lohn")) ".lohn" "")) }}</span></li>{{ end }}</ul>
-        <p class="w-small">{{ i18n "w.s.dfy.preis" }}</p>
-        <div class="w-ctas">
-          <a class="btn primary large" href="{{ site.Params.booking }}" target="_blank" rel="noopener">{{ i18n "w.call" }} ↗</a>
-          {{ with partial "link.html" "#/web/preise/service" }}<a class="btn large" href="{{ . }}">{{ i18n "w.s.dfy.cta" }}</a>{{ end }}
-        </div>
-      </div>
-      {{ partial "fragment.html" "start-dfy" }}
-    </div>
-  </div>
-</section>
+{{ partial "dfy.html" "s-dfy" }}
 
 {{ $auftrag := partial "flag.html" "auftrag" }}
 {{ $fragen := slice }}

@@ -35,7 +35,14 @@ const PAGES = {
   agb: { route: '#/web/agb', de: '/agb', en: '/en/terms', css: '' },
   avv: { route: '#/web/avv', de: '/avv', en: '/en/dpa', css: '' },
   unterauftragnehmer: { route: '#/web/unterauftragnehmer', de: '/unterauftragnehmer', en: '/en/subprocessors', css: '' },
-}
+  // the product pages (#106), built as drafts by parity.sh; bots and ki-buchhaltung exist only with their flag
+  ...Object.fromEntries(
+    ([['buchhaltung', 'bookkeeping'], ['rechnungen', 'invoices'], ['umsatzsteuer', 'vat'], ['jahresabschluss', 'annual-accounts'], ['gruendung', 'company-formation'], ['privat', 'income-tax'], ['entwickler', 'developers'], ['bots', 'bots'], ['ki-buchhaltung', 'ai-bookkeeping']] as const).map(([de, en]) => [de, { route: '#/web/' + de, de: '/' + de, en: '/en/' + en, css: '' }]),
+  ),
+  ...Object.fromEntries(
+    ([['gmbh', 'gmbh'], ['ug', 'ug'], ['holding', 'holding'], ['freiberufler', 'freelancers'], ['selbststaendige', 'self-employed'], ['entwickler', 'developers']] as const).map(([de, en]) => ['fuer-' + de, { route: '#/web/fuer/' + de, de: '/fuer/' + de, en: '/en/solutions/' + en, css: '' }]),
+  ),
+} as Record<string, { route: string; de: string; en: string; css: string }>
 // owner-approved differences of a case in this flag state, as CSS hiding the part on both sides (a part the site lacks
 // matches nothing there)
 // a case written as <case>@<lang> applies to that language only
@@ -57,7 +64,7 @@ async function site(page: Page, lang: string, c: Case) {
 }
 
 // states: the flag states the case runs in (both when absent); bar: no stored choice, so the consent bar shows (the viewport shot holds it)
-type Case = { name: string; page?: keyof typeof PAGES; width: number; height: number; full: boolean; states?: string[]; bar?: boolean; act?: (p: Page) => Promise<void> }
+type Case = { name: string; page?: string; width: number; height: number; full: boolean; states?: string[]; bar?: boolean; act?: (p: Page) => Promise<void> }
 const open = (m: string) => async (p: Page) => {
   await p.locator(`button[aria-controls=menu-${m}]`).hover()
   await p.locator(`#menu-${m}`).waitFor()
@@ -99,6 +106,10 @@ const CASES: Case[] = [
   ...(['os', 'dv', 'neu', 'impressum', 'datenschutz', 'agb', 'avv', 'unterauftragnehmer'] as const).flatMap((pg) =>
     [1280, 390].map((w) => ({ name: `${pg}-${w}`, page: pg, width: w, height: w === 1280 ? 900 : 844, full: true, states: pg === 'os' ? ['all'] : pg === 'dv' ? undefined : ['offer'] })),
   ),
+  // the product pages at both widths; bots and ki-buchhaltung only with every flag on (they are not built otherwise)
+  ...['buchhaltung', 'rechnungen', 'umsatzsteuer', 'jahresabschluss', 'gruendung', 'privat', 'entwickler', 'fuer-gmbh', 'fuer-ug', 'fuer-holding', 'fuer-freiberufler', 'fuer-selbststaendige', 'fuer-entwickler', 'bots', 'ki-buchhaltung'].flatMap((pg) =>
+    [1280, 390].map((w) => ({ name: `p-${pg}-${w}`, page: pg, width: w, height: w === 1280 ? 900 : 844, full: true, states: ['bots', 'ki-buchhaltung'].includes(pg) ? ['all'] : undefined })),
+  ),
   {
     name: 'sheet-390',
     width: 390,
@@ -113,7 +124,7 @@ const CASES: Case[] = [
 ]
 
 for (const lang of (process.env.LANGS ?? 'de,en').split(',')) {
-  for (const c of CASES.filter((c) => !c.states || c.states.includes(LABEL))) {
+  for (const c of CASES.filter((c) => (!c.states || c.states.includes(LABEL)) && (!process.env.ONLY || new RegExp(process.env.ONLY).test(c.name)))) {
     test(`${LABEL} ${lang} ${c.name}`, async ({ browser }, info) => {
       const opts = { viewport: { width: c.width, height: c.height }, reducedMotion: 'reduce' as const, deviceScaleFactor: 1 }
       const shot = { fullPage: c.full, mask: [] as ReturnType<Page['locator']>[], animations: 'disabled' as const }
