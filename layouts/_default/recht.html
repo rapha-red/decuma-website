@@ -39,7 +39,10 @@
   {{ if not $r }}{{ errorf "recht.html: no legal frame %q in data/pages/recht.json" $key }}{{ end }}
   <section class="kopf {{ $c }}"><div class="w-hero-text {{ $c }}"><h1 class="w-h1 {{ $c }}">{{ index $r.h1 $i }}</h1>{{ if $i }}<p class="w-small {{ $c }}" lang="en">{{ $d.RECHT_EN_HINWEIS }}</p>{{ end }}{{ with $r.lead }}<p class="w-lead {{ $c }}">{{ index . $i }}</p>{{ end }}</div></section>
   {{ with $de.Content }}
-    <div class="{{ $c }}" lang="de">{{ . }}</div>
+    {{/* the owner's text in the frame's sections: one section per "##" heading, as the prototype draws them */}}
+    {{ $parts := split (string .) "<h2" }}
+    {{ with trim (index $parts 0) " \n" }}<div class="{{ $c }}" lang="de">{{ . | safeHTML }}</div>{{ end }}
+    {{ range after 1 $parts }}{{ printf "<section class=\"block %s\" lang=\"de\"><h2 class=\"w-h3 %s\"%s</section>" $c $c . | safeHTML }}{{ end }}
   {{ else }}
     {{ range $r.teile }}<section class="block {{ $c }}"><h2 class="w-h3 {{ $c }}">{{ index . $i }}</h2>{{ if ne $key "impressum" }}<p class="platzhalter {{ $c }}">{{ index $d.RECHT_TEXT $i }}</p>{{ end }}{{ if and (eq $key "datenschutz") (hasPrefix (index . 0) "Diese Website") }}{{ partial "consent-table.html" . }}{{ end }}</section>{{ end }}
   {{ end }}

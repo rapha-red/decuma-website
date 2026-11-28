@@ -1,2 +1,9 @@
 # "Neu in Decuma": one entry per release (date, de, en), appended by the release script; the page sorts newest first.
-[]
+- date: 2026-11-28
+  de: "Website: decuma.de ist neu, mit allen Produktseiten, Preisen und dem Datenversprechen."
+  en: "Website: decuma.de is new, with every product page, the prices and the data promise."
+- {date: 2026-11-28, de: "Die Live-Steuerschätzung ist jetzt in jedem Tarif enthalten.", en: "The live tax estimate is now included in every plan."}
+- {date: 2026-11-28, de: "Die Fristen zeigen jetzt auch deine Vorauszahlungen und erinnern dich rechtzeitig daran.", en: "Deadlines now also show your tax prepayments and remind you in time."}
+- {date: 2026-11-28, de: "Bei der Gründung schlägt dir Decuma dein Finanzamt vor, und deine Steuernummern erfasst du an einer Stelle.", en: "When you set up a company, Decuma suggests your tax office, and you enter your tax numbers in one place."}
+- {date: 2026-11-28, de: "Für Geschäftspartner kannst du jetzt die Bankverbindung hinterlegen.", en: "You can now store the bank details of your business partners."}
+- {date: 2026-11-28, de: "Die private Nutzung des Firmenwagens wird jeden Monat gebucht, und die Tage im häuslichen Arbeitszimmer erfasst du direkt.", en: "Private use of the company car is booked every month, and you enter your home office days directly."}
