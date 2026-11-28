@@ -1,0 +1,904 @@
+{
+  "plans": [
+    {
+      "plan": "free",
+      "name": "Kostenlos",
+      "name_en": "Free",
+      "monthly": "0",
+      "yearly_per_month": "0",
+      "yearly": "0",
+      "intro": "0",
+      "ai_credit": "0.50",
+      "persons": 1
+    },
+    {
+      "plan": "pro",
+      "name": "Pro",
+      "name_en": "Pro",
+      "monthly": "8.00",
+      "yearly_per_month": "6.00",
+      "yearly": "72.00",
+      "intro": "0.80",
+      "ai_credit": "1.00",
+      "persons": 10
+    },
+    {
+      "plan": "agent",
+      "name": "Max",
+      "name_en": "Max",
+      "monthly": "20.00",
+      "yearly_per_month": "15.00",
+      "yearly": "180.00",
+      "intro": "2.00",
+      "ai_credit": "3.00",
+      "persons": 10
+    }
+  ],
+  "intro_discount_percent": 90,
+  "intro_discount_months": 3,
+  "einkommensteuererklaerung": "9.00",
+  "top_up_amounts": [
+    "5.00",
+    "10.00",
+    "25.00"
+  ],
+  "top_up_minimum": "5.00",
+  "ai_surcharge_percent": 20,
+  "belege_per_month": 30,
+  "storage_mb": 500,
+  "deletion_after_months": 6,
+  "open_source": "https://github.com/rapha-red/open-decuma",
+  "not_offered": [
+    "hinweise_aus_belegen",
+    "lohn"
+  ],
+  "flags": {
+    "agent_tier": true,
+    "auftrag": true,
+    "bank": true,
+    "eric": true,
+    "hinweise_aus_belegen": true,
+    "lohn": true,
+    "model_steps": true,
+    "source_link": true,
+    "supplier_invoices": true
+  },
+  "offer": {
+    "columns": [
+      {
+        "key": "free",
+        "plan": true,
+        "highlight": false,
+        "flags": [],
+        "de": "Kostenlos",
+        "en": "Free",
+        "cta_de": "Kostenlos starten",
+        "cta_en": "Start for free",
+        "href": "#/registrieren"
+      },
+      {
+        "key": "pro",
+        "plan": true,
+        "highlight": true,
+        "flags": [],
+        "de": "Pro",
+        "en": "Pro",
+        "cta_de": "Jetzt starten",
+        "cta_en": "Start now",
+        "href": "#/checkout/pro"
+      },
+      {
+        "key": "agent",
+        "plan": true,
+        "highlight": false,
+        "flags": [
+          "agent_tier"
+        ],
+        "de": "Max",
+        "en": "Max",
+        "cta_de": "Jetzt starten",
+        "cta_en": "Start now",
+        "href": "#/checkout/max"
+      },
+      {
+        "key": "privat",
+        "plan": false,
+        "highlight": false,
+        "flags": [],
+        "de": "Privat",
+        "en": "Privat",
+        "cta_de": "Erklärung beginnen",
+        "cta_en": "Start the return",
+        "href": "#/web/privat"
+      },
+      {
+        "key": "done_for_you",
+        "plan": false,
+        "highlight": false,
+        "flags": [],
+        "de": "Done-for-you",
+        "en": "Done-for-you",
+        "cta_de": "Gespräch buchen",
+        "cta_en": "Book a call",
+        "href": "#/web/preise/service"
+      },
+      {
+        "key": "self_hosted",
+        "plan": false,
+        "highlight": false,
+        "flags": [],
+        "de": "Selbst hosten",
+        "en": "Self-host",
+        "cta_de": "Auf GitHub ansehen",
+        "cta_en": "View on GitHub",
+        "href": "https://github.com/rapha-red/open-decuma",
+        "mark": "github",
+        "call": {
+          "de": "Installation buchen",
+          "en": "Book an installation",
+          "href": "https://cal.com/decuma-raphael/30min"
+        }
+      }
+    ],
+    "groups": [
+      {
+        "key": "invoices",
+        "de": "Rechnungen",
+        "en": "Invoices",
+        "rows": [
+          {
+            "key": "invoices",
+            "de": "Rechnungen und Angebote",
+            "en": "Invoices and quotes",
+            "capability": "offen.rechnungen",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "e_invoices",
+            "de": "E-Rechnung senden und empfangen (XRechnung, ZUGFeRD)",
+            "en": "Send and receive e-invoices (XRechnung, ZUGFeRD)",
+            "capability": "offen.rechnungen",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "recurring_invoices",
+            "de": "Wiederkehrende Rechnungen",
+            "en": "Recurring invoices",
+            "capability": "vorbehalten.pro.wiederkehrende_rechnungen",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "dunning",
+            "de": "Mahnungen",
+            "en": "Dunning",
+            "capability": "vorbehalten.pro.mahnungen",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "von Hand",
+                "en": "by hand"
+              },
+              {
+                "de": "automatisch",
+                "en": "automatic"
+              },
+              {
+                "de": "automatisch",
+                "en": "automatic"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "bookkeeping",
+        "de": "Buchhaltung",
+        "en": "Bookkeeping",
+        "rows": [
+          {
+            "key": "belege",
+            "de": "Belege erfassen (Handy, Upload, Belegpostfach mit Weiterleitung, API)",
+            "en": "Capture Belege (phone, upload, Beleg inbox with forwarding, API)",
+            "capability": "offen.eingang",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "{n} im Monat",
+                "en": "{n} a month",
+                "value": "30"
+              },
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "supplier_invoices",
+            "de": "Rechnungen aus Lieferanten-Konten abholen",
+            "en": "Fetch invoices from supplier accounts",
+            "capability": null,
+            "flags": [
+              "agent_tier"
+            ],
+            "any_flags": [],
+            "app_flags": [
+              "supplier_invoices"
+            ],
+            "cells": [
+              "no",
+              "no",
+              "yes"
+            ]
+          },
+          {
+            "key": "storage",
+            "de": "Speicher",
+            "en": "Storage",
+            "capability": "offen.eingang",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "{n} MB",
+                "en": "{n} MB",
+                "value": "500"
+              },
+              {
+                "de": "fair use",
+                "en": "fair use"
+              },
+              {
+                "de": "fair use",
+                "en": "fair use"
+              }
+            ]
+          },
+          {
+            "key": "journal",
+            "de": "Journal, SKR04 oder SKR03, Auswertungen",
+            "en": "Journal, SKR04 or SKR03, reports",
+            "capability": "offen.buchhaltung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "cash_book",
+            "de": "Kassenbuch",
+            "en": "Cash book",
+            "capability": "offen.buchhaltung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "statement_import",
+            "de": "Kontoauszüge importieren (CAMT, MT940, CSV)",
+            "en": "Import statements (CAMT, MT940, CSV)",
+            "capability": "offen.bank",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "bank",
+            "de": "Bank verbinden",
+            "en": "Connect bank",
+            "capability": "vorbehalten.pro.bank_synchronisation",
+            "flags": [
+              "bank"
+            ],
+            "any_flags": [],
+            "cells": [
+              "no",
+              {
+                "de": "Bank-Schnittstelle, Decuma Bridge",
+                "en": "bank API, Decuma Bridge"
+              },
+              {
+                "de": "dazu automatisch bis 4× täglich",
+                "en": "plus automatic up to 4× a day"
+              }
+            ]
+          },
+          {
+            "key": "matching",
+            "de": "Abgleich von Zahlungen",
+            "en": "Payment matching",
+            "capability": "vorbehalten.pro.abgleich_automatisch",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "nach festen Regeln",
+                "en": "by fixed rules"
+              },
+              {
+                "de": "automatisch",
+                "en": "automatic"
+              },
+              {
+                "de": "automatisch",
+                "en": "automatic"
+              }
+            ]
+          },
+          {
+            "key": "rules",
+            "de": "Regeln und Automatisierungen",
+            "en": "Rules and automations",
+            "capability": "vorbehalten.pro.regeln",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "assets",
+            "de": "Anlagenverzeichnis und Abschreibungen",
+            "en": "Fixed assets and depreciation",
+            "capability": "vorbehalten.pro.anlagen_und_darlehen",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "migration",
+            "de": "Umzug aus anderer Software",
+            "en": "Migration from other software",
+            "capability": "offen.umstieg_und_export",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "datev",
+            "de": "DATEV-Export",
+            "en": "DATEV export",
+            "capability": "vorbehalten.pro.datev_export",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "export",
+            "de": "Export aller Daten",
+            "en": "Export of all data",
+            "capability": "offen.mandant",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "payroll",
+            "de": "Lohnabrechnung",
+            "en": "Payroll",
+            "capability": "vorbehalten.pro.lohnabrechnung",
+            "flags": [
+              "lohn"
+            ],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          }
+        ]
+      },
+      {
+        "key": "ai",
+        "de": "KI und Automatisierung",
+        "en": "AI and automation",
+        "rows": [
+          {
+            "key": "reading",
+            "de": "Belege automatisch lesen, Vorschläge",
+            "en": "Read Belege automatically, proposals",
+            "capability": "offen.eingang",
+            "flags": [
+              "model_steps"
+            ],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "solange das Guthaben reicht",
+                "en": "while credit lasts"
+              },
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "rule_notices",
+            "de": "Hinweise nach festen Regeln",
+            "en": "Rule-based hints",
+            "capability": "offen.hinweise",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "beleg_notices",
+            "de": "Hinweise aus Belegen, mit Wirkung in Euro",
+            "en": "Hints from Belege, with euro effect",
+            "capability": "offen.hinweise",
+            "flags": [
+              "model_steps",
+              "hinweise_aus_belegen"
+            ],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "solange das Guthaben reicht",
+                "en": "while credit lasts"
+              },
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "decuma_ai",
+            "de": "Decuma-KI",
+            "en": "Decuma AI",
+            "capability": null,
+            "flags": [
+              "model_steps"
+            ],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "inklusive",
+                "en": "included"
+              },
+              {
+                "de": "mit mehr Power",
+                "en": "with more power"
+              },
+              {
+                "de": "mit voller Power",
+                "en": "with full power"
+              }
+            ]
+          },
+          {
+            "key": "top_up",
+            "de": "KI-Guthaben aufladen",
+            "en": "Top up AI credit",
+            "capability": "offen.gehostet",
+            "flags": [
+              "model_steps"
+            ],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "agent",
+            "de": "Agent, Tagesbericht, Chat, der handelt",
+            "en": "Agent, daily report, chat that acts",
+            "capability": null,
+            "flags": [
+              "agent_tier"
+            ],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "no",
+              "yes"
+            ]
+          }
+        ]
+      },
+      {
+        "key": "taxes",
+        "de": "Steuern",
+        "en": "Taxes",
+        "rows": [
+          {
+            "key": "voranmeldung",
+            "de": "Umsatzsteuer-Voranmeldung mit Dauerfristverlängerung",
+            "en": "VAT return with permanent extension",
+            "capability": "offen.voranmeldung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "zm",
+            "de": "Zusammenfassende Meldung",
+            "en": "EC Sales List",
+            "capability": "offen.zusammenfassende_meldung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "deadlines",
+            "de": "Fristenkalender und Erinnerungen",
+            "en": "Deadline calendar and reminders",
+            "capability": "offen.webhooks_und_benachrichtigungen",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "elster_file",
+            "de": "Datei für Mein ELSTER, Eingabeblatt",
+            "en": "File for Mein ELSTER, input sheet",
+            "capability": "offen.voranmeldung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "own_agent",
+            "de": "Dein eigener Agent füllt Mein ELSTER aus",
+            "en": "Your own agent fills in Mein ELSTER",
+            "capability": "offen.mandant",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "eric",
+            "de": "Mit eigenem ELSTER-Zertifikat",
+            "en": "With your own ELSTER certificate",
+            "capability": null,
+            "flags": [
+              "eric"
+            ],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "auftrag",
+            "de": "Decuma übermittelt für dich",
+            "en": "Decuma transmits for you",
+            "capability": null,
+            "flags": [
+              "auftrag"
+            ],
+            "any_flags": [],
+            "cells": [
+              "no",
+              {
+                "de": "inklusive",
+                "en": "included"
+              },
+              {
+                "de": "inklusive",
+                "en": "included"
+              }
+            ]
+          },
+          {
+            "key": "annual_returns",
+            "de": "Jahresabschluss, E-Bilanz, Körperschaft- und Gewerbesteuer, Umsatzsteuererklärung, EÜR",
+            "en": "Year-end, E-Bilanz, Körperschaft- and Gewerbesteuer, annual VAT return, EÜR",
+            "capability": "vorbehalten.pro.jahreserklaerungen",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              {
+                "de": "mit jährlicher Abrechnung",
+                "en": "on yearly billing"
+              },
+              {
+                "de": "mit jährlicher Abrechnung",
+                "en": "on yearly billing"
+              }
+            ]
+          },
+          {
+            "key": "est",
+            "de": "Einkommensteuererklärung",
+            "en": "Income tax return",
+            "capability": "offen.einkommensteuer",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "{n} € je Erklärung",
+                "en": "€{n} per return",
+                "value": "9.00"
+              },
+              {
+                "de": "jährlich enthalten, sonst {n} €",
+                "en": "included yearly, else €{n}",
+                "value": "9.00"
+              },
+              {
+                "de": "jährlich enthalten, sonst {n} €",
+                "en": "included yearly, else €{n}",
+                "value": "9.00"
+              }
+            ]
+          },
+          {
+            "key": "verwaltung",
+            "de": "Verwaltung: Bescheide, Steuerzahlungen, Anträge, Ausschüttung, Offenlegung",
+            "en": "Administration: notices, tax payments, applications, distributions, disclosure",
+            "capability": "vorbehalten.pro.verwaltung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          }
+        ]
+      },
+      {
+        "key": "founding",
+        "de": "Gründung",
+        "en": "Founding",
+        "rows": [
+          {
+            "key": "fragebogen",
+            "de": "Fragebogen zur steuerlichen Erfassung",
+            "en": "Tax registration questionnaire",
+            "capability": "vorbehalten.pro.verwaltung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "opening_balance",
+            "de": "Eröffnungsbilanz",
+            "en": "Opening balance sheet",
+            "capability": "vorbehalten.pro.verwaltung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "founding_transmission",
+            "de": "Übermittlung ans Finanzamt für dich",
+            "en": "Transmission for you",
+            "capability": "vorbehalten.pro.verwaltung",
+            "flags": [],
+            "any_flags": [
+              "eric",
+              "auftrag"
+            ],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          }
+        ]
+      },
+      {
+        "key": "platforms",
+        "de": "Plattformen",
+        "en": "Platforms",
+        "rows": [
+          {
+            "key": "web_app",
+            "de": "Web-App",
+            "en": "Web app",
+            "capability": "offen.buchhaltung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "phone",
+            "de": "Auf dem Handy, als App installierbar",
+            "en": "On your phone, installable as an app",
+            "capability": "offen.buchhaltung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "api",
+            "de": "REST API, CLI und MCP",
+            "en": "REST API, CLI and MCP",
+            "capability": "offen.mandant",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "remote_mcp",
+            "de": "Remote-MCP für deine KI-App",
+            "en": "Remote MCP for your AI app",
+            "capability": "offen.mandant",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "sdks",
+            "de": "SDKs für Python, TypeScript, Rust",
+            "en": "SDKs for Python, TypeScript, Rust",
+            "capability": "offen.mandant",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          }
+        ]
+      },
+      {
+        "key": "team",
+        "de": "Zusammenarbeit",
+        "en": "Working together",
+        "rows": [
+          {
+            "key": "persons",
+            "de": "Personen je Unternehmen",
+            "en": "People per business",
+            "capability": "vorbehalten.pro.team_und_berater",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "eine",
+                "en": "one"
+              },
+              {
+                "de": "bis {n}, kostenlos",
+                "en": "up to {n}, free",
+                "value": "10"
+              },
+              {
+                "de": "bis {n}, kostenlos",
+                "en": "up to {n}, free",
+                "value": "10"
+              }
+            ]
+          },
+          {
+            "key": "advisor",
+            "de": "Berater einladen, Prüfvermerk",
+            "en": "Invite advisor, review note",
+            "capability": "vorbehalten.pro.team_und_berater",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "key": "several",
+            "de": "Mehrere Unternehmen",
+            "en": "Several businesses",
+            "capability": "offen.mandant",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              {
+                "de": "eines",
+                "en": "one"
+              },
+              {
+                "de": "Preis je Unternehmen",
+                "en": "price per business"
+              },
+              {
+                "de": "Preis je Unternehmen",
+                "en": "price per business"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
