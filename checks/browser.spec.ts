@@ -117,7 +117,7 @@ function buildWith(change: (o: any) => void, files: Record<string, string> = {})
   change(o)
   writeFileSync(join(dir, 'data/offer.json'), JSON.stringify(o))
   for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, f), text)
-  execFileSync(join(REPO, 'tools/bin/hugo'), ['--minify', '--logLevel', 'error', '-s', dir, '-d', join(dir, 'public')])
+  execFileSync(join(REPO, 'tools/bin/hugo'), ['--minify', '--buildDrafts', '--logLevel', 'error', '-s', dir, '-d', join(dir, 'public')])
   return join(dir, 'public')
 }
 const SITE = 'http://site.test'
@@ -130,6 +130,36 @@ async function serve(page: Page, root: string) {
 }
 // every flag on: the price list's own --all-flags answer (check-site.sh holds it to DECUMA_BIN)
 const ALL_ON = (o: any) => Object.assign(o, JSON.parse(readFileSync(join(REPO, 'checks/offer-all-flags.json'), 'utf8')))
+
+test.describe('product pages', () => {
+  test.use({ viewport: { width: 1280, height: 900 } })
+  test('motion: the hero work sequence plays its steps once at the captured pace and stops; reduced motion shows the last step', async ({ browser }) => {
+    const root = buildWith(ALL_ON)
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
+    const page = await ctx.newPage()
+    await serve(page, root)
+    await page.goto(SITE + '/buchhaltung')
+    const seq = page.locator('.w-hero-visual [data-folge]')
+    const steps = await page.locator('.w-hero-visual template[data-nach]').evaluateAll((t) => t.map((e) => [Number((e as HTMLElement).dataset.nach), (e as HTMLTemplateElement).content.firstElementChild!.innerHTML] as [number, string]))
+    expect(steps.length).toBeGreaterThan(2)
+    const t0 = Date.now()
+    await expect.poll(() => seq.evaluate((e) => e.innerHTML), { timeout: 15000 }).toBe(steps.at(-1)![1])
+    const took = Date.now() - t0
+    const total = steps.reduce((a, [ms]) => a + ms, 0)
+    expect(took).toBeGreaterThan(total - 1000)
+    const html = await seq.evaluate((e) => e.innerHTML)
+    await page.waitForTimeout(2500)
+    expect(await seq.evaluate((e) => e.innerHTML)).toBe(html) // stopped
+    await ctx.close()
+    const calm = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } })
+    const p2 = await calm.newPage()
+    await serve(p2, root)
+    await p2.goto(SITE + '/buchhaltung')
+    expect(await p2.locator('.w-hero-visual [data-folge]').evaluate((e) => e.innerHTML)).toBe(steps.at(-1)![1])
+    expect(await p2.locator('.w-anim:not([data-an]), .w-z:not([data-an])').count()).toBe(0)
+    await calm.close()
+  })
+})
 
 test.describe('start page', () => {
   test.use({ viewport: { width: 1280, height: 900 } })
