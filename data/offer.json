@@ -367,6 +367,18 @@
             ]
           },
           {
+            "key": "tax_estimate",
+            "de": "Live-Steuerschätzung mit Rücklage",
+            "en": "Live tax estimate with reserve",
+            "capability": "offen.steuerschaetzung",
+            "flags": [],
+            "any_flags": [],
+            "cells": [
+              "yes",
+              "yes"
+            ]
+          },
+          {
             "key": "deadlines",
             "de": "Fristenkalender und Erinnerungen",
             "en": "Deadline calendar and reminders",
