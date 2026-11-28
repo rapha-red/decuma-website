@@ -391,6 +391,9 @@ def main():
             if f.is_file() and f.suffix in (".html", ".txt", ".xml") and not f.relative_to(tree).as_posix().startswith(("kb/", "pagefind/")):
                 for m in to_kb.finditer(f.read_text(errors="replace")):
                     fails.append(f"/{f.relative_to(tree).as_posix()}: kb_live is off but it links the Knowledge Base: {m.group(0)}")
+        # and no /kb page is built at all (an empty index would still answer on the server)
+        if (tree / "kb").exists():
+            fails.append("/kb: kb_live is off but the tree holds a Knowledge Base page")
     fails += kb_checks(tree, repo)
     for x in fails:
         print("FAIL " + x)
