@@ -1,4 +1,4 @@
-# synced from the prototype at 9e83640876d6 by tools/sync.mjs; do not edit
+# synced from the prototype at 8a700973f4f3 by tools/sync.mjs; do not edit
 "actor.agent": "Agent"
 "actor.agent.tip": "Der Agent von Decuma. Er handelt nur über dieselben Befehle wie du."
 "actor.api": "API-Schlüssel"
