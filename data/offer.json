@@ -98,22 +98,6 @@
         "cta_de": "Gespräch buchen",
         "cta_en": "Book a call",
         "href": "#/web/preise/service"
-      },
-      {
-        "key": "self_hosted",
-        "plan": false,
-        "highlight": false,
-        "flags": [],
-        "de": "Selbst hosten",
-        "en": "Self-host",
-        "cta_de": "Mehr zu Open Source",
-        "cta_en": "More on open source",
-        "href": "#/web/open-source",
-        "call": {
-          "de": "Installation buchen",
-          "en": "Book an installation",
-          "href": "https://cal.com/decuma-raphael/30min"
-        }
       }
     ],
     "groups": [
