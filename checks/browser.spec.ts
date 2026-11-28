@@ -24,13 +24,14 @@ test.describe('menus at 1280 px', () => {
   })
 
   test('leaving and re-entering within 150 ms keeps it open; leaving closes after 150 ms', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 1400 }) // room below the tallest panel (every flag on)
     await trigger(page).hover()
-    await page.mouse.move(640, 880) // below the panel, outside the wrapper
+    await page.mouse.move(640, 1380) // below the panel, outside the wrapper
     await page.waitForTimeout(60)
     await trigger(page).hover()
     await page.waitForTimeout(250)
     expect(await panel(page).isVisible()).toBe(true)
-    await page.mouse.move(640, 880)
+    await page.mouse.move(640, 1380)
     await page.waitForTimeout(80)
     expect(await panel(page).isVisible()).toBe(true)
     await page.waitForTimeout(200)
@@ -111,7 +112,7 @@ test.describe('without JavaScript', () => {
 
 // The start page built from a test copy of data/offer.json (Hugo into a temporary directory), served through a route
 // so that each case can change the offer without touching the tree under test.
-import { mkdtempSync, cpSync, readFileSync, writeFileSync, existsSync, statSync, readdirSync } from 'node:fs'
+import { mkdtempSync, cpSync, readFileSync, writeFileSync, existsSync, statSync, readdirSync, rmSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -122,6 +123,10 @@ function buildWith(change: (o: any) => void, files: Record<string, string> = {})
   const o = JSON.parse(readFileSync(join(dir, 'data/offer.json'), 'utf8'))
   change(o)
   writeFileSync(join(dir, 'data/offer.json'), JSON.stringify(o))
+  // the flag tests drive data/offer.json, so the target-state switch is off in their copies
+  writeFileSync(join(dir, 'hugo.toml'), readFileSync(join(dir, 'hugo.toml'), 'utf8').replace(/^show_all_flags = true$/m, 'show_all_flags = false'))
+  // the KI-Buchhaltung pages are plain files (built in the target state); without the switch they follow model_steps
+  if (!o.flags.model_steps) for (const f of ['content/ki-buchhaltung.md', 'content/ai-bookkeeping.en.md']) rmSync(join(dir, f), { force: true })
   for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, f), text)
   execFileSync(join(REPO, 'tools/bin/hugo'), ['--minify', '--buildDrafts', '--logLevel', 'error', '-s', dir, '-d', join(dir, 'public')])
   return join(dir, 'public')
@@ -259,6 +264,8 @@ test.describe('price page', () => {
 
   test('every row and column comes from data/offer.json, flagged ones only while on', async ({ page }) => {
     const offer = JSON.parse(readFileSync(join(REPO, 'data/offer.json'), 'utf8'))
+    const toml = readFileSync(join(REPO, 'hugo.toml'), 'utf8')
+    if (/^show_all_flags = true$/m.test(toml)) for (const k of Object.keys(offer.flags)) if (k !== 'source_link') offer.flags[k] = true
     await page.goto('/preise')
     expect(await rows(page)).toEqual(visible(offer))
     for (const [state, max] of [[false, false], [true, true]] as const) {
@@ -385,6 +392,8 @@ test.describe('consent on every page', () => {
       const page = await ctx.newPage()
       const requests: string[] = []
       page.on('request', (r) => requests.push(r.url()))
+      const csp: string[] = []
+      page.on('console', (m) => { if (m.type() === 'error' && /Content Security Policy/i.test(m.text())) csp.push(m.text()) })
       await page.goto(path, { waitUntil: 'networkidle' })
       const before = { cookies: (await ctx.cookies()).map((c) => c.name), storage: await stored(page), scripts: await scripts(page) }
       await page.locator('[data-choice="0"]').click()
@@ -395,6 +404,7 @@ test.describe('consent on every page', () => {
       // network log and storage dump of this page, kept as evidence in the test's output directory
       writeFileSync(info.outputPath('consent-log.json'), JSON.stringify({ path, before, after, requests: requests.map((u) => u.replace(baseURL!, '')), afterReject: requests.slice(at).map((u) => u.replace(baseURL!, '')) }))
       await ctx.close()
+      expect.soft(csp, 'Content-Security-Policy violations').toEqual([])
       expect.soft(requests.filter((u) => new URL(u).origin !== new URL(baseURL!).origin), 'requests to another origin').toEqual([])
       expect.soft(before.cookies, 'cookies before a click').toEqual([])
       expect.soft(before.storage, 'storage before a click').toEqual([])

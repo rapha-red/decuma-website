@@ -1,4 +1,6 @@
 {{/* Whether a website flag is on, from data/offer.json "flags"; a flag missing there stops the build. */}}
 {{ $f := hugo.Data.offer.flags }}
 {{ if not (isset $f .) }}{{ errorf "flag %q is missing in data/offer.json" . }}{{ end }}
-{{ return index $f . }}
+{{ $on := index $f . }}
+{{ if and site.Params.show_all_flags (not (in site.Params.real_flags .)) }}{{ $on = true }}{{ end }}
+{{ return $on }}

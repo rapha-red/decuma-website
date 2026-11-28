@@ -16,7 +16,7 @@ trap 'git -C "$repo" worktree remove --force "$PWD/checks/.proto"' EXIT
 export PROTO_DIR=$PWD/checks/.proto/prototype/ui
 FLAGS="model_steps agent_tier lohn bank source_link eric auftrag"
 # kb_live is a switch of hugo.toml, the other flags come from the price list
-on=$(python3 -c 'import json,sys,tomllib; f=json.load(open("data/offer.json"))["flags"]; f["kb_live"]=tomllib.load(open("hugo.toml","rb"))["params"]["kb_live"]; print(",".join(k for k in sys.argv[1:] if f[k]) or "aus")' $FLAGS kb_live)
+on=$(python3 -c 'import json,sys,tomllib; f=json.load(open("data/offer.json"))["flags"]; p=tomllib.load(open("hugo.toml","rb"))["params"]; f={k: v or (p.get("show_all_flags") and k not in p["real_flags"]) for k, v in f.items()}; f["kb_live"]=p["kb_live"]; print(",".join(k for k in sys.argv[1:] if f[k]) or "aus")' $FLAGS kb_live)
 stars=$(python3 -c 'import json; print(json.load(open("data/github.json"))["stars"])')
 # a copy of the tree per flag state, with the prototype's sample entries as data/changelog.yaml and the legal pages
 # without their bodies (the prototype has the frames only)
