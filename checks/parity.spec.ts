@@ -108,7 +108,7 @@ const CASES: Case[] = [
   ),
   // the product pages at both widths; bots and ki-buchhaltung only with every flag on (they are not built otherwise)
   ...['buchhaltung', 'rechnungen', 'umsatzsteuer', 'jahresabschluss', 'gruendung', 'privat', 'entwickler', 'fuer-gmbh', 'fuer-ug', 'fuer-holding', 'fuer-freiberufler', 'fuer-selbststaendige', 'fuer-entwickler', 'bots', 'ki-buchhaltung'].flatMap((pg) =>
-    [1280, 390].map((w) => ({ name: `${pg}-${w}`, page: pg, width: w, height: w === 1280 ? 900 : 844, full: true, states: ['bots', 'ki-buchhaltung'].includes(pg) ? ['all'] : undefined })),
+    [1280, 390].map((w) => ({ name: `p-${pg}-${w}`, page: pg, width: w, height: w === 1280 ? 900 : 844, full: true, states: ['bots', 'ki-buchhaltung'].includes(pg) ? ['all'] : undefined })),
   ),
   {
     name: 'sheet-390',

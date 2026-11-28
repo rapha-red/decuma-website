@@ -227,7 +227,7 @@ for (const l of ['de', 'en']) {
           if (steps.at(-1)[1] !== html) throw new Error(`${name} ${on}: the last step is not the reduced-motion end state`)
           out = steps[0].replace(/^<(\w+)/, '<$1 data-folge') + steps.slice(1).map(([ms, h]) => `<template data-nach="${ms}">${h}</template>`).join('')
         }
-        writeFileSync(join(dir, [name, ...extra].join('--') + '.html'), out + '\n')
+        writeFileSync(join(dir, [name, ...on].join('--') + '.html'), out + '\n')
       }
     }
   }
